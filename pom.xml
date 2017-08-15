@@ -1,18 +1,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.eclipse.che.examples</groupId>
-    <artifactId>console-java-simple</artifactId>
+    <groupId>edu.upenn.cis.cis455</groupId>
+    <artifactId>homework-1</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>hello-app</name>
-    <url>http://maven.apache.org</url>
+    <name>CIS 455 Web Server</name>
+    <url>http://www.cis.upenn.edu/~cis455</url>
+    
+    
+    <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <maven.compiler.source>1.8</maven.compiler.source>
+            <maven.compiler.target>1.8</maven.compiler.target>
+            <java.version>1.8</java.version>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
@@ -26,7 +42,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.eclipse.che.examples.HelloWorld</mainClass>
+                            <mainClass>edu.upenn.cis.cis455.WebServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

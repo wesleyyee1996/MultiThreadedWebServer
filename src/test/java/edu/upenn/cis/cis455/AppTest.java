@@ -1,4 +1,4 @@
-package com.codenvy.example.java;
+package edu.upenn.cis.cis455;
 
 import static org.junit.Assert.assertTrue;
 
