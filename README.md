@@ -4,7 +4,7 @@
 
 | #       | Command           | 
 | :------------- |:------------- |
-| 1      | `mvn -f ${current.project.path} clean install && mvn exec:java` |
+| 1      | `mvn -f ${current.project.path} clean install exec:java` |
 
 # App output
 
