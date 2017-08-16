@@ -26,18 +26,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.webserver.stubs;
+package edu.upenn.cis.cis455.m2.server.stubs;
 
-import edu.upenn.cis.cis455.webserver.Filter;
-import edu.upenn.cis.cis455.webserver.Route;
-import edu.upenn.cis.cis455.webserver.exceptions.HaltException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m1.server.HttpServer;
+import edu.upenn.cis.cis455.m2.server.Filter;
+import edu.upenn.cis.cis455.m2.server.Route;
 
 public abstract class Service {
+    final static Logger logger = LogManager.getLogger(Service.class);
+
+    protected HttpServer basicServer;
+    protected int port = 8080;
+    protected int workers = 10;
     
+    public Service() {
+        basicServer = new HttpServer(port, workers);
+    }
+
     /**
      * Launches the Web server thread pool and the listener
      */
-    public abstract void start();
+    public void start() {
+        basicServer.start();
+    }
+    
+    /**
+     * Gracefully shut down the server
+     */
+    public void stop() {
+        logger.info("Terminating server");
+        basicServer.stop();
+    }
+    
+    /**
+     * Hold until the server is fully initialized
+     */
+    public void awaitInitialization() {
+        logger.info("Initializing server");
+        start();
+    }
+    
+    /**
+     * Triggers a HaltException that terminates the request
+     */
+    public HaltException halt() {
+        throw new HaltException();
+    }
+
+
+    /**
+     * Triggers a HaltException that terminates the request
+     */
+    public HaltException halt(int statusCode) {
+        throw new HaltException(statusCode);
+    }
+    
+    /**
+     * Triggers a HaltException that terminates the request
+     */
+    public HaltException halt(String body) {
+        throw new HaltException(body);
+    }
+    
+    /**
+     * Triggers a HaltException that terminates the request
+     */
+    public HaltException halt(int statusCode, String body) {
+        throw new HaltException(statusCode, body);
+    }
+
+    /**
+     * Set the root directory of the "static web" files
+     */
+    public void staticFileLocation(String directory) {
+        basicServer.setFileRoot(directory);
+    }
+    
+    ///////////////////////////////////////////////////
+    // For more advanced capabilities
     
     /**
      * Handle an HTTP GET request to the path
@@ -91,35 +161,6 @@ public abstract class Service {
      */
     public abstract void after(String path, String acceptType, Filter filter);
     
-    /**
-     * Triggers a HaltException that terminates the request
-     */
-    public HaltException halt() {
-        throw new HaltException();
-    }
-
-
-    /**
-     * Triggers a HaltException that terminates the request
-     */
-    public HaltException halt(int statusCode) {
-        throw new HaltException(statusCode);
-    }
-    
-    /**
-     * Triggers a HaltException that terminates the request
-     */
-    public HaltException halt(String body) {
-        throw new HaltException(body);
-    }
-    
-    /**
-     * Triggers a HaltException that terminates the request
-     */
-    public HaltException halt(int statusCode, String body) {
-        throw new HaltException(statusCode, body);
-    }
-
     ////////////////////////////////////////////
     // Server configuration
     ////////////////////////////////////////////
@@ -139,18 +180,4 @@ public abstract class Service {
      */
     public abstract void threadPool(int threads);
     
-    /**
-     * Set the root directory of the "static web" files
-     */
-    public abstract void staticFileLocation(String directory);
-    
-    /**
-     * Hold until the server is fully initialized
-     */
-    public abstract void awaitInitialization();
-    
-    /**
-     * Gracefully shut down the server
-     */
-    public abstract void stop();
 }

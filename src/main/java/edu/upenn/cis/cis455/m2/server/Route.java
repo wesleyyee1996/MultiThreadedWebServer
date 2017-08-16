@@ -26,36 +26,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.webserver.exceptions;
+package edu.upenn.cis.cis455.m2.server;
 
-import javax.servlet.http.HttpServletResponse;
+import edu.upenn.cis.cis455.m1.server.stubs.Request;
+import edu.upenn.cis.cis455.m1.server.stubs.Response;
 
-public class HaltException extends RuntimeException {
-    int statusCode = HttpServletResponse.SC_OK;
-    private String body = null;
+@FunctionalInterface
+public interface Route {
     
-    public HaltException() {
-        super();
-    }
-    
-    public HaltException(int statusCode) {
-        statusCode = statusCode;
-    }
-    
-    public HaltException(String body) {
-        this.body = body;
-    }
-    
-    public HaltException(int statusCode, String body) {
-        this.statusCode = statusCode;
-        this.body = body;
-    }
-    
-    public int statusCode() {
-        return statusCode;
-    }
-    
-    public String body() {
-        return body;
-    }
+    /**
+     * A route handler for a given HTTP request.
+     * 
+     */
+    Object handle(Request request, Response response) throws Exception;
 }
