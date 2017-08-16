@@ -1,19 +1,12 @@
-# desktop-java-simple
-
-# Developer Workspace
-
-[![Contribute](http://beta.codenvy.com/factory/resources/codenvy-contribute.svg)](http://beta.codenvy.com/f?id=omriatu352kkthua)
-
-# Recipe
-
-FROM [codenvy/ubuntu_jdk8](https://hub.docker.com/r/codenvy/ubuntu_jdk8/)
+# CIS 455/555 Homework 1 - Build a Web Server / Microservices Framework
 
 # Commands
 
 | #       | Command           | 
 | :------------- |:------------- |
-| 1      | `mvn -f ${current.project.path} clean install && java -jar ${current.project.path}/target/*.jar` |
+| 1      | `mvn -f ${current.project.path} clean install && mvn exec:java` |
 
 # App output
 
-App output is streamed into a console. Note that if your app expects user input, do not use command but execute jars in the terminal directly.
+You need to create a "run" option as per the instructions, and click on the `Preview:` link
+for the Web server.  Your server's logs should show up on the terminal.
