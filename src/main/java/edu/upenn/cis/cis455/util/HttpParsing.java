@@ -1,7 +1,3 @@
-/**
- * Parsing help, largely derived from NanoHttpd, copyright notice below.
- */
-
 /*
  * #%L
  * NanoHttpd-Core
@@ -61,6 +57,9 @@ import javax.servlet.http.HttpServletResponse;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 
 
+/**
+ * Header parsing help, largely derived from NanoHttpd, copyright notice above.
+ */
 public class HttpParsing {
     final static Logger logger = LogManager.getLogger(HttpParsing.class);
     
@@ -94,15 +93,18 @@ public class HttpParsing {
             }
 
             String uri = st.nextToken();
+            String queryString = "";
 
             // Decode parameters from the URI
             int qmi = uri.indexOf('?');
             if (qmi >= 0) {
+                queryString = uri.substring(qmi + 1);
                 decodeParms(uri.substring(qmi + 1), parms);
                 uri = decodePercent(uri.substring(0, qmi));
             } else {
                 uri = decodePercent(uri);
             }
+            
 
             // If there's another token, its protocol version,
             // followed by HTTP headers.
@@ -124,6 +126,7 @@ public class HttpParsing {
             }
 
             pre.put("uri", uri);
+            pre.put("queryString", queryString);
         } catch (IOException ioe) {
             throw new HaltException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
         }
@@ -252,7 +255,7 @@ public class HttpParsing {
                 headers.put("http-client-ip", remoteIp);
             }
 
-            uri = pre.get("uri");
+            uri = pre.get("uri") + (pre.get("queryString").isEmpty() ? "" : "?" + pre.get("queryString"));
             
             headers.put("protocolVersion", pre.get("protocolVersion"));
 

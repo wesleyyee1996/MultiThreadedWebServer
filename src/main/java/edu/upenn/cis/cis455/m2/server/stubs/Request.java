@@ -75,7 +75,7 @@ public abstract class Request extends edu.upenn.cis.cis455.m1.server.stubs.Reque
     public abstract Map<String, String> cookies();
     
     public String cookie(String name) {
-        if (name == null)
+        if (name == null || cookies() == null)
             return null;
         else
             return cookies().get(name);
