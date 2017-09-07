@@ -26,11 +26,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m2.server;
+package edu.upenn.cis.cis455.handlers;
 
-import edu.upenn.cis.cis455.m1.server.stubs.Request;
-import edu.upenn.cis.cis455.m1.server.stubs.Response;
+import edu.upenn.cis.cis455.m1.server.interfaces.Request;
+import edu.upenn.cis.cis455.m1.server.interfaces.Response;
 
+/**
+ * A Route Handler is called when an HTTP request maps to the assigned route.
+ * It is given Request info.
+ */
 @FunctionalInterface
 public interface Route {
     

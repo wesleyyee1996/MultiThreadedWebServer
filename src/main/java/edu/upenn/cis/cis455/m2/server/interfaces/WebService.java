@@ -26,24 +26,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m2.server.stubs;
+package edu.upenn.cis.cis455.m2.server.interfaces;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.handlers.Filter;
+import edu.upenn.cis.cis455.handlers.Route;
 import edu.upenn.cis.cis455.m1.server.HttpServer;
-import edu.upenn.cis.cis455.m2.server.Filter;
-import edu.upenn.cis.cis455.m2.server.Route;
 
-public abstract class Service {
-    final static Logger logger = LogManager.getLogger(Service.class);
+public abstract class WebService {
+    final static Logger logger = LogManager.getLogger(WebService.class);
 
     protected HttpServer basicServer;
     protected int port = 8080;
     protected int workers = 10;
     
-    public Service() {
+    protected Path fileRoot = Paths.get("./www");
+    
+    public WebService() {
         basicServer = new HttpServer(port, workers);
     }
 
@@ -103,6 +108,7 @@ public abstract class Service {
      * Set the root directory of the "static web" files
      */
     public void staticFileLocation(String directory) {
+        fileRoot = Paths.get(directory);
         basicServer.setFileRoot(directory);
     }
     

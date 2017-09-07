@@ -54,6 +54,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
+import edu.upenn.cis.cis455.exceptions.ClosedConnectionException;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 
 
@@ -222,7 +223,7 @@ public class HttpParsing {
             try {
                 read = inputStream.read(buf, 0, BUFSIZE);
             } catch (IOException e) {
-                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST);
+                throw new ClosedConnectionException();
             }
             if (read == -1) {
                 throw new HaltException(HttpServletResponse.SC_BAD_REQUEST);
@@ -258,6 +259,8 @@ public class HttpParsing {
             uri = pre.get("uri") + (pre.get("queryString").isEmpty() ? "" : "?" + pre.get("queryString"));
             
             headers.put("protocolVersion", pre.get("protocolVersion"));
+            
+            headers.put("Method", pre.get("method"));
 
 //            this.cookies = new CookieHandler(this.headers);
 
@@ -291,23 +294,12 @@ public class HttpParsing {
 //            }
         } catch (SocketException e) {
             // throw it out to close socket object (finalAccept)
-            throw e;
+            throw new ClosedConnectionException();
         } catch (SocketTimeoutException ste) {
             // treat socket timeouts the same way we treat socket exceptions
             // i.e. close the stream & finalAccept object by throwing the
             // exception up the call stack.
-            throw ste;
-//        } catch (IOException ioe) {
-//            Response resp = Response.newFixedLengthResponse(Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
-//            resp.send(this.outputStream);
-//            NanoHTTPD.safeClose(this.outputStream);
-//        } catch (ResponseException re) {
-//            Response resp = Response.newFixedLengthResponse(re.getStatus(), NanoHTTPD.MIME_PLAINTEXT, re.getMessage());
-//            resp.send(this.outputStream);
-//            NanoHTTPD.safeClose(this.outputStream);
-//        } finally {
-//            NanoHTTPD.safeClose(r);
-//            this.tempFileManager.clear();
+            throw new ClosedConnectionException();
         }
         
         return uri;
@@ -409,17 +401,18 @@ public class HttpParsing {
     }
 
     public static String getMimeType(String path) {
-        String endsWith = path.lastIndexOf('.') >= 0 ? path.substring(path.lastIndexOf('.') + 1) : path;
+        if (path == null)
+            return "";
         
-        if (endsWith.equals("html") || endsWith.equals("htm"))
+        if (path.endsWith(".html") || path.endsWith("htm"))
             return "text/html";
-        if (endsWith.equals("txt") || endsWith.equals("text"))
+        if (path.endsWith("txt") || path.endsWith("text"))
             return "text/plain";
-        if (endsWith.equals("gif"))
+        if (path.endsWith("gif"))
             return "image/gif";
-        if (endsWith.equals("jpg") || endsWith.equals("jpeg"))
+        if (path.endsWith("jpg") || path.endsWith("jpeg"))
             return "image/jpeg";
-        
+            
         return "octet/stream";
     }
 }

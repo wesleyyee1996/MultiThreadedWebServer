@@ -1,10 +1,13 @@
-package edu.upenn.cis.cis455.m2.server.stubs;
+package edu.upenn.cis.cis455.m2.server.interfaces;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class Request extends edu.upenn.cis.cis455.m1.server.stubs.Request {
+/**
+ * Expanded version of the request API for Milestone 2
+ */
+public abstract class Request extends edu.upenn.cis.cis455.m1.server.interfaces.Request {
     /**
      * @return Gets the session associated with this request
      */
@@ -81,5 +84,5 @@ public abstract class Request extends edu.upenn.cis.cis455.m1.server.stubs.Reque
             return cookies().get(name);
     }
     
-    
+
 }

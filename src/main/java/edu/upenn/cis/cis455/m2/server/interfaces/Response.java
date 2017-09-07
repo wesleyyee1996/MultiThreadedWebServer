@@ -1,6 +1,6 @@
-package edu.upenn.cis.cis455.m2.server.stubs;
+package edu.upenn.cis.cis455.m2.server.interfaces;
 
-public abstract class Response extends edu.upenn.cis.cis455.m1.server.stubs.Response {
+public abstract class Response extends edu.upenn.cis.cis455.m1.server.interfaces.Response {
     /**
      * Add a header key/value
      */
