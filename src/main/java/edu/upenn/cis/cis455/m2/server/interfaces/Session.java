@@ -1,4 +1,4 @@
-package edu.upenn.cis.cis455.m2.server.stubs;
+package edu.upenn.cis.cis455.m2.server.interfaces;
 
 import java.util.Set;
 

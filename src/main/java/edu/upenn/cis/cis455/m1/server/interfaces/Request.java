@@ -26,11 +26,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m1.server.stubs;
+package edu.upenn.cis.cis455.m1.server.interfaces;
 
 import java.util.Set;
 
+/**
+ * Initial (simplified) request API, for Milestone 1
+ */
 public abstract class Request {
+    /**
+     * Indicates we have a persistent HTTP 1.1 connection
+     */
+    boolean persistent = false;
+    
     /**
      * The request method (GET, POST, ...)
      */
@@ -98,4 +106,17 @@ public abstract class Request {
     
     public abstract Set<String> headers();
     
+    /**
+     * Indicates we have a persistent HTTP 1.1 connection
+     */
+    public boolean persistentConnection() {
+        return persistent;
+    }
+    
+    /**
+     * Sets whether we have a persistent HTTP 1.1 connection
+     */
+    public void persistentConnection(boolean persistent) {
+        this.persistent = persistent;
+    }
 }

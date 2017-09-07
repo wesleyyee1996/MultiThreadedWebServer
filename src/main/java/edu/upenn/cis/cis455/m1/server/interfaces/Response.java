@@ -26,14 +26,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m1.server.stubs;
+package edu.upenn.cis.cis455.m1.server.interfaces;
 
 import java.io.UnsupportedEncodingException;
 
 public abstract class Response {
     protected int statusCode = 200;
     protected byte[] body;
-    protected String contentType = "text/plain";
+    protected String contentType = null;//"text/plain";
     
     public int status() {
         return statusCode;
@@ -73,4 +73,5 @@ public abstract class Response {
         this.contentType = contentType;
     }
     
+    public abstract String getHeaders();
 }
