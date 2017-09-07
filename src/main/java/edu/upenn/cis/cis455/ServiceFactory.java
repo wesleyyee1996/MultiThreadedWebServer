@@ -7,6 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.upenn.cis.cis455.m1.server.interfaces.WebService;
+import edu.upenn.cis.cis455.m1.server.interfaces.HttpRequestHandler;
+import edu.upenn.cis.cis455.m1.server.interfaces.Request;
+import edu.upenn.cis.cis455.m1.server.interfaces.Response;
+import edu.upenn.cis.cis455.m2.server.interfaces.Session;
+
+
 public class ServiceFactory {
 
     /**
@@ -24,7 +31,7 @@ public class ServiceFactory {
                          boolean keepAlive,
                          Map<String, String> headers,
                          Map<String, List<String>> parms) {
-        return new Cis455Request(socket, uri, keepAlive, headers, parms);                         
+        return null;
     }
     
     /**
