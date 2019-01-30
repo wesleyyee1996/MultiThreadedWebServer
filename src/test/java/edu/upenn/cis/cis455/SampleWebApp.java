@@ -7,9 +7,10 @@ public class SampleWebApp {
         WebServiceController.staticFileLocation("./www");
         
         // At this point, the web server should handle requests for static files from ./www
+        // if you open your web browser to the Preview URL
         
         
-        // Uncomment this for milestone 2: it will be a GET handler to a simple lambda function
-        WebServiceController.get("index.html", (request, response) -> "Hello World");
+        // TODO: Uncomment this for milestone 2: it will be a GET handler to a simple lambda function
+        // WebServiceController.get("index.html", (request, response) -> "Hello World");
     }
 }
