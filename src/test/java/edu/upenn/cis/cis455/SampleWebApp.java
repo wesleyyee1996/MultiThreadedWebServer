@@ -6,6 +6,8 @@ public class SampleWebApp {
         // Set the web server path to ./www
         WebServiceController.staticFileLocation("./www");
         
+        System.out.println("Here");
+        
         // At this point, the web server should handle requests for static files from ./www
         // if you open your web browser to the Preview URL
         

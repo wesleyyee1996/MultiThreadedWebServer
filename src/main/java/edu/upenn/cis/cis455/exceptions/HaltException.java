@@ -42,7 +42,7 @@ public class HaltException extends RuntimeException {
     }
     
     public HaltException(int statusCode) {
-        statusCode = statusCode;
+        this.statusCode = statusCode;
     }
     
     public HaltException(String body) {
