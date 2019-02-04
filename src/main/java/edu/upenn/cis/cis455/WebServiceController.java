@@ -34,7 +34,10 @@ package edu.upenn.cis.cis455;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.handlers.Filter;
 import edu.upenn.cis.cis455.handlers.Route;
-import edu.upenn.cis.cis455.m2.server.interfaces.WebService;
+// For milestone 1, use this:
+import edu.upenn.cis.cis455.m1.server.interfaces.WebService;
+// For milestone 2, use this:
+//import edu.upenn.cis.cis455.m2.server.interfaces.WebService;
 
 public class WebServiceController {
     
