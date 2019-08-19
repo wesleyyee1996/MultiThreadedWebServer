@@ -17,7 +17,7 @@ import edu.upenn.cis.cis455.m2.server.interfaces.Session;
 public class ServiceFactory {
 
     /**
-     * Get the HTTP server associated with port 8080
+     * Get the HTTP server associated with port 45555
      */
     public static WebService getServerInstance() {
         return null;
