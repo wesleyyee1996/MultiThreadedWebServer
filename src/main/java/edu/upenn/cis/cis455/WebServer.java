@@ -9,6 +9,11 @@ public class WebServer {
 		// TODO: make sure you parse *BOTH* command line arguments properly
 
 		// TODO: launch your server daemon
+		
+
+		// All user routes should go below here...
+
+		// ... and above here. Leave this comment for the Spark comparator tool
 
 		System.out.println("Waiting to handle requests!");
 	}
