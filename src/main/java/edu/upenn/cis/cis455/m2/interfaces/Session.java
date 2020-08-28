@@ -1,4 +1,4 @@
-package edu.upenn.cis.cis455.m2.server.interfaces;
+package edu.upenn.cis.cis455.m2.interfaces;
 
 import java.util.Set;
 
@@ -43,7 +43,7 @@ public abstract class Session {
     public abstract void attribute(String name, Object value);
     
     /**
-     * Get an object associatd with the name
+     * Get an object associated with the name
      */
     public abstract Object attribute(String name);
     

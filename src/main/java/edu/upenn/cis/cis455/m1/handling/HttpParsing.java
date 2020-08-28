@@ -31,7 +31,7 @@
  * #L%
  */
 
-package edu.upenn.cis.cis455.util;
+package edu.upenn.cis.cis455.m1.handling;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -60,6 +60,7 @@ import edu.upenn.cis.cis455.exceptions.HaltException;
 
 /**
  * Header parsing help, largely derived from NanoHttpd, copyright notice above.
+ * Feel free to modify as needed.
  */
 public class HttpParsing {
     final static Logger logger = LogManager.getLogger(HttpParsing.class);
@@ -74,49 +75,45 @@ public class HttpParsing {
     /**
      * Decodes the sent headers and loads the data into Key/value pairs
      */
-    public static void decodeHeader(BufferedReader in, Map<String, String> pre, Map<String, List<String>> parms, Map<String, String> headers) throws HaltException {
+    public static void decodeHeader(BufferedReader in, Map<String, String> pre, Map<String, List<String>> parms,
+                                    Map<String, String> headers) throws HaltException {
         try {
             // Read the request line
-            String inLine = in.readLine();
-            if (inLine == null) {
+            String requestLine = in.readLine();
+            if (requestLine == null) {
                 return;
             }
+            StringTokenizer st = new StringTokenizer(requestLine);
 
-            StringTokenizer st = new StringTokenizer(inLine);
+            // Get method
             if (!st.hasMoreTokens()) {
-                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Syntax error. Usage: GET /example/file.html");
+                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Syntax error. Usage: GET /example/file.html HTTP/1.1");
             }
-
             pre.put("method", st.nextToken());
 
+            // Get URI and params
             if (!st.hasMoreTokens()) {
-                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.html");
+                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.html HTTP/1.1");
             }
-
             String uri = st.nextToken();
-            String queryString = "";
-
-            // Decode parameters from the URI
             int qmi = uri.indexOf('?');
             if (qmi >= 0) {
-                queryString = uri.substring(qmi + 1);
+                pre.put("queryString", uri.substring(qmi + 1));
+                pre.put("uri",decodePercent(uri.substring(0, qmi)));
                 decodeParms(uri.substring(qmi + 1), parms);
-                uri = decodePercent(uri.substring(0, qmi));
             } else {
-                uri = decodePercent(uri);
+                pre.put("queryString", "");
+                pre.put("uri",decodePercent(uri));
             }
-            
 
-            // If there's another token, its protocol version,
-            // followed by HTTP headers.
-            // NOTE: this now forces header names lower case since they are
-            // case insensitive and vary by client.
-            if (st.hasMoreTokens()) {
-                pre.put("protocolVersion", st.nextToken());
-            } else {
-                pre.put("protocolVersion", "HTTP/1.1");
-                logger.debug("No protocol version specified, strange. Assuming HTTP/1.1.");
+            // Get HTTP protocol
+            // NOTE: this now forces header names lower case since they are case insensitive and vary by client.
+            if (!st.hasMoreTokens()) {
+                throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.html HTTP/1.1");
             }
+            pre.put("protocolVersion", st.nextToken());
+
+            // Get Headers
             String line = in.readLine();
             while (line != null && !line.trim().isEmpty()) {
                 int p = line.indexOf(':');
@@ -125,9 +122,6 @@ public class HttpParsing {
                 }
                 line = in.readLine();
             }
-
-            pre.put("uri", uri);
-            pre.put("queryString", queryString);
         } catch (IOException ioe) {
             throw new HaltException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
         }
@@ -257,41 +251,10 @@ public class HttpParsing {
             }
 
             uri = pre.get("uri") + (pre.get("queryString").isEmpty() ? "" : "?" + pre.get("queryString"));
-            
+
+            headers.put("cookie", pre.get("cookie"));
             headers.put("protocolVersion", pre.get("protocolVersion"));
-            
             headers.put("Method", pre.get("method"));
-
-//            this.cookies = new CookieHandler(this.headers);
-
-//            String connection = headers.get("connection");
-//            boolean keepAlive = "HTTP/1.1".equals(pre.get("protocolVersion") )
-//                && (connection == null || !connection.matches("(?i).*close.*"));
-
-//            // Ok, now do the serve()
-//
-//            // TODO: long body_size = getBodySize();
-//            // TODO: long pos_before_serve = this.inputStream.totalRead()
-//            // (requires implementation for totalRead())
-//            r = httpd.handle(this);
-//            // TODO: this.inputStream.skip(body_size -
-//            // (this.inputStream.totalRead() - pos_before_serve))
-//
-//            if (r == null) {
-//                throw new HaltException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SERVER INTERNAL ERROR: Serve() returned a null response.");
-//            } else {
-//                String acceptEncoding = this.headers.get("accept-encoding");
-//                this.cookies.unloadQueue(r);
-//                r.setRequestMethod(this.method);
-//                if (acceptEncoding == null || !acceptEncoding.contains("gzip")) {
-//                    r.setUseGzip(false);
-//                }
-//                r.setKeepAlive(keepAlive);
-//                r.send(this.outputStream);
-//            }
-//            if (!keepAlive || r.isCloseConnection()) {
-//                throw new SocketException("NanoHttpd Shutdown");
-//            }
         } catch (SocketException e) {
             // throw it out to close socket object (finalAccept)
             throw new ClosedConnectionException();
@@ -412,7 +375,9 @@ public class HttpParsing {
             return "image/gif";
         if (path.endsWith("jpg") || path.endsWith("jpeg"))
             return "image/jpeg";
-            
+        if(path.endsWith("ico"))
+        	return "image/x-icon";
+
         return "octet/stream";
     }
 }

@@ -1,7 +1,7 @@
 /**
  * CIS 455/555 route-based HTTP framework
  * 
- * Z. Ives, 8/2017
+ * V. Liu, Z. Ives
  * 
  * Portions excerpted from or inspired by Spark Framework, 
  * 
@@ -26,10 +26,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.handlers;
 
-import edu.upenn.cis.cis455.m1.server.interfaces.Request;
-import edu.upenn.cis.cis455.m1.server.interfaces.Response;
+package edu.upenn.cis.cis455.m2.interfaces;
 
 /**
  * A Route Handler is called when an HTTP request maps to the assigned route.

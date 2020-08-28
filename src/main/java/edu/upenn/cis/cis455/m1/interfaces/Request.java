@@ -1,7 +1,7 @@
 /**
  * CIS 455/555 route-based HTTP framework
  * 
- * Z. Ives, 8/2017
+ * V. Liu, Z. Ives
  * 
  * Portions excerpted from or inspired by Spark Framework, 
  * 
@@ -26,9 +26,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m1.server.interfaces;
+package edu.upenn.cis.cis455.m1.interfaces;
 
 import java.util.Set;
+
 
 /**
  * Initial (simplified) request API, for Milestone 1

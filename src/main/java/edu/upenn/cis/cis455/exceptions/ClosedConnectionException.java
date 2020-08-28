@@ -1,7 +1,9 @@
 package edu.upenn.cis.cis455.exceptions;
 
 public class ClosedConnectionException extends HaltException {
-    public ClosedConnectionException() {
+	private static final long serialVersionUID = -8561030665797185655L;
+
+	public ClosedConnectionException() {
         super(0);
     }
 }

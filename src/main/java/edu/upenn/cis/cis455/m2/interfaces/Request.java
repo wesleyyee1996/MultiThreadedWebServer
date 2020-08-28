@@ -1,4 +1,4 @@
-package edu.upenn.cis.cis455.m2.server.interfaces;
+package edu.upenn.cis.cis455.m2.interfaces;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Expanded version of the request API for Milestone 2
  */
-public abstract class Request extends edu.upenn.cis.cis455.m1.server.interfaces.Request {
+public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request {
     /**
      * @return Gets the session associated with this request
      */

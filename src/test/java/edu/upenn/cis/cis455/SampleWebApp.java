@@ -1,10 +1,12 @@
 package edu.upenn.cis.cis455;
 
+import static edu.upenn.cis.cis455.WebServiceFactory.*;
+
 public class SampleWebApp {
     public static void main() {
         
         // Set the web server path to ./www
-        WebServiceController.staticFileLocation("./www");
+        staticFileLocation("./www");
         
         System.out.println("Here");
         
@@ -13,6 +15,6 @@ public class SampleWebApp {
         
         
         // TODO: Uncomment this for milestone 2: it will be a GET handler to a simple lambda function
-        // WebServiceController.get("index.html", (request, response) -> "Hello World");
+        // get("index.html", (request, response) -> "Hello World");
     }
 }

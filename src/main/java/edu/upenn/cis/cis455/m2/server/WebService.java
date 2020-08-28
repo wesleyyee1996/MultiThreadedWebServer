@@ -26,20 +26,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.upenn.cis.cis455.m2.server.interfaces;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+package edu.upenn.cis.cis455.m2.server;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.upenn.cis.cis455.exceptions.HaltException;
-import edu.upenn.cis.cis455.handlers.Filter;
-import edu.upenn.cis.cis455.handlers.Route;
-import edu.upenn.cis.cis455.m1.server.HttpServer;
+import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.m2.interfaces.Filter;
 
-public abstract class WebService extends edu.upenn.cis.cis455.m1.server.interfaces.WebService {
+public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
 
     public WebService() {
@@ -53,27 +48,27 @@ public abstract class WebService extends edu.upenn.cis.cis455.m1.server.interfac
     /**
      * Handle an HTTP POST request to the path
      */
-    public abstract void post(String path, Route route);
+    public void post(String path, Route route) {}
 
     /**
      * Handle an HTTP PUT request to the path
      */
-    public abstract void put(String path, Route route);
+    public void put(String path, Route route) {}
 
     /**
      * Handle an HTTP DELETE request to the path
      */
-    public abstract void delete(String path, Route route);
+    public void delete(String path, Route route) {}
 
     /**
      * Handle an HTTP HEAD request to the path
      */
-    public abstract void head(String path, Route route);
+    public void head(String path, Route route) {}
 
     /**
      * Handle an HTTP OPTIONS request to the path
      */
-    public abstract void options(String path, Route route);
+    public void options(String path, Route route) {}
     
     ///////////////////////////////////////////////////
     // HTTP request filtering
@@ -82,20 +77,20 @@ public abstract class WebService extends edu.upenn.cis.cis455.m1.server.interfac
     /**
      * Add filters that get called before a request
      */
-    public abstract void before(Filter filter);
+    public void before(Filter filter) {}
 
     /**
      * Add filters that get called after a request
      */
-    public abstract void after(Filter filter);
+    public void after(Filter filter) {}
     /**
      * Add filters that get called before a request
      */
-    public abstract void before(String path, String acceptType, Filter filter);
+    public void before(String path, String acceptType, Filter filter) {}
     /**
      * Add filters that get called after a request
      */
-    public abstract void after(String path, String acceptType, Filter filter);
+    public void after(String path, String acceptType, Filter filter) {}
     
    
 }

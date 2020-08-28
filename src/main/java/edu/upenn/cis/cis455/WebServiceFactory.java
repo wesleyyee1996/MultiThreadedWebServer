@@ -3,7 +3,7 @@
  * 
  * Basic service handler and route manager.
  * 
- * Z. Ives, 8/2017
+ * V. Liu, Z. Ives
  * 
  * Portions excerpted from or inspired by Spark Framework, 
  * 
@@ -32,67 +32,57 @@
 package edu.upenn.cis.cis455;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
-import edu.upenn.cis.cis455.handlers.Filter;
-import edu.upenn.cis.cis455.handlers.Route;
-// For milestone 1, use this:
-import edu.upenn.cis.cis455.m1.server.interfaces.WebService;
-// For milestone 2, use this:
-//import edu.upenn.cis.cis455.m2.server.interfaces.WebService;
 
-public class WebServiceController {
-    
+// change to m2.server.WebService for m2
+import edu.upenn.cis.cis455.m1.server.WebService;
+import edu.upenn.cis.cis455.m2.interfaces.Filter;
+import edu.upenn.cis.cis455.m1.interfaces.Route;
+
+public class WebServiceFactory {
+
     // We don't want people to use the constructor
-    protected WebServiceController() {}
-    
-    protected static WebService getInstance() {
-        // TODO: get a singletone instance of the WebService from the ServiceFactory
-        throw new UnsupportedOperationException("Not yet implemented!");
-    }
-    
-    ///////////////////////////////////////////////////
-    // HTTP requests
-    ///////////////////////////////////////////////////
-    
+    protected WebServiceFactory() {}
+
     /**
      * Handle an HTTP GET request to the path
      */
     public static void get(String path, Route route) {
-        getInstance().get(path, route);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP POST request to the path
      */
     public static void post(String path, Route route) {
-        getInstance().post(path, route);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP PUT request to the path
      */
     public static void put(String path, Route route) {
-        getInstance().put(path, route);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP DELETE request to the path
      */
     public static void delete(String path, Route route) {
-        getInstance().delete(path, route);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP HEAD request to the path
      */
     public static void head(String path, Route route) {
-        getInstance().head(path, route);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP OPTIONS request to the path
      */
     public static void options(String path, Route route) {
-        getInstance().options(path, route);
+    	throw new UnsupportedOperationException();
     }
     
     ///////////////////////////////////////////////////
@@ -103,46 +93,42 @@ public class WebServiceController {
      * Add filters that get called before a request
      */
     public static void before(Filter... filters) {
-        for (Filter filter: filters)
-            getInstance().before(filter);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(Filter... filters) {
-        for (Filter filter: filters)
-            getInstance().after(filter);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called before a request
      */
     public static void before(String path, String acceptType, Filter... filters) {
-        for (Filter filter: filters)
-            getInstance().before(path, acceptType, filter);
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(String path, String acceptType, Filter... filters) {
-        for (Filter filter: filters)
-            getInstance().after(path, acceptType, filter);
+    	throw new UnsupportedOperationException();
     }
     
     /**
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt() {
-        throw getInstance().halt();
+    	throw new UnsupportedOperationException();
     }
 
     /**
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt(int statusCode, String body) {
-        throw getInstance().halt(statusCode, body);
+    	throw new UnsupportedOperationException();
     }
 
     ////////////////////////////////////////////
@@ -153,38 +139,41 @@ public class WebServiceController {
      * Set the IP address to listen on (default 0.0.0.0)
      */
     public static void ipAddress(String ipAddress) {
-        getInstance().ipAddress(ipAddress);
+    	throw new UnsupportedOperationException();
     }
-    
+
+    /**
+     * Set the port to listen on (default 45555)
+     */
     public static void port(int port) {
-        getInstance().port(port);
+    	throw new UnsupportedOperationException();
     }
     
     /**
      * Set the size of the thread pool
      */
     public static void threadPool(int threads) {
-        getInstance().threadPool(threads);
+    	throw new UnsupportedOperationException();
     }
     
     /**
      * Set the root directory of the "static web" files
      */
     public static void staticFileLocation(String directory) {
-        getInstance().staticFileLocation(directory);
+    	throw new UnsupportedOperationException();
     }
     
     /**
      * Hold until the server is fully initialized
      */
     public static void awaitInitialization() {
-        getInstance().awaitInitialization();
+    	throw new UnsupportedOperationException();
     }
     
     /**
      * Gracefully shut down the server
      */
     public static void stop() {
-        getInstance().stop();
+    	throw new UnsupportedOperationException();
     }
 }

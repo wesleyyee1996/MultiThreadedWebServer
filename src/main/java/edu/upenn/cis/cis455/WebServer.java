@@ -1,5 +1,7 @@
 package edu.upenn.cis.cis455;
 
+import static edu.upenn.cis.cis455.WebServiceFactory.*;
+
 import org.apache.logging.log4j.Level;
 
 public class WebServer {
@@ -8,9 +10,10 @@ public class WebServer {
 
 		// TODO: make sure you parse *BOTH* command line arguments properly
 
-		// TODO: launch your server daemon
+		// TODO: add routes, etc.
 
 		System.out.println("Waiting to handle requests!");
+		awaitInitialization();
 	}
 
 }

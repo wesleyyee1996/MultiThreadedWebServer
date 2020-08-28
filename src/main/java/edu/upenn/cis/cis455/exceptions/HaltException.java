@@ -34,7 +34,9 @@ package edu.upenn.cis.cis455.exceptions;
 import javax.servlet.http.HttpServletResponse;
 
 public class HaltException extends RuntimeException {
-    int statusCode = HttpServletResponse.SC_OK;
+	private static final long serialVersionUID = -1781180700340240978L;
+
+	int statusCode = HttpServletResponse.SC_OK;
     private String body = null;
     
     public HaltException() {
