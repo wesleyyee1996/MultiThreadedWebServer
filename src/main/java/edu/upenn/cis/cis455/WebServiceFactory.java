@@ -32,10 +32,10 @@
 package edu.upenn.cis.cis455;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
-
-// change to m2.server.WebService for m2
-import edu.upenn.cis.cis455.m1.server.WebService;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
+
+// change all to edu.upenn.cis.cis455.m2 for m2
+import edu.upenn.cis.cis455.m1.server.WebService;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
 
 public class WebServiceFactory {
