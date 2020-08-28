@@ -4,11 +4,11 @@ import java.net.Socket;
 
 public class HttpTask {
     Socket requestSocket;
-    
+
     public HttpTask(Socket socket) {
         requestSocket = socket;
     }
-    
+
     public Socket getSocket() {
         return requestSocket;
     }

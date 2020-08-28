@@ -1,11 +1,9 @@
 package edu.upenn.cis.cis455.m2.interfaces;
 
-
 /**
- * A Filter is called by the Web server to process data before or after
- * the Route Handler is called.  This is typically used to attach
- * attributes or to call the HaltException, e.g., if the user is not
- * authorized.
+ * A Filter is called by the Web server to process data before or after the
+ * Route Handler is called. This is typically used to attach attributes or to
+ * call the HaltException, e.g., if the user is not authorized.
  */
 @FunctionalInterface
 public interface Filter {

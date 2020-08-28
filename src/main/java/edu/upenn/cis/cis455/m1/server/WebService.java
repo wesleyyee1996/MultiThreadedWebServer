@@ -89,10 +89,11 @@ public class WebService {
      * Set the root directory of the "static web" files
      */
     public void staticFileLocation(String directory) {}
-    
+
     ///////////////////////////////////////////////////
     // For more advanced capabilities
-    
+    ///////////////////////////////////////////////////
+
     /**
      * Handle an HTTP GET request to the path
      */
@@ -101,20 +102,20 @@ public class WebService {
     ////////////////////////////////////////////
     // Server configuration
     ////////////////////////////////////////////
-    
+
     /**
      * Set the IP address to listen on (default 0.0.0.0)
      */
     public void ipAddress(String ipAddress) {}
-    
+
     /**
      * Set the TCP port to listen on (default 45555)
      */
     public void port(int port) {}
-    
+
     /**
      * Set the size of the thread pool
      */
     public void threadPool(int threads) {}
-    
+
 }

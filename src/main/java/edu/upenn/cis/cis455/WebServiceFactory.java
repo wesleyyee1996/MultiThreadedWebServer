@@ -33,6 +33,7 @@ package edu.upenn.cis.cis455;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
+import edu.upenn.cis.cis455.m2.interfaces.Session;
 
 // change all to edu.upenn.cis.cis455.m2 for m2
 import edu.upenn.cis.cis455.m1.server.WebService;
@@ -47,133 +48,141 @@ public class WebServiceFactory {
      * Handle an HTTP GET request to the path
      */
     public static void get(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP POST request to the path
      */
     public static void post(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP PUT request to the path
      */
     public static void put(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP DELETE request to the path
      */
     public static void delete(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP HEAD request to the path
      */
     public static void head(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Handle an HTTP OPTIONS request to the path
      */
     public static void options(String path, Route route) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     ///////////////////////////////////////////////////
     // HTTP request filtering
     ///////////////////////////////////////////////////
-    
+
     /**
      * Add filters that get called before a request
      */
     public static void before(Filter... filters) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(Filter... filters) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called before a request
      */
     public static void before(String path, String acceptType, Filter... filters) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(String path, String acceptType, Filter... filters) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt() {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt(int statusCode, String body) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     ////////////////////////////////////////////
     // Server configuration
     ////////////////////////////////////////////
-    
+
     /**
      * Set the IP address to listen on (default 0.0.0.0)
      */
     public static void ipAddress(String ipAddress) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Set the port to listen on (default 45555)
      */
     public static void port(int port) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Set the size of the thread pool
      */
     public static void threadPool(int threads) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Set the root directory of the "static web" files
      */
     public static void staticFileLocation(String directory) {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Hold until the server is fully initialized
      */
     public static void awaitInitialization() {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Gracefully shut down the server
      */
     public static void stop() {
-    	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
+    }
+
+    public static String createSession() {
+        throw new UnsupportedOperationException();
+    }
+
+    public static Session getSession(String id) {
+        throw new UnsupportedOperationException();
     }
 }

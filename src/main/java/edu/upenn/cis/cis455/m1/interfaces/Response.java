@@ -30,20 +30,19 @@ package edu.upenn.cis.cis455.m1.interfaces;
 
 import java.io.UnsupportedEncodingException;
 
-
 public abstract class Response {
     protected int statusCode = 200;
     protected byte[] body;
-    protected String contentType = null;//"text/plain";
-    
+    protected String contentType = null; // e.g., "text/plain";
+
     public int status() {
         return statusCode;
     }
-    
+
     public void status(int statusCode) {
         this.statusCode = statusCode;
     }
-    
+
     public String body() {
         try {
             return body == null ? "" : new String(body, "UTF-8");
@@ -53,26 +52,26 @@ public abstract class Response {
             return "";
         }
     }
-    
+
     public byte[] bodyRaw() {
         return body;
     }
-    
+
     public void bodyRaw(byte[] b) {
         body = b;
     }
-    
+
     public void body(String body) {
         this.body = body == null ? null : body.getBytes();
     }
-    
+
     public String type() {
         return contentType;
     }
-    
+
     public void type(String contentType) {
         this.contentType = contentType;
     }
-    
+
     public abstract String getHeaders();
 }

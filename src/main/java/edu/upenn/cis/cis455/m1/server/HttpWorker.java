@@ -5,8 +5,8 @@ package edu.upenn.cis.cis455.m1.server;
  */
 public class HttpWorker implements Runnable {
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+    }
 }

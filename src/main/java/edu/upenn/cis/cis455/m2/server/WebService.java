@@ -41,10 +41,10 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
         super();
     }
 
-    
     ///////////////////////////////////////////////////
     // For more advanced capabilities
-    
+    ///////////////////////////////////////////////////
+
     /**
      * Handle an HTTP POST request to the path
      */
@@ -69,11 +69,11 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
      * Handle an HTTP OPTIONS request to the path
      */
     public void options(String path, Route route) {}
-    
+
     ///////////////////////////////////////////////////
     // HTTP request filtering
     ///////////////////////////////////////////////////
-    
+
     /**
      * Add filters that get called before a request
      */
@@ -91,6 +91,6 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
      * Add filters that get called after a request
      */
     public void after(String path, String acceptType, Filter filter) {}
-    
-   
+
+
 }

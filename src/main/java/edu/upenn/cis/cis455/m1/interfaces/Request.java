@@ -30,7 +30,6 @@ package edu.upenn.cis.cis455.m1.interfaces;
 
 import java.util.Set;
 
-
 /**
  * Initial (simplified) request API, for Milestone 1
  */
@@ -39,7 +38,7 @@ public abstract class Request {
      * Indicates we have a persistent HTTP 1.1 connection
      */
     boolean persistent = false;
-    
+
     /**
      * The request method (GET, POST, ...)
      */
@@ -48,33 +47,33 @@ public abstract class Request {
     /**
      * @return The host
      */
-    public abstract String host();  
-    
+    public abstract String host();
+
     /**
      * @return The user-agent
      */
     public abstract String userAgent();
-    
+
     /**
      * @return The server port
      */
     public abstract int port();
-    
+
     /**
      * @return The path
      */
     public abstract String pathInfo();
-    
+
     /**
      * @return The URL
      */
     public abstract String url();
-    
+
     /**
      * @return The URI up to the query string
      */
     public abstract String uri();
-    
+
     /**
      * @return The protocol name and version from the request
      */
@@ -84,36 +83,36 @@ public abstract class Request {
      * @return The MIME type of the body
      */
     public abstract String contentType();
-    
+
     /**
      * @return The client's IP address
      */
     public abstract String ip();
-    
+
     /**
      * @return The request body sent by the client
      */
     public abstract String body();
-    
+
     /**
      * @return The length of the body
      */
     public abstract int contentLength();
-    
+
     /**
      * @return Get the item from the header
      */
     public abstract String headers(String name);
-    
+
     public abstract Set<String> headers();
-    
+
     /**
      * Indicates we have a persistent HTTP 1.1 connection
      */
     public boolean persistentConnection() {
         return persistent;
     }
-    
+
     /**
      * Sets whether we have a persistent HTTP 1.1 connection
      */
