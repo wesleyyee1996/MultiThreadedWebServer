@@ -1,6 +1,8 @@
 #!/bin/bash
 # Author: @miabelar F20
 
+MAXWAIT=60
+
 # go to the same directory as the script. Makes edge cases easier
 cd "$(dirname "$0")"
 
@@ -49,8 +51,8 @@ if [[ $1 == "make" ]]; then
     fi
     cp -r ./src ./spark_version/src
     # go in and replace imports to spark
-    sed -i 's@import static edu.upenn.cis.cis455.WebServiceController.*;@import static spark.Spark.*;@g' ./spark_version/src/main/java/edu/upenn/cis/cis455/WebServer.java
-    sed -i 's@import edu.upenn.cis.cis455.m2.server.interfaces.Session;@//import edu.upenn.cis.cis455.m2.server.interfaces.Session;@g' ./spark_version/src/main/java/edu/upenn/cis/cis455/WebServer.java
+    sed -i 's@import static edu.upenn.cis.cis455.WebServiceFactory.*;@import static spark.Spark.*;\nimport spark.*;@g' ./spark_version/src/main/java/edu/upenn/cis/cis455/WebServer.java
+    sed -i 's@import edu.upenn.cis.cis455.m2.interfaces@//import edu.upenn.cis.cis455.m2.interfaces@g' ./spark_version/src/main/java/edu/upenn/cis/cis455/WebServer.java
     # add an afterAfter filter for headers to match writeup
     sed -i '/Leave this comment for the Spark comparator tool/a afterAfter((req, res) -> {\n\t\t\tres.header("Content-Length", "" + res.body().length());\n\t\t\tres.header("Connection", "close");\n\t\t});' ./spark_version/src/main/java/edu/upenn/cis/cis455/WebServer.java
     exit 0
@@ -75,14 +77,14 @@ if [[ $1 == "up" ]]; then
         eval "mvn install exec:java -Dexec.args='45555 $(pwd)/www' &" >/dev/null
         # wait for port to be listening
         # wait max for 10 seconds
-        echo "Starting original server..."
+        echo "Starting original server... (waiting max ${MAXWAIT} seconds)"
         original_server_counter=0
-        while [ -z "$(lsof -t -i:45555)" ] && [ $original_server_counter -lt 10 ]
+        while [ -z "$(lsof -t -i:45555)" ] && [ $original_server_counter -lt ${MAXWAIT} ]
         do
          sleep 1
          original_server_counter=$(( $original_server_counter + 1 ))
         done
-        if [ $original_server_counter -eq 10 ] ; then 
+        if [ $original_server_counter -eq ${MAXWAIT} ] ; then 
             echo "Original server could not start"
             fuser -k 45555/tcp  > /dev/null 2>&1
             fuser -k 45556/tcp  > /dev/null 2>&1
@@ -91,17 +93,17 @@ if [[ $1 == "up" ]]; then
         echo "Original server running"
         # start the spark server
         cd ./spark_version
-        echo "Starting spark server..."
+        echo "Starting spark server... (waiting max ${MAXWAIT} seconds)"
         eval "mvn install exec:java -Dexec.args='45556 $(pwd)/www' &" >/dev/null
         # wait for port to be listening
         # listen max for 10 seconds
         spark_server_counter=0
-        while [ -z "$(lsof -t -i:45556)" ] && [ $spark_server_counter -lt 10 ]
+        while [ -z "$(lsof -t -i:45556)" ] && [ $spark_server_counter -lt ${MAXWAIT} ]
         do
          sleep 1
          spark_server_counter=$(( $spark_server_counter + 1 ))
         done
-        if [ $spark_server_counter -eq 10 ] ; then 
+        if [ $spark_server_counter -eq ${MAXWAIT} ] ; then 
             echo "Spark server could not start. This could be transient. Please try again before looking into why the server did not start."
             fuser -k 45555/tcp  > /dev/null 2>&1
             fuser -k 45556/tcp  > /dev/null 2>&1
@@ -144,6 +146,8 @@ if [[ $1 == "diff" ]]; then
         # filter unnecessary headers
         original_res=$(echo "$original_res" | sed "/Server:/d")
         spark_res=$(echo "$spark_res" | sed "/Server:/d")
+        original_res=$(echo "$original_res" | sed "/Date:/d")
+        spark_res=$(echo "$spark_res" | sed "/Date:/d")
         # sort content
         sorted_original_res=$(sort <(echo "$original_res"))
         sorted_spark_res=$(sort <(echo "$spark_res"))
@@ -162,7 +166,7 @@ if [[ $1 == "diff" ]]; then
     exit 0
 fi
 
-if [[ $1 == "halt" ]]; then 
+if [[ $1 == "halt" || $1 == "clean" ]]; then 
     if [ -d ./spark_version ] ; then
         echo "Shutting down servers..."
         # sometimes weird output comes when killing the servers
