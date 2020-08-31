@@ -43,6 +43,11 @@ if [[ $1 == "make" ]]; then
         echo "Directory already exists"
         exit 0
     fi
+    isCommentInFile=$(cat ./src/main/java/edu/upenn/cis/cis455/WebServer.java | grep -c "Leave this comment for the Spark comparator tool")
+    if [ $isCommentInFile -eq 0 ]; then
+       echo "Error: You need to have the following comment in your WebServer.java: // ... and above here. Leave this comment for the Spark comparator tool";
+       exit 0;
+    fi
     # make folder and copy
     mkdir ./spark_version
     cp ./pom.xml ./spark_version
