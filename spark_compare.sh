@@ -182,13 +182,16 @@ if [[ $1 == "halt" || $1 == "clean" ]]; then
     else
         echo "You need to run make"
     fi
-    exit 0
 fi
 
 if [[ $1 == "clean" ]]; then 
     if [ -d ./spark_version ] ; then
         rm -rf ./spark_version
     fi
+    exit 0
+fi
+
+if [[ $1 == "halt" ]]; then
     exit 0
 fi
 
