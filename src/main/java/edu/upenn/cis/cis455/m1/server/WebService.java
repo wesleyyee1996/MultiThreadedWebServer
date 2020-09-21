@@ -1,4 +1,4 @@
-/**
+/*
  * CIS 455/555 route-based HTTP framework
  * 
  * V. Liu, Z. Ives
@@ -28,31 +28,52 @@
  */
 package edu.upenn.cis.cis455.m1.server;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import java.io.IOException;
+
+import java.net.ServerSocket;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
+import edu.upenn.cis.cis455.m1.server.*;
 
 public class WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
 
     protected HttpListener listener;
-
+    protected ThreadPool threadPool;
+    protected int threadPoolSize;
+    protected int port;
+    protected String root_dir;
+    protected String ip_address;
+    
     /**
      * Launches the Web server thread pool and the listener
+     * @throws IOException 
      */
-    public void start() {}
+    public void start() throws IOException {
+    	
+    	threadPool = new ThreadPool(threadPoolSize); 	
+    	listener = new HttpListener(this.port, this.root_dir);
+    }
 
     /**
      * Gracefully shut down the server
      */
-    public void stop() {}
+    public void stop() {
+    	threadPool.shutdownPool();
+    }
 
     /**
      * Hold until the server is fully initialized
+     * @throws IOException 
      */
-    public void awaitInitialization() {
+    public void awaitInitialization() throws IOException {
         logger.info("Initializing server");
         start();
     }
@@ -88,7 +109,9 @@ public class WebService {
     /**
      * Set the root directory of the "static web" files
      */
-    public void staticFileLocation(String directory) {}
+    public void staticFileLocation(String directory) {
+    	this.root_dir = directory;
+    }
 
     ///////////////////////////////////////////////////
     // For more advanced capabilities
@@ -106,16 +129,22 @@ public class WebService {
     /**
      * Set the IP address to listen on (default 0.0.0.0)
      */
-    public void ipAddress(String ipAddress) {}
+    public void ipAddress(String ipAddress) {
+    	this.ip_address = ipAddress;
+    }
 
     /**
      * Set the TCP port to listen on (default 45555)
      */
-    public void port(int port) {}
+    public void port(int port) {
+    	this.port = port;
+    }
 
     /**
      * Set the size of the thread pool
      */
-    public void threadPool(int threads) {}
+    public void SetThreadPool(int threads) {
+    	this.threadPoolSize = threads;
+    }
 
 }
