@@ -35,10 +35,12 @@ public class HttpListener implements Runnable {
     			Socket socket = serverSocket.accept();
         		System.out.println("accepted socket");
     			
-        		HttpTask task = new HttpTask(socket);
+        		HttpTask task = new HttpTask(socket, port, root_dir);
         		
         		//HttpTaskQueue taskQueue = new HttpTaskQueue();
         		//taskQueue.addTask(task);
+        		
+        		//TODO: use thread pool to assign worker to task from task queue
         		
         		HttpWorker worker = new HttpWorker(task);    
         		worker.run();

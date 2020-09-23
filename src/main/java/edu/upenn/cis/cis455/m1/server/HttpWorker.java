@@ -1,9 +1,11 @@
 package edu.upenn.cis.cis455.m1.server;
 
+import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
 import edu.upenn.cis.cis455.m1.interfaces.GetResponse;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
+import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
 import edu.upenn.cis.cis455.m1.server.*;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class HttpWorker implements Runnable {
 	
 	public HttpWorker (HttpTask task) {
 		this.httpTask = task;
-		this.socket = httpTask.requestSocket;
+		this.socket = httpTask.getSocket();
 		System.out.println("worker started");
 	}
 	
@@ -34,11 +36,15 @@ public class HttpWorker implements Runnable {
     	// Use HttpIoHandler to parse socket data
     	try {
     		HttpIoHandler httpHandler = new HttpIoHandler();
-    		httpHandler.readInputStream(socket);
     		
-    		inputStream = this.socket.getInputStream();
-    		outputStream = this.socket.getOutputStream();
+    		// Parse input stream
+    		httpHandler.parseInputStream(socket);
+    		
+    		// Based on request type, create a 
+    		String requestType = httpHandler.parsedRequestLine.get(Constants.Method);
+    		
     		// Create a request
+    		Request request = createRequest(requestType);
     		
     	    String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Simple Java HTTP Server</h1></body></html>";
     		
@@ -95,14 +101,12 @@ public class HttpWorker implements Runnable {
     	// Create a response
     }
     
-	public Request createRequest(Socket socket) {
-	    	
-	    	InputStream inputStream = null;
-	    	OutputStream outputStream = null;
-	    	
-	    	Request request = new GetRequest();
-	    	
-	    	return request;
+	/** Uses RequestFactory to create and get a new Request based on requestType
+	 * @param requestType
+	 * @return
+	 */
+	public Request createRequest(String requestType) {
+	    	return RequestFactory.getRequest(requestType);
 	}
     
     public GetResponse createGetResponse() {

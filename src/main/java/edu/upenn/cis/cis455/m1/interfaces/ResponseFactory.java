@@ -10,6 +10,9 @@ public class ResponseFactory {
 		if (responseType == Constants.get) {
 			return new GetResponse();
 		}
+		if (responseType == Constants.head) {
+			return new HeadResponse();
+		}
 		throw new IOException("Invalid response type: " + responseType);
 	}
 }
