@@ -1,12 +1,16 @@
 package edu.upenn.cis.cis455;
 
 import static edu.upenn.cis.cis455.WebServiceFactory.*;
+
+import java.io.IOException;
 import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
 
+import edu.upenn.cis.cis455.m2.server.WebService;
+
 public class WebServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         org.apache.logging.log4j.core.config.Configurator.setLevel("edu.upenn.cis.cis455", Level.DEBUG);
 
         Integer port = 45555;
@@ -30,18 +34,23 @@ public class WebServer {
         	root_dir = args[1];
         }
     	// TODO: make sure you parse *BOTH* command line arguments properly
-    	port(port);
-    	staticFileLocation(root_dir);
+    	//port(port);
+    	//staticFileLocation(root_dir);
                         
             // All user routes should go below here...
 
             // ... and above here. Leave this comment for the Spark comparator tool
 
         
-        System.out.println(port);
-        System.out.println(root_dir);
+        //System.out.println(port);
+        //System.out.println(root_dir);
         
         System.out.println("Waiting to handle requests!");
+        
+        WebService webService = new WebService();
+        webService.port(port);
+        webService.staticFileLocation(root_dir);
+        webService.start();
         //awaitInitialization();
     }
 

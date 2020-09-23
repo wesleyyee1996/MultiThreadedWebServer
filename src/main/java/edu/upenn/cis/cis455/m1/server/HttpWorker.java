@@ -1,32 +1,115 @@
 package edu.upenn.cis.cis455.m1.server;
 
+import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
+import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
+import edu.upenn.cis.cis455.m1.interfaces.GetResponse;
+import edu.upenn.cis.cis455.m1.interfaces.Request;
+import edu.upenn.cis.cis455.m1.interfaces.Response;
+import edu.upenn.cis.cis455.m1.server.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
 /**
  * Stub class for a thread worker that handles Web requests
  */
 public class HttpWorker implements Runnable {
 
 	private HttpTask httpTask;
+	private Socket socket;
 	
 	public HttpWorker (HttpTask task) {
 		this.httpTask = task;
+		this.socket = httpTask.requestSocket;
+		System.out.println("worker started");
 	}
 	
     @Override
     public void run() {
         // TODO Auto-generated method stub
+    	InputStream inputStream = null;
+    	OutputStream outputStream = null;
     	
     	// Use HttpIoHandler to parse socket data
+    	try {
+    		HttpIoHandler httpHandler = new HttpIoHandler();
+    		httpHandler.readInputStream(socket);
+    		
+    		inputStream = this.socket.getInputStream();
+    		outputStream = this.socket.getOutputStream();
+    		// Create a request
+    		
+    	    String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Simple Java HTTP Server</h1></body></html>";
+    		
+    		String CRLF = "\r\n";
+    		
+        	String response = 
+        			"HTTP/1.0 200 OK" + CRLF +
+        			"Content-Length: " + html.getBytes().length + CRLF +
+        			CRLF + 
+        			html + 
+        			CRLF + CRLF;
+        	
+        	System.out.println(response);
+        	
+        	outputStream.write(response.getBytes());
+        	
+        	inputStream.close();
+        	outputStream.close();
+        	socket.close();
+    	}
+    	catch (IOException e){
+    		System.out.println(e);
+    	}
+//    	finally {
+//    		if (inputStream != null) {
+//    			try {
+//    				outputStream.close();
+//    			}
+//    			catch (IOException e) {
+//    				System.out.println(e);
+//    			}
+//    		}
+//    		if (outputStream != null) {
+//    			try {
+//    				outputStream.close();
+//    			} catch (IOException e) {
+//    				System.out.println(e);
+//    			}
+//    		}
+//    		if (socket != null) {
+//    			try {
+//    				socket.close();
+//    			}
+//    			catch (IOException e){
+//    				System.out.println(e);
+//    			}
+//    		}
+//    	}
     	
-    	// Create a request
+    	
     	
     	// Call some type of RequestHandler to handle the request
     	
     	// Create a response
     }
     
-//    public Response createResponse() {
-//    	
-//    	
-//    }
+	public Request createRequest(Socket socket) {
+	    	
+	    	InputStream inputStream = null;
+	    	OutputStream outputStream = null;
+	    	
+	    	Request request = new GetRequest();
+	    	
+	    	return request;
+	}
+    
+    public GetResponse createGetResponse() {
+    	GetResponse response = new GetResponse();
+    	
+    	return response;
+    	
+    }
 
 }

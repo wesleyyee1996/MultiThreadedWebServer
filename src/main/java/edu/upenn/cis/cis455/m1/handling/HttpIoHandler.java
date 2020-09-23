@@ -22,29 +22,23 @@ public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
     
-    public Request createRequest(Socket socket) {
-    	
-    	InputStream inputStream = null;
-    	OutputStream outputStream = null;
-    	
-    	Request request = new GetRequest();
-    	
-    	return request;
-    }
-    
     public String readInputStream(Socket socket) {
     	String request = "";
 		try {
 	    	InputStreamReader reader = new InputStreamReader(socket.getInputStream());
 	    	BufferedReader in = new BufferedReader(reader);
 	    	while((request = in.readLine()) != null) {
-	    		
+	    		socket.getInputStream();
 	    	}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error reading socket input stream" + e.toString());
 		}
     	return request;
+    }
+    
+    public void writeToOutputString() {
+    	
     }
     
     /**

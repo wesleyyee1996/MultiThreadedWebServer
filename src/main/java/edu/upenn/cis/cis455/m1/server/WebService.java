@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.io.IOException;
 
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,8 +59,13 @@ public class WebService {
      */
     public void start() throws IOException {
     	
-    	threadPool = new ThreadPool(threadPoolSize); 	
+    	//Socket socket = new Socket();
+    	//HttpTask task = new HttpTask(socket);
+    	//HttpWorker worker = new HttpWorker(task);
+    	
+    	//threadPool = new ThreadPool(threadPoolSize); 	
     	listener = new HttpListener(this.port, this.root_dir);
+    	listener.run();
     }
 
     /**

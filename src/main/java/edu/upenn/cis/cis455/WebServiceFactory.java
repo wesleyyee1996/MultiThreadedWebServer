@@ -44,6 +44,15 @@ public class WebServiceFactory {
     // We don't want people to use the constructor
     protected WebServiceFactory() {}
 
+    public static WebService CreateWebService(int port, String root_dir) throws Exception{
+    	WebService webService = new WebService();
+    	webService.start();
+    	webService.SetThreadPool(5);
+    	webService.port(port);
+    	webService.staticFileLocation(root_dir);
+    	return webService;
+    }
+    
     /**
      * Handle an HTTP GET request to the path
      */
