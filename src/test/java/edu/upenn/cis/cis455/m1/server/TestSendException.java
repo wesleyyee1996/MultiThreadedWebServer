@@ -19,9 +19,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
-import edu.upenn.cis.cis455.TestHelper;
+
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
+import edu.upenn.cis.test.TestHelper;
 
 import org.apache.logging.log4j.Level;
 

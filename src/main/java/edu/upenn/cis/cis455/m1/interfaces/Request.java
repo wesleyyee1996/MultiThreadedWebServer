@@ -153,7 +153,7 @@ public abstract class Request {
     
     public abstract void setHeaders(Hashtable<String,String> headers);
 
-    public abstract Set<String> headers();
+    public abstract Hashtable<String,String> headers();
 
     /**
      * Indicates we have a persistent HTTP 1.1 connection

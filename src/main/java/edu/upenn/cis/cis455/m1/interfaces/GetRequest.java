@@ -92,9 +92,9 @@ public class GetRequest extends Request{
 	}
 
 	@Override
-	public Set<String> headers() {
+	public Hashtable<String,String> headers() {
 		// TODO Auto-generated method stub
-		return null;
+		return headers;
 	}
 
 	@Override
