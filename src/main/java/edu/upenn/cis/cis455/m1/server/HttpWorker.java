@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Hashtable;
 
 /**
  * Stub class for a thread worker that handles Web requests
@@ -20,6 +21,7 @@ public class HttpWorker implements Runnable {
 
 	private HttpTask httpTask;
 	private Socket socket;
+	private Hashtable<String,String> headers;
 	
 	public HttpWorker (HttpTask task) {
 		this.httpTask = task;
@@ -40,13 +42,12 @@ public class HttpWorker implements Runnable {
     		// Parse input stream
     		httpHandler.parseInputStream(socket);
     		
-    		// Based on request type, create a 
-    		String requestType = httpHandler.parsedRequestLine.get(Constants.Method);
+    		// Create a request based on the request type
+    		Request request = createRequest(httpHandler.parsedHeaders, httpTask);
     		
-    		// Create a request
-    		Request request = createRequest(requestType);
+    		String test = request.requestMethod();
     		
-    	    String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Simple Java HTTP Server</h1></body></html>";
+    	    String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Simple Java HTTP Server"+test+"</h1></body></html>";
     		
     		String CRLF = "\r\n";
     		
@@ -104,9 +105,11 @@ public class HttpWorker implements Runnable {
 	/** Uses RequestFactory to create and get a new Request based on requestType
 	 * @param requestType
 	 * @return
+	 * @throws IOException 
 	 */
-	public Request createRequest(String requestType) {
-	    	return RequestFactory.getRequest(requestType);
+	public Request createRequest(Hashtable<String,String> parsedHeaders, HttpTask httpTask) throws IOException {
+		RequestFactory requestFactory = new RequestFactory();
+    	return requestFactory.getRequest(parsedHeaders, httpTask);
 	}
     
     public GetResponse createGetResponse() {

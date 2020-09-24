@@ -89,7 +89,7 @@ public class HttpParsing {
             if (!st.hasMoreTokens()) {
                 throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Syntax error. Usage: GET /example/file.html HTTP/1.1");
             }
-            pre.put("method", st.nextToken());
+            pre.put("method", appendQuotes(st.nextToken()));
 
             // Get URI and params
             if (!st.hasMoreTokens()) {
@@ -98,12 +98,12 @@ public class HttpParsing {
             String uri = st.nextToken();
             int qmi = uri.indexOf('?');
             if (qmi >= 0) {
-                pre.put("queryString", uri.substring(qmi + 1));
-                pre.put("uri",decodePercent(uri.substring(0, qmi)));
+                pre.put("queryString", appendQuotes(uri.substring(qmi + 1)));
+                pre.put("uri",appendQuotes(decodePercent(uri.substring(0, qmi))));
                 decodeParms(uri.substring(qmi + 1), parms);
             } else {
                 pre.put("queryString", "");
-                pre.put("uri",decodePercent(uri));
+                pre.put("uri",appendQuotes(decodePercent(uri)));
             }
 
             // Get HTTP protocol
@@ -111,7 +111,7 @@ public class HttpParsing {
             if (!st.hasMoreTokens()) {
                 throw new HaltException(HttpServletResponse.SC_BAD_REQUEST, "BAD REQUEST: Missing URI. Usage: GET /example/file.html HTTP/1.1");
             }
-            pre.put("protocolVersion", st.nextToken());
+            pre.put("protocolVersion", appendQuotes(st.nextToken()));
 
             // Get Headers
             String line = in.readLine();
@@ -166,6 +166,11 @@ public class HttpParsing {
         return queryParameterString;
     }
 
+    
+    public static String appendQuotes(String str){
+    	return "\"" + str + "\"";
+    }
+    
 
     /**
      * Decode percent encoded <code>String</code> values.
@@ -252,7 +257,7 @@ public class HttpParsing {
 
             uri = pre.get("uri") + (pre.get("queryString").isEmpty() ? "" : "?" + pre.get("queryString"));
 
-            headers.put("cookie", pre.get("cookie"));
+            //headers.put("cookie", pre.get("cookie"));
             headers.put("protocolVersion", pre.get("protocolVersion"));
             headers.put("Method", pre.get("method"));
         } catch (SocketException e) {

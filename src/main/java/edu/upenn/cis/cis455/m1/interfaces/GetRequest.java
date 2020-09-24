@@ -100,79 +100,79 @@ public class GetRequest extends Request{
 	@Override
 	public void setRequestMethod(String requestMethod) {
 		// TODO Auto-generated method stub
-		
+		this.requestMethod = requestMethod;
 	}
 
 	@Override
 	public void setHost(String host) {
 		// TODO Auto-generated method stub
-		
+		this.host = host;
 	}
 
 	@Override
 	public void setUserAgent(String agent) {
 		// TODO Auto-generated method stub
-		
+		this.userAgent = agent;
 	}
 
 	@Override
 	public void setPort(int port) {
 		// TODO Auto-generated method stub
-		
+		this.port = port;
 	}
 
 	@Override
-	public void setPathInfo() {
+	public void setPathInfo(String pathInfo) {
 		// TODO Auto-generated method stub
-		
+		this.pathInfo = pathInfo;
 	}
 
 	@Override
 	public void setUrl(String url) {
 		// TODO Auto-generated method stub
-		
+		this.url = url;
 	}
 
 	@Override
 	public void setUri(String uri) {
 		// TODO Auto-generated method stub
-		
+		this.uri = uri;
 	}
 
 	@Override
 	public void setProtocol(String protocol) {
 		// TODO Auto-generated method stub
-		
+		this.protocol = protocol;
 	}
 
 	@Override
 	public void setContentType(String contentType) {
 		// TODO Auto-generated method stub
-		
+		this.contentType = contentType;
 	}
 
 	@Override
 	public void setIp(String ip) {
 		// TODO Auto-generated method stub
-		
+		this.ip = ip;
 	}
 
 	@Override
 	public void setBody(String body) {
 		// TODO Auto-generated method stub
-		
+		this.body = body;
 	}
 
 	@Override
 	public void setContentLength(int contentLength) {
 		// TODO Auto-generated method stub
-		
+		this.contentLength = contentLength;
 	}
 
 	@Override
 	public void setHeaders(Hashtable<String, String> headers) {
 		// TODO Auto-generated method stub
-		
+		this.headers = headers;
 	}
 	
 

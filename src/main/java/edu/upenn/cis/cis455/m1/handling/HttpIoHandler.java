@@ -1,13 +1,16 @@
 package edu.upenn.cis.cis455.m1.handling;
 
 import java.util.Hashtable;
-
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,15 +29,21 @@ public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
     public Hashtable<String,String> parsedHeaders;
-    public String requestLine;
-    public Hashtable<String,String> parsedRequestLine;
+//    public String requestLine;
+//    public Hashtable<String,String> parsedRequestLine;
     
     public void parseInputStream(Socket socket) {
 		try {
-	    	InputStreamReader reader = new InputStreamReader(socket.getInputStream());
-	    	BufferedReader in = new BufferedReader(reader);
-	    	parseRequests(in);
-	    	parseRequestLine(requestLine);
+//	    	InputStreamReader reader = new InputStreamReader(socket.getInputStream());
+//	    	BufferedReader in = new BufferedReader(reader);
+	    	Hashtable<String, String> headers = new Hashtable<String,String>();
+	    	Hashtable<String, List<String>> parms = new Hashtable<String,List<String>>();
+	    	InetAddress remoteIp = socket.getInetAddress();
+	    	HttpParsing.parseRequest(remoteIp.toString(), socket.getInputStream(), headers, parms);
+	    	this.parsedHeaders = headers;
+	    	
+	    	//parseRequests(in);
+	    	//parseRequestLine(requestLine);
 	    	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -47,52 +56,52 @@ public class HttpIoHandler {
      * @param buffReader
      * @throws IOException
      */
-    public void parseRequests(BufferedReader buffReader) throws IOException {
-    	
-    	// Get the request line
-    	requestLine = buffReader.readLine();
-    	
-    	String header;
-    	// If there is still another line in the Buffered Reader, then keep reading
-    	while((header = buffReader.readLine()) != null) {
-    		parseHeaders(header);
-    		
-    	}
-    	    	
-    }
-    
-    /** Parses each header after request line and adds parameters to a Hashtable
-     * @param header
-     * @throws IOException
-     */
-    public void parseHeaders (String header) throws IOException {
-    	// Split based on colon of header
-    	int index = header.indexOf(":");
-    	if (index == -1) {
-    		throw new IOException("Invalid Header: " + header);
-    	}
-    	
-    	// Add parsed headers to Hashtable
-    	parsedHeaders.put(header.substring(0,index),header.substring(index+1, header.length()));
-    }
-    
-    
-    
-    /** Parses request line and adds parameters to a Hashtable
-     * @param requestLine
-     * @throws IOException
-     */
-    public void parseRequestLine (String requestLine) throws IOException {
-    	try {
-    		String[] requestParams = requestLine.split(" ");
-    		parsedRequestLine.put(Constants.Method, requestParams[0]);
-    		parsedRequestLine.put(Constants.Uri, requestParams[1]);
-    		parsedRequestLine.put(Constants.HttpVersion, requestParams[2]);
-    	}
-    	catch (Exception e){
-    		System.out.println("Error parsing request line: " + e);
-    	}
-    }
+//    public void parseRequests(BufferedReader buffReader) throws IOException {
+//    	
+//    	// Get the request line
+//    	requestLine = buffReader.readLine();
+//    	
+//    	String header;
+//    	// If there is still another line in the Buffered Reader, then keep reading
+//    	while((header = buffReader.readLine()) != null) {
+//    		parseHeaders(header);
+//    		
+//    	}
+//    	    	
+//    }
+//    
+//    /** Parses each header after request line and adds parameters to a Hashtable
+//     * @param header
+//     * @throws IOException
+//     */
+//    public void parseHeaders (String header) throws IOException {
+//    	// Split based on colon of header
+//    	int index = header.indexOf(":");
+//    	if (index == -1) {
+//    		throw new IOException("Invalid Header: " + header);
+//    	}
+//    	
+//    	// Add parsed headers to Hashtable
+//    	parsedHeaders.put(header.substring(0,index),header.substring(index+1, header.length()));
+//    }
+//    
+//    
+//    
+//    /** Parses request line and adds parameters to a Hashtable
+//     * @param requestLine
+//     * @throws IOException
+//     */
+//    public void parseRequestLine (String requestLine) throws IOException {
+//    	try {
+//    		String[] requestParams = requestLine.split(" ");
+//    		parsedRequestLine.put(Constants.Method, requestParams[0]);
+//    		parsedRequestLine.put(Constants.Uri, requestParams[1]);
+//    		parsedRequestLine.put(Constants.HttpVersion, requestParams[2]);
+//    	}
+//    	catch (Exception e){
+//    		System.out.println("Error parsing request line: " + e);
+//    	}
+//    }
     
 //    public String getRequestType() throws IOException {
 //    	try {

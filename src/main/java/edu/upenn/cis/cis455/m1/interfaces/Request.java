@@ -95,7 +95,7 @@ public abstract class Request {
      */
     public abstract String pathInfo();
     
-    public abstract void setPathInfo();
+    public abstract void setPathInfo(String pathInfo);
 
     /**
      * @return The URL
