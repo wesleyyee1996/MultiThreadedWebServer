@@ -3,22 +3,21 @@ package edu.upenn.cis.cis455.m1.interfaces;
 import java.io.IOException;
 import java.util.Hashtable;
 
-import edu.upenn.cis.cis455.*;
+import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 
 public class RequestFactory {
 
 	public  Request getRequest(Hashtable<String,String> parsedHeaders, HttpTask task) throws IOException {
 		String requestType = parsedHeaders.get(Constants.Method);
-		if (requestType.contentEquals(Constants.get)) {
+		if (requestType.equals(Constants.get)) {
 			GetRequest getRequest = new GetRequest();
 			setRequestParams(getRequest, task, requestType, parsedHeaders);
 			return getRequest;
 		}
-		if (requestType == Constants.head) {
+		if (requestType.equals(Constants.head)) {
 			return new HeadRequest();
 		}
-		//return null;
 		throw new IOException("Error creating request for request type " + requestType);
 	}
 	
@@ -26,6 +25,7 @@ public class RequestFactory {
 		
 		request.setRequestMethod(requestType);
 		request.setPort(task.getPort());
+		request.setRootDir(task.getRootDir());
 		if (headers.get(Constants.ip) != null) {
 			request.setIp(headers.get(Constants.ip));
 		}

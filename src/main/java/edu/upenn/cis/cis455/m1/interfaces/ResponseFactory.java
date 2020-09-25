@@ -6,7 +6,7 @@ import edu.upenn.cis.cis455.Constants;
 
 public class ResponseFactory {
 
-	public Response ResponseFactory(String responseType) throws IOException {
+	public Response getResponse(String responseType) throws IOException {
 		if (responseType == Constants.get) {
 			return new GetResponse();
 		}

@@ -1,4 +1,4 @@
-package edu.upenn.cis.cis455.m1.server;
+package edu.upenn.cis.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
-import edu.upenn.cis.test.TestHelper;
 
 import org.apache.logging.log4j.Level;
 

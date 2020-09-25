@@ -44,6 +44,7 @@ public abstract class Request {
     protected String host;
     protected String userAgent;
     protected int port;
+    protected String root_dir;
     protected String pathInfo;
     protected String url;
     protected String uri;
@@ -154,6 +155,10 @@ public abstract class Request {
     public abstract void setHeaders(Hashtable<String,String> headers);
 
     public abstract Hashtable<String,String> headers();
+    
+    public abstract String root_dir();
+    
+    public abstract void setRootDir(String root_dir);
 
     /**
      * Indicates we have a persistent HTTP 1.1 connection

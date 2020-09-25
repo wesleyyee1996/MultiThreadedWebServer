@@ -168,7 +168,8 @@ public class HttpParsing {
 
     
     public static String appendQuotes(String str){
-    	return "\"" + str + "\"";
+    	return str;
+    	//return "\"" + str + "\"";
     }
     
 

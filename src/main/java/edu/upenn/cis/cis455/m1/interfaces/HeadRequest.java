@@ -168,4 +168,16 @@ public class HeadRequest extends Request{
 		return headers;
 	}
 
+	@Override
+	public String root_dir() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setRootDir(String root_dir) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

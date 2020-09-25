@@ -174,6 +174,18 @@ public class GetRequest extends Request{
 		// TODO Auto-generated method stub
 		this.headers = headers;
 	}
+
+	@Override
+	public String root_dir() {
+		// TODO Auto-generated method stub
+		return this.root_dir;
+	}
+
+	@Override
+	public void setRootDir(String root_dir) {
+		this.root_dir = root_dir;
+		
+	}
 	
 
 }
