@@ -28,7 +28,10 @@
  */
 package edu.upenn.cis.cis455.m1.interfaces;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
 
 public abstract class Response {
     protected int statusCode = 200;
@@ -64,6 +67,10 @@ public abstract class Response {
     public void body(String body) {
         this.body = body == null ? null : body.getBytes();
     }
+    
+    public void setBodyFromFile(File file) throws IOException {
+    	this.body = Files.readAllBytes(file.toPath());
+    }
 
     public String type() {
         return contentType;
@@ -72,6 +79,8 @@ public abstract class Response {
     public void type(String contentType) {
         this.contentType = contentType;
     }
+    
+    
 
-    public abstract String getHeaders();
+    
 }

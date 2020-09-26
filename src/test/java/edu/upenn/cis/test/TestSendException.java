@@ -43,7 +43,7 @@ public class TestSendException {
     @Test
     public void testSendException() throws IOException {
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Socket s = TestHelper.getMockSocket(
+        Socket s = getMockSocket(
             sampleGetRequest, 
             byteArrayOutputStream);
         
@@ -59,4 +59,17 @@ public class TestSendException {
     
     @After
     public void tearDown() {}
+    
+    public static Socket getMockSocket(String socketContent, ByteArrayOutputStream output) throws IOException {
+        Socket s = mock(Socket.class);
+        byte[] arr = socketContent.getBytes();
+        final ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+
+        when(s.getInputStream()).thenReturn(bis);
+        when(s.getOutputStream()).thenReturn(output);
+        when(s.getLocalAddress()).thenReturn(InetAddress.getLocalHost());
+        when(s.getRemoteSocketAddress()).thenReturn(InetSocketAddress.createUnresolved("host", 8080));
+        
+        return s;
+    }
 }

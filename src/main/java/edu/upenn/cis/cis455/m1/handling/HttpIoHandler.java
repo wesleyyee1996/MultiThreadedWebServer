@@ -33,6 +33,7 @@ public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
     public Hashtable<String,String> parsedHeaders;
+    public String uri;
     private InetAddress remoteIp;
     private Socket socket;
     private HttpTask httpTask;
@@ -52,7 +53,7 @@ public class HttpIoHandler {
 	    	if (socket.getInetAddress() != null) {
 	    		remoteIp = socket.getInetAddress().toString();
 	    	}
-	    	HttpParsing.parseRequest(remoteIp, socket.getInputStream(), headers, parms);
+	    	uri = HttpParsing.parseRequest(remoteIp, socket.getInputStream(), headers, parms);
 	    	this.parsedHeaders = headers;
 	    	
 		} catch (IOException e) {
@@ -64,31 +65,18 @@ public class HttpIoHandler {
     public void handleRequest() throws IOException {
     	Request request = createRequest();
 		
-		String test = request.requestMethod();
-		
 		// Call Request Handler
-		
-	    String html = "<html><head><title>Simple Java HTTP Server</title></head><body><h1>This page was served using my Simple Java HTTP Server"+test+"</h1></body></html>";
-		
-		String CRLF = "\r\n";
-		
-    	String response = 
-    			"HTTP/1.0 200 OK" + CRLF +
-    			"Content-Length: " + html.getBytes().length + CRLF +
-    			CRLF + 
-    			html + 
-    			CRLF + CRLF;
+		RequestHandler requestHandler = new RequestHandler(request);
+		String responseBody = requestHandler.responseBody;
     	
-    	
-    	
-    	System.out.println(response);
-    	
-    	// Write output to socket
+		// Write output to socket
+    	OutputStream outputStream = socket.getOutputStream();
+    	outputStream.write(responseBody.getBytes());   	    	
     }
     
     public Request createRequest() throws IOException {
 		RequestFactory requestFactory = new RequestFactory();
-    	return requestFactory.getRequest(parsedHeaders, httpTask);
+    	return requestFactory.getRequest(parsedHeaders, httpTask, uri);
 	}
 
     /**

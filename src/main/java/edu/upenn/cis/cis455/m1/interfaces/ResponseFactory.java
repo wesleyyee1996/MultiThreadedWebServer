@@ -6,7 +6,8 @@ import edu.upenn.cis.cis455.Constants;
 
 public class ResponseFactory {
 
-	public Response getResponse(String responseType) throws IOException {
+	// Create response
+	public Response createResponse(String responseType) throws IOException {
 		if (responseType == Constants.get) {
 			return new GetResponse();
 		}
@@ -15,4 +16,13 @@ public class ResponseFactory {
 		}
 		throw new IOException("Invalid response type: " + responseType);
 	}
+	
+	// Based on the status of the request handler, create different kind of response
+	// Exception Response
+	// Success Response
+	
+	// set Status Code
+	// set Body
+	// set Content Type
+	
 }

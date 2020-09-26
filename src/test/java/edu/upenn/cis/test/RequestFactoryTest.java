@@ -56,7 +56,7 @@ public class RequestFactoryTest {
 		
 		// Gets a new request from the Request Factory
 		RequestFactory requestFactory = new RequestFactory();
-		Request getRequest = requestFactory.getRequest(parsedHeaders, task);
+		Request getRequest = requestFactory.getRequest(parsedHeaders, task, "/a/b/hello.htm?q=x&v=12%200");
 		assertNotNull(getRequest);
 		
 		
