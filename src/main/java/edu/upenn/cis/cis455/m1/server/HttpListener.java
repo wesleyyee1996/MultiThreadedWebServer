@@ -7,13 +7,19 @@ import edu.upenn.cis.cis455.m1.server.*;
 
 /**
  * Stub for your HTTP server, which listens on a ServerSocket and handles
- * requests
+ * requests. 
+ * This is the actual HTTP server w/ ThreadPool and thread management
+ * - Creates and manages thread pool
+ * - Listens on sockets
+ * - Invokes Handlers
  */
 public class HttpListener implements Runnable {
 
 	private int port;
 	private String root_dir;
 	private ServerSocket serverSocket;
+	int numQueueTasks = 10;
+	int numThreads = 10;
 	
 	public HttpListener(int port, String root_dir) throws IOException {
 		this.port = port;
@@ -41,6 +47,7 @@ public class HttpListener implements Runnable {
         		//taskQueue.addTask(task);
         		
         		//TODO: use thread pool to assign worker to task from task queue
+        		ThreadPool threadPool = new ThreadPool(numQueueTasks, numThreads);
         		
         		HttpWorker worker = new HttpWorker(task);    
         		worker.run();

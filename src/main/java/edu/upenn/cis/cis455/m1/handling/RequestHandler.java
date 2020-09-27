@@ -48,7 +48,7 @@ public class RequestHandler implements Route {
     // Check if file exists in directory
     	// If it doesn't exist, then create a file not found response (404)
     
-    // Create response method should get response using ResponseFactory, but RequestHandler should add the file to the body
+    // CreateResponse method should get response using ResponseFactory
     
     
 	/** Gets file from directory

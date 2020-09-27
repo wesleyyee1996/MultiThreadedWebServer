@@ -38,6 +38,9 @@ public class HttpWorker implements Runnable {
     	
     	// Use HttpIoHandler to parse socket data
     	try {
+    		// Dequeue task from Task Queue
+    		
+    		
     		HttpIoHandler httpHandler = new HttpIoHandler(socket, httpTask);
     		
     		// Parse input stream

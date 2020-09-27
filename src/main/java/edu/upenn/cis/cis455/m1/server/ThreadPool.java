@@ -5,18 +5,26 @@ import java.util.concurrent.Executors;
 
 public class ThreadPool {
 	
-	ExecutorService pool;
+	HttpTaskQueue _taskQueue;
 	
-	public ThreadPool(int threadPoolSize) {
-		this.pool = Executors.newFixedThreadPool(threadPoolSize);
+	public ThreadPool(int numQueueTasks, int numThreads) {
+		//this._pool = Executors.newFixedThreadPool(threadPoolSize);
+		_taskQueue = new HttpTaskQueue(numQueueTasks);
+		
+		while()
 	}
 	
-	public void executeTask(HttpWorker worker) {
-		pool.execute(worker);
+	public void addTask(HttpTask task) throws InterruptedException {
+		_taskQueue.addTask(task);
+		
 	}
 	
-	public void shutdownPool () {
-		pool.shutdown();
-	}
+//	public void executeTask(HttpWorker worker) {
+//		_pool.execute(worker);
+//	}
+//	
+//	public void shutdownPool () {
+//		_pool.shutdown();
+//	}
 
 }

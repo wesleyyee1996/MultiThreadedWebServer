@@ -16,5 +16,6 @@ public class Constants {
 	public static final String contentLength = "Content-Length";
 	public static final String ip = "http-client-ip";
 	//public static final String Url = ""
+	
 }
 	
