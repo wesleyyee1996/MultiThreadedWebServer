@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import edu.upenn.cis.cis455.m1.server.*;
+import edu.upenn.cis.cis455.Constants;
 
 /**
  * Stub for your HTTP server, which listens on a ServerSocket and handles
@@ -18,8 +19,6 @@ public class HttpListener implements Runnable {
 	private int port;
 	private String root_dir;
 	private ServerSocket serverSocket;
-	int numQueueTasks = 10;
-	int numThreads = 10;
 	
 	public HttpListener(int port, String root_dir) throws IOException {
 		this.port = port;
@@ -43,14 +42,12 @@ public class HttpListener implements Runnable {
     			
         		HttpTask task = new HttpTask(socket, port, root_dir);
         		
-        		//HttpTaskQueue taskQueue = new HttpTaskQueue();
+        		HttpTaskQueue taskQueue = new HttpTaskQueue(Constants.taskQueueNumTasks);
         		//taskQueue.addTask(task);
         		
         		//TODO: use thread pool to assign worker to task from task queue
-        		ThreadPool threadPool = new ThreadPool(numQueueTasks, numThreads);
-        		
-        		HttpWorker worker = new HttpWorker(task);    
-        		worker.run();
+        		ThreadPool threadPool = new ThreadPool(Constants.taskQueueNumTasks, Constants.threadPoolNumThreads);
+        		threadPool.addTask(task);
         		
         		serverSocket.close();
         	}
@@ -59,6 +56,9 @@ public class HttpListener implements Runnable {
     	catch (IOException ex){
     		// TODO Add logging functionality
     		System.out.println("Error creating connection" + ex);
+    	}
+    	catch (InterruptedException ex){
+    		System.out.println("Thread error: " + ex);
     	}
     	
     	

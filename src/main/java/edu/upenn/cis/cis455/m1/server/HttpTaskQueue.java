@@ -42,5 +42,15 @@ public class HttpTaskQueue {
 		}
 		return _taskQueue.poll();
 	}
+		
+	public boolean isEmpty() {
+		if (_taskQueue.size() == 0) {
+			return true;
+		}
+		return false;
+	}
 	
+	public int getSize() {
+		return _taskQueue.size();
+	}
 }

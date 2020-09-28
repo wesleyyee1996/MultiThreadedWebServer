@@ -17,5 +17,16 @@ public class Constants {
 	public static final String ip = "http-client-ip";
 	//public static final String Url = ""
 	
+	public static final int threadPoolNumThreads = 10;
+	public static final int taskQueueNumTasks = 10;
+	
+	public static final String error_FileNotFound = "<html><head><title>404 Server Error</title></head><body><h1>File not found</h1><p></p></body></html>\"";
+	
+	public static final String httpVersion = "HTTP/1.1";
+	
+	public static final String CRFL = "\r\n";
+	
+	//public static final Hashtable<Integer, String> statusCodeMessages = new Hashtable<Integer, String>() {{ put(200, "OK"); put()
 }
 	
+

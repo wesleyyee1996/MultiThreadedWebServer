@@ -32,23 +32,36 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.util.Hashtable;
+
+import edu.upenn.cis.cis455.Constants;
 
 public abstract class Response {
-    protected int statusCode = 200;
-    protected byte[] body;
-    protected String contentType = null; // e.g., "text/plain";
+    protected int _statusCode = 200;
+    protected byte[] _body;
+    protected byte[] _messageBody;
+    protected String _contentType = null; // e.g., "text/plain";
+    protected Hashtable<String,String> _headers;
 
     public int status() {
-        return statusCode;
+        return _statusCode;
     }
 
     public void status(int statusCode) {
-        this.statusCode = statusCode;
+        this._statusCode = statusCode;
+    }
+    
+    public void setHeaders(Hashtable<String,String> headers) {
+    	this._headers = headers;
     }
 
+    /** 
+     * Returns the overall body of the Response. Need to call constructBody() before this returns anything.
+     * @return
+     */
     public String body() {
         try {
-            return body == null ? "" : new String(body, "UTF-8");
+            return _body == null ? "" : new String(_body, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -57,30 +70,57 @@ public abstract class Response {
     }
 
     public byte[] bodyRaw() {
-        return body;
+        return _body;
     }
 
     public void bodyRaw(byte[] b) {
-        body = b;
+        _body = b;
     }
 
     public void body(String body) {
-        this.body = body == null ? null : body.getBytes();
+        this._body = body == null ? null : body.getBytes();
     }
     
-    public void setBodyFromFile(File file) throws IOException {
-    	this.body = Files.readAllBytes(file.toPath());
+    public void setMessageBodyFromFile(File file) throws IOException {
+    	this._messageBody = Files.readAllBytes(file.toPath());
+    }
+    
+    public void constructBody() {
+    	StringBuffer body = new StringBuffer();
+    	
+    	body = constructStatusLine();
+    	
+    	body.append(constructHeaders());    	
+    	
+    	body.append(Constants.CRFL);
+    	this._body = body.toString().getBytes();
+    	
+    	// Combine message bodies
+    	byte[] _newMessageBody = new byte[_body.length + _messageBody.length];
+    	System.arraycopy(_body, 0, _newMessageBody, 0, _body.length);
+    	System.arraycopy(_messageBody, 0, _newMessageBody, _body.length, _messageBody.length);
+    	this._body = _newMessageBody;
+    }
+    
+    public abstract StringBuffer constructStatusLine();
+    
+    private StringBuffer constructHeaders() {
+    	StringBuffer bodyHeaders = new StringBuffer();
+    	for (String key : _headers.keySet()) {
+    		bodyHeaders.append(key + " : " + _headers.get(key) + Constants.CRFL);
+    	}
+    	return bodyHeaders;
     }
 
     public String type() {
-        return contentType;
+        return _contentType;
     }
 
     public void type(String contentType) {
-        this.contentType = contentType;
+        this._contentType = contentType;
     }
     
-    
+    public abstract String getHeaders();
 
     
 }

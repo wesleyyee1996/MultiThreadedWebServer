@@ -19,11 +19,10 @@ import org.apache.logging.log4j.Logger;
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
-import edu.upenn.cis.cis455.m1.interfaces.GetResponse;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
 import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
-import edu.upenn.cis.cis455.m1.interfaces.ResponseFactory;
+import edu.upenn.cis.cis455.m1.interfaces.SuccessResponse;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 
 /**
@@ -32,29 +31,50 @@ import edu.upenn.cis.cis455.m1.server.HttpTask;
 public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
-    public Hashtable<String,String> parsedHeaders;
-    public String uri;
-    private InetAddress remoteIp;
-    private Socket socket;
-    private HttpTask httpTask;
+    public Hashtable<String,String> _parsedHeaders;
+    public String _uri;
+    private InetAddress _remoteIp;
+    private Socket _socket;
+    private HttpTask _httpTask;
     
     public HttpIoHandler(Socket socket, HttpTask task) {
-    	this.socket = socket;
-    	this.httpTask = task;
+    	this._socket = socket;
+    	this._httpTask = task;
     }
     
-    public void parseInputStream() {
+    public void handleRequest() throws IOException {
+    	Request request = createRequest();
+    	
+    	try {
+        	parseInputStream();
+    		
+    		// Call Request Handler
+    		RequestHandler requestHandler = new RequestHandler(request);
+    		SuccessResponse successResponse = new SuccessResponse();
+    		String responseBody = (String)requestHandler.handle(request, successResponse);
+    		sendResponse(_socket, request, successResponse);
+    	} 
+    	// If anything goes wrong when trying to handle the request, then throw a HaltException
+    	catch (HaltException haltException) {
+    		sendException(_socket, request, haltException);
+    	}
+    }
+    
+    /**
+     * Parses the socket's InputStream and gets the headers as well as the uri
+     */
+    private void parseInputStream() {
 		try {
 //	    	InputStreamReader reader = new InputStreamReader(socket.getInputStream());
 //	    	BufferedReader in = new BufferedReader(reader);
 	    	Hashtable<String, String> headers = new Hashtable<String,String>();
 	    	Hashtable<String, List<String>> parms = new Hashtable<String,List<String>>();
 	    	String remoteIp = "";
-	    	if (socket.getInetAddress() != null) {
-	    		remoteIp = socket.getInetAddress().toString();
+	    	if (_socket.getInetAddress() != null) {
+	    		remoteIp = _socket.getInetAddress().toString();
 	    	}
-	    	uri = HttpParsing.parseRequest(remoteIp, socket.getInputStream(), headers, parms);
-	    	this.parsedHeaders = headers;
+	    	_uri = HttpParsing.parseRequest(remoteIp, _socket.getInputStream(), headers, parms);
+	    	this._parsedHeaders = headers;
 	    	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -62,37 +82,37 @@ public class HttpIoHandler {
 		}
     }
     
-    public void handleRequest() throws IOException {
-    	Request request = createRequest();
-		
-		// Call Request Handler
-		RequestHandler requestHandler = new RequestHandler(request);
-		String responseBody = requestHandler.responseBody;
-    	
-		// Write output to socket
-    	OutputStream outputStream = socket.getOutputStream();
-    	outputStream.write(responseBody.getBytes());   	    	
-    }
-    
-    public Request createRequest() throws IOException {
+    private Request createRequest() throws IOException {
 		RequestFactory requestFactory = new RequestFactory();
-    	return requestFactory.getRequest(parsedHeaders, httpTask, uri);
+    	return requestFactory.getRequest(_parsedHeaders, _httpTask, _uri);
 	}
 
     /**
      * Sends an exception back, in the form of an HTTP response code and message.
      * Returns true if we are supposed to keep the connection open (for persistent
      * connections).
+     * @throws IOException 
      */
-    public static boolean sendException(Socket socket, Request request, HaltException except) {
-        return true;
+    public static boolean sendException(Socket socket, Request request, HaltException except) throws IOException {
+    	if (!request.persistentConnection()) {
+    		OutputStream outputStream = socket.getOutputStream();
+    		outputStream.write(except.body().getBytes());
+    	}
+    	return true;
     }
 
     /**
      * Sends data back. Returns true if we are supposed to keep the connection open
      * (for persistent connections).
+     * @throws IOException 
      */
-    public static boolean sendResponse(Socket socket, Request request, Response response) {
-        return true;
+    public static boolean sendResponse(Socket socket, Request request, Response response) throws IOException {
+    	if (!request.persistentConnection()) {
+    		// Write output to socket
+        	OutputStream outputStream = socket.getOutputStream();
+        	outputStream.write(response.body().getBytes());  
+    	}
+    	return true;
+        
     }
 }

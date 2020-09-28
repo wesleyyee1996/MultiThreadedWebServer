@@ -72,7 +72,7 @@ public class WebService {
      * Gracefully shut down the server
      */
     public void stop() {
-    	threadPool.shutdownPool();
+    	//threadPool.shutdownPool();
     }
 
     /**

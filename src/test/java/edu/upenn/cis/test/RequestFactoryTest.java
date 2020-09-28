@@ -51,8 +51,8 @@ public class RequestFactoryTest {
 		HttpTask task = new HttpTask(s, port, root_dir);
 		HttpIoHandler handler = new HttpIoHandler(s, task);
 		
-		handler.parseInputStream();
-		parsedHeaders = handler.parsedHeaders;
+		handler.handleRequest();
+		parsedHeaders = handler._parsedHeaders;
 		
 		// Gets a new request from the Request Factory
 		RequestFactory requestFactory = new RequestFactory();
