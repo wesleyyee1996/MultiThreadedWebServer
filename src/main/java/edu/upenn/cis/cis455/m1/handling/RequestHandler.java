@@ -11,7 +11,7 @@ import edu.upenn.cis.cis455.m1.interfaces.Request;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
 
-public class RequestHandler implements Route {
+public class RequestHandler{
 
 	private Request request;
 	private Response response;
@@ -34,8 +34,8 @@ public class RequestHandler implements Route {
 	}
 	
 	// Since the only thing we are returning to the HttpIOHandler is the string of the Response body, 
-    @Override
-    public Object handle(Request request, Response response) throws HaltException, IOException {
+
+    public String handleRequest(Request request) throws HaltException, IOException {
         //response.status(200);
         //response.type("text/html");
         getFile(response);
