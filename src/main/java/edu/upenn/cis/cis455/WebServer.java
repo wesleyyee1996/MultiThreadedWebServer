@@ -10,6 +10,8 @@ import org.apache.logging.log4j.*;
 import edu.upenn.cis.cis455.configuration.Config;
 import edu.upenn.cis.cis455.configuration.ConfigBuilder;
 import edu.upenn.cis.cis455.exceptions.ConfigurationException;
+import edu.upenn.cis.cis455.m1.server.CommandLineParser;
+import edu.upenn.cis.cis455.m1.server.CommandLineValues;
 import edu.upenn.cis.cis455.m2.server.WebService;
 
 public class WebServer {
@@ -55,6 +57,8 @@ public class WebServer {
         
         //System.out.println(port);
         //System.out.println(root_dir);     
+        CommandLineParser commandLineParse = new CommandLineParser();
+        commandLineParse.validateInput(args, CommandLineValues.getInstance());
         
         WebServiceFactory webServiceFactory = new WebServiceFactory();
         try {

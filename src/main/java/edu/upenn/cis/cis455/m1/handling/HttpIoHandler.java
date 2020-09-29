@@ -51,7 +51,7 @@ public class HttpIoHandler {
     		// Call Request Handler
     		RequestHandler requestHandler = new RequestHandler(request);
     		SuccessResponse successResponse = new SuccessResponse();
-    		String responseBody = (String)requestHandler.handle(request, successResponse);
+    		//String responseBody = (String)requestHandler.handle(request, successResponse);
     		sendResponse(_socket, request, successResponse);
     	} 
     	// If anything goes wrong when trying to handle the request, then throw a HaltException
