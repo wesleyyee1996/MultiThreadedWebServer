@@ -40,6 +40,7 @@ public abstract class Response {
     protected int _statusCode = 200;
     protected byte[] _body;
     protected byte[] _messageBody;
+    protected String method;
     protected String _contentType = null; // e.g., "text/plain";
     protected Hashtable<String,String> _headers = new Hashtable<String,String>();
     protected String _protocol;
@@ -60,6 +61,14 @@ public abstract class Response {
     	this._headers.put(key, value);
     }
     
+    public void setMethod(String method) {
+    	this.method = method;
+    }
+    
+    public String method() {
+    	return this.method;
+    }
+        
     public String protocol() {
     	return this._protocol;
     }

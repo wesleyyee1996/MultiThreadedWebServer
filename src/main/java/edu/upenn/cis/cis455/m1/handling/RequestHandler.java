@@ -7,6 +7,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Hashtable;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,7 @@ import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
+import edu.upenn.cis.cis455.m1.server.ControlPanel;
 import edu.upenn.cis.cis455.m1.server.WebService;
 
 public class RequestHandler{
@@ -23,8 +25,10 @@ public class RequestHandler{
 	
 	private Request request;
 	private Response response;
+	private Socket socket;
 	private String responseBody;
 	private File file;
+	private int route;
 		
     /**
      * Decides which method to call (either shutdown, show control panel, or get file)
@@ -33,40 +37,45 @@ public class RequestHandler{
      * @throws HaltException
      * @throws IOException
      */
-    public Response handleRequest(Request request, Response response) throws HaltException, IOException {
+    public boolean handleRequest(Request request, Response response, Socket socket) throws HaltException, IOException {
     	this.request = request;
     	this.response = response;
+    	this.socket = socket;
     	this.response.setProtocol(request.protocol());
+    	this.response.setMethod(request.requestMethod());
     	this.response.addToHeaders("Server","CIS555/1.00");
 
     	boolean handleFunctionSuccess = handleFunction();
     	if (!handleFunctionSuccess) {
-    		return this.response;
+    		return false;
+    		//return Constants.normalRouteFailed;
     	}
-        // if file exists, then get content type and set Response
-        // if file exists, then generate the body
         
-        return this.response;
+        return true;
     }
     
-    // General check method. If there's some exception, send a 500 response
-    
-    // Check if file exists in directory
-    	// If it doesn't exist, then create a file not found response (404)
-    
-    // Get file type    
-    
     private boolean handleFunction() {
-    	if (request.uri() == "/shutdown") {
+    	if (request.uri().equals("/shutdown")) {
     		// call shutdown method
+    		WebService.getInstance().setSocket(this.socket);
     		WebService.getInstance().stop();
     	}
-    	if (request.uri() == "/control") {
+    	else if (request.uri().equals("/control")) {
+    		ControlPanel controlPanel = new ControlPanel();
+        	byte[] controlPanelBytes = controlPanel.getControlPanel(WebService.getInstance().getThreadPool());
+        	response.bodyRaw(controlPanelBytes);
+        	response.addToHeaders("Content-Length", Integer.toString(calcContentLength(controlPanelBytes)));
+        	response.type("text/html");
+    		return true;
     		// call control panel method
     	}
     	else {
-    		// get file from directory
-    		return getFileFromPath();
+    		// if request type is head, then don't need to get the body
+    		//if (!request.headers().get(Constants.Method).equals(Constants.head)) {
+	    		// get file from directory
+	    		route = Constants.normalRoute;
+	    		return getFileFromPath();
+    		//}
     	}
     	return true;
     }
@@ -76,7 +85,7 @@ public class RequestHandler{
 	 */
 	private boolean getFileFromPath () throws HaltException {
 		try {
-			Path fileDirectory = createRelativePath();
+			Path fileDirectory = createRelativePath(request.root_dir(), request.uri());
 			file = new File(fileDirectory.toString());
 			logger.debug("Uri for the file: "+file.toString());
 			if (file.exists() == false) {
@@ -98,20 +107,13 @@ public class RequestHandler{
 			}
 			
 			// get content type
-			String mimeType = Files.probeContentType(fileDirectory);
-			if (mimeType != null) {
-				response.type(mimeType);
-				response.addToHeaders("Content-Type", mimeType);
-				System.out.println(mimeType);
-			}
-//			else {
-//				response.addToHeaders("Content-Type", "text/html");
-//			}
+			setContentType(fileDirectory);
 						
 			response.setProtocol(request.protocol());
-			
 			// read file into byte array
-			response.bodyRaw(Files.readAllBytes(file.toPath()));
+			byte[] bodyRaw = Files.readAllBytes(file.toPath());
+			response.bodyRaw(bodyRaw);
+			response.addToHeaders("Content-Length", Integer.toString(calcContentLength(bodyRaw)));
 			setLastModifiedHeader(fileDirectory);
 			return true;
 		}
@@ -121,6 +123,18 @@ public class RequestHandler{
 			return false;
 		}
 				
+	}
+	
+	private int calcContentLength(byte[] bytes) {
+		return bytes.length;
+	}
+	
+	private void setContentType(Path fileDirectory) throws IOException {
+		String mimeType = Files.probeContentType(fileDirectory);
+		if (mimeType != null) {
+			response.type(mimeType);
+			response.addToHeaders("Content-Type", mimeType);
+		}
 	}
 	
 	private void setLastModifiedHeader(Path fileDirectory) throws IOException{
@@ -133,11 +147,9 @@ public class RequestHandler{
 		
 	}
 	
-	private Path createRelativePath () throws HaltException {
+	private Path createRelativePath (String root_dir, String uri) throws HaltException {
 		try {
-			System.out.println(request.root_dir());
-			System.out.println(request.uri());
-			Path pathDirectory = Paths.get(request.root_dir(), request.uri());
+			Path pathDirectory = Paths.get(root_dir, uri);
 			return pathDirectory;
 		}
 		catch (Exception e){

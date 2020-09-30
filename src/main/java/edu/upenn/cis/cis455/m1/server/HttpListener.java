@@ -3,6 +3,11 @@ package edu.upenn.cis.cis455.m1.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m1.server.*;
 import edu.upenn.cis.cis455.Constants;
 
@@ -15,11 +20,13 @@ import edu.upenn.cis.cis455.Constants;
  * - Invokes Handlers
  */
 public class HttpListener implements Runnable {
-
+	 final static Logger logger = LogManager.getLogger(HttpListener.class);
+	
 	private int port;
 	private String root_dir;
 	private ServerSocket serverSocket;
 	private final HttpTaskQueue taskQueue;
+	private boolean exit = true;
 	
 	public HttpListener(int port, String root_dir, HttpTaskQueue taskQueue){
 		this.port = port;
@@ -36,7 +43,7 @@ public class HttpListener implements Runnable {
 	
     @Override
     public void run() {
-    	while(true) {
+    	while(exit) {
     		try {
         		System.out.println("running listener");
         	    // Make sure socket is bound to an address and has not already been closed
@@ -64,5 +71,12 @@ public class HttpListener implements Runnable {
         	}
     	}
     	
+    }
+    
+    public void closeServerSocket() throws IOException {
+    	logger.info("Turning off the Listener");
+    	this.exit = false;
+//    	logger.info("Closing the server socket");
+//    	this.serverSocket.close();
     }
 }

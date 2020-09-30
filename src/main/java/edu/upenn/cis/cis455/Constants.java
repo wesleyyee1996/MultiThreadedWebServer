@@ -29,7 +29,7 @@ public class Constants {
 	
 	public static final String CRFL = "\r\n";
 	
-	public static final int threadPoolSize = 10;
+	public static final int threadPoolSize = 40;
 	public static final int taskQueueSize = 10;
 	
 	
@@ -43,13 +43,11 @@ public class Constants {
 		statusCodeReasons.put(404,"File note found");
 		statusCodeReasons.put(500,"Server error");
 	}
-//	public static final String _200 = "OK";
-//	public static final String _400 = "Bad Request";
-//	public static final String _403 = "Forbidden";
-//	public static final String _404 = "File not found";
-//	public static final String _500 = "Server error";
 	
-	//public static final Hashtable<Integer, String> statusCodeMessages = new Hashtable<Integer, String>() {{ put(200, "OK"); put()
+	public static final int controlPanelRoute = 1;
+	public static final int normalRoute = 0;
+	public static final int normalRouteFailed = 2;
+	
 }
 	
 

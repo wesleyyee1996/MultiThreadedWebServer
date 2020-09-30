@@ -29,6 +29,13 @@ public class SocketOutputBodyBuilder {
 			socketOutput.append(CRFL);
 		}
 		socketOutputBytes = stringToByteArray(socketOutput.toString());
+		
+		// if it's a head request, then don't add the body
+		if (response.method().equals(Constants.head)) {
+			return socketOutputBytes;
+		}
+		
+		// if it's not a head request, then add the body
 		if (response.bodyRaw() != null) {
 			socketOutputBytesOutput = combineByteArrays(socketOutputBytes, response.bodyRaw());
 		}

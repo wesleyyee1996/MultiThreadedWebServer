@@ -9,121 +9,109 @@ public class HeadRequest extends Request{
 	@Override
 	public String requestMethod() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.requestMethod;
 	}
 
 	@Override
 	public void setRequestMethod(String requestMethod) {
 		// TODO Auto-generated method stub
-		
+		this.requestMethod = requestMethod;
 	}
 
 	@Override
 	public String host() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.host;
 	}
 
 	@Override
 	public void setHost(String host) {
-		// TODO Auto-generated method stub
+		this.host = host;
 		
 	}
 
 	@Override
 	public String userAgent() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userAgent;
 	}
 
 	@Override
 	public void setUserAgent(String agent) {
-		// TODO Auto-generated method stub
+		this.userAgent = agent;
 		
 	}
 
 	@Override
 	public int port() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.port;
 	}
 
 	@Override
 	public void setPort(int port) {
-		// TODO Auto-generated method stub
+		this.port = port;
 		
 	}
 
 	@Override
 	public String pathInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.pathInfo;
 	}
 
 	@Override
 	public void setPathInfo(String pathInfo) {
-		// TODO Auto-generated method stub
-		
+		this.pathInfo = pathInfo;		
 	}
 
 	@Override
 	public String url() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.url;
 	}
 
 	@Override
 	public void setUrl(String url) {
-		// TODO Auto-generated method stub
-		
+		this.url = url;
 	}
 
 	@Override
 	public String uri() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.uri;
 	}
 
 	@Override
 	public void setUri(String uri) {
-		// TODO Auto-generated method stub
-		
+		this.uri = uri;
 	}
 
 	@Override
 	public String protocol() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.protocol;
 	}
 
 	@Override
 	public void setProtocol(String protocol) {
-		// TODO Auto-generated method stub
+		this.protocol = protocol;
 		
 	}
 
 	@Override
 	public String contentType() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.contentType;
 	}
 
 	@Override
 	public void setContentType(String contentType) {
-		// TODO Auto-generated method stub
-		
+		this.contentType = contentType;
 	}
 
 	@Override
 	public String ip() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.ip;
 	}
 
 	@Override
 	public void setIp(String ip) {
-		// TODO Auto-generated method stub
-		
+		this.ip = ip;
 	}
 
 	@Override
@@ -140,13 +128,12 @@ public class HeadRequest extends Request{
 
 	@Override
 	public int contentLength() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.contentLength;
 	}
 
 	@Override
 	public void setContentLength(int contentLength) {
-		// TODO Auto-generated method stub
+		this.contentLength = contentLength;
 		
 	}
 
@@ -158,26 +145,25 @@ public class HeadRequest extends Request{
 
 	@Override
 	public void setHeaders(Hashtable<String, String> headers) {
-		// TODO Auto-generated method stub
+		this.headers = headers;
 		
 	}
 
 	@Override
 	public Hashtable<String,String> headers() {
 		// TODO Auto-generated method stub
-		return headers;
+		return this.headers;
 	}
 
 	@Override
 	public String root_dir() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.root_dir;
 	}
 
 	@Override
 	public void setRootDir(String root_dir) {
-		// TODO Auto-generated method stub
-		
+		this.root_dir = root_dir;
 	}
 
 }

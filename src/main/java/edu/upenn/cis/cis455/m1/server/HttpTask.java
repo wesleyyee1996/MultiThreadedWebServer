@@ -15,6 +15,8 @@ public class HttpTask {
         this.port = port;
         this.root_dir = root_dir;
     }
+    
+    public HttpTask() {}
 
     public Socket getSocket() {
         return requestSocket;

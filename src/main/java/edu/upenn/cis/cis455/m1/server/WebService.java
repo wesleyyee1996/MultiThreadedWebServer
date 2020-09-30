@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import java.io.IOException;
-
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -42,6 +42,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
 import edu.upenn.cis.cis455.m1.server.*;
 
@@ -49,8 +50,10 @@ public class WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
 
     protected static HttpListener listener;
+    protected static Thread listenerThread;
     protected static HttpTaskQueue taskQueue;
     protected static ArrayList<Thread> threadPool;
+    protected Socket socket = new Socket();
     //protected ThreadPool threadPool;
     //protected int threadPoolSize;
     protected int port;
@@ -74,7 +77,7 @@ public class WebService {
     public void start() {
     	// Launch the listener
     	listener = new HttpListener(this.port, this.root_dir, taskQueue);
-    	Thread listenerThread = new Thread(listener);
+    	listenerThread = new Thread(listener);
     	listenerThread.start();
     	
     	// Create the thread pool
@@ -94,7 +97,27 @@ public class WebService {
      * Gracefully shut down the server
      */
     public void stop() {
-    	//threadPool.shutdownPool();
+    	try {
+			listener.closeServerSocket();
+			listenerThread.interrupt();
+		} catch (IOException e) {
+			logger.error("There was an issue closing the server socket");
+		}
+    	while(taskQueue.isEmpty()) {
+    		logger.info("All tasks have been completed. Shutting down server.");
+        	try {
+				HttpIoHandler.sendResponse(socket, "Server has been shutdown".getBytes());
+			} catch (IOException e) {
+				logger.error("There was an error sending the shutdown response to the client",e);
+			}
+    		System.exit(0);
+    	}
+    }
+    
+    public void setSocket(Socket socket) {
+    	synchronized (this.socket) {
+    		this.socket = socket;
+    	}
     }
 
     /**
@@ -108,10 +131,6 @@ public class WebService {
         taskQueue = new HttpTaskQueue(Constants.taskQueueSize);
         
         start();
-    }
-    
-    public void controlPanel() {
-    	
     }
 
     /**
@@ -178,6 +197,10 @@ public class WebService {
     
     public void threadPoolSize(int size) {
     	this.threadPoolSize = size;
+    }
+    
+    public ArrayList<Thread> getThreadPool() {
+    	return this.threadPool;
     }
 
 }

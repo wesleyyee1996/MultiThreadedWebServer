@@ -16,7 +16,9 @@ public class RequestFactory {
 			return getRequest;
 		}
 		if (requestType.equals(Constants.head)) {
-			return new HeadRequest();
+			HeadRequest headRequest = new HeadRequest();
+			setRequestParams(headRequest, task, requestType, parsedHeaders, uri);
+			return headRequest;
 		}
 		throw new IOException("Error creating request for request type " + requestType);
 	}
@@ -26,15 +28,13 @@ public class RequestFactory {
 		request.setRequestMethod(requestType);
 		request.setPort(task.getPort());
 		request.setRootDir(task.getRootDir());
+		request.setHeaders(headers);
 		if (headers.get(Constants.ip) != null) {
 			request.setIp(headers.get(Constants.ip));
 		}
 		if (uri != null) {
 			request.setUri(uri);
 		}
-//		if (headers.get(Constants.Url) != null) {
-//			request.setUrl(headers.get(Constants.Url));
-//		}
 		if (headers.get(Constants.userAgent) != null) {
 			request.setUserAgent(headers.get(Constants.userAgent));
 		}
@@ -50,8 +50,5 @@ public class RequestFactory {
 		if (headers.get(Constants.host) != null) {
 			request.setProtocol(headers.get(Constants.host));
 		}
-//		if (headers.get(Constants.Body) != null) {
-//			request.setBody(headers.get(Constants.Body));
-//		}
 	}
 }

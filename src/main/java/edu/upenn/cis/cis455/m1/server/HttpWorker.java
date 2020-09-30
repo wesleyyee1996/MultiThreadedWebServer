@@ -27,6 +27,7 @@ public class HttpWorker implements Runnable {
 	//private Socket _socket;
 	private Hashtable<String,String> _headers;
 	private final HttpTaskQueue _httpTaskQueue;
+	public static String threadStatus;
 	
 	public HttpWorker (HttpTaskQueue httpTaskQueue) {
 		//this._socket = _httpTask.getSocket();
@@ -49,13 +50,11 @@ public class HttpWorker implements Runnable {
         		// HttpIoHandler parses data on socket, creates Request   		
         		HttpIoHandler httpHandler = new HttpIoHandler(_httpTask.getSocket(), _httpTask);
         		
-        		// Parse input stream
-        		//httpHandler.parseInputStream();
-        		
         		// Handle request
         		httpHandler.handleRequest();    		
             	
             	_httpTask.getSocket().close();
+            	threadStatus = "waiting";
         	}
         	catch (InterruptedException e){
         		System.out.println(e);
@@ -65,26 +64,29 @@ public class HttpWorker implements Runnable {
         	}
     	}
     	
-    	// Call some type of RequestHandler to handle the request
     }
     
-    private HttpTask readFromQueue() throws InterruptedException {
-    	while (true) {
-    		synchronized (_httpTaskQueue) {
-    			if (_httpTaskQueue.isEmpty()) {
-    				logger.debug("Queue is currently empty");
-    				_httpTaskQueue.wait();
-    			}
-    			else {
-    				HttpTask task = _httpTaskQueue.popTask();
-    				logger.debug("Removed task from queue and notifying other Workers");
-    				task.notifyAll();
-    				logger.debug("Exiting queue with return");
-    				return task;
-    			}
-    		}
-    	}
+    public static String workerStatus() {
+    	return threadStatus;
     }
+    
+//    private HttpTask readFromQueue() throws InterruptedException {
+//    	while (true) {
+//    		synchronized (_httpTaskQueue) {
+//    			if (_httpTaskQueue.isEmpty()) {
+//    				logger.debug("Queue is currently empty");
+//    				_httpTaskQueue.wait();
+//    			}
+//    			else {
+//    				HttpTask task = _httpTaskQueue.popTask();
+//    				logger.debug("Removed task from queue and notifying other Workers");
+//    				task.notifyAll();
+//    				logger.debug("Exiting queue with return");
+//    				return task;
+//    			}
+//    		}
+//    	}
+//    }
     
 	/** Uses RequestFactory to create and get a new Request based on requestType
 	 * @param requestType
