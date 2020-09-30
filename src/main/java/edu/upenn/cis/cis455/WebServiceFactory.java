@@ -31,6 +31,8 @@
 
 package edu.upenn.cis.cis455;
 
+import java.io.IOException;
+
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
@@ -40,17 +42,22 @@ import edu.upenn.cis.cis455.m1.server.WebService;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
 
 public class WebServiceFactory {
+	
+	private int _threadPoolSize;
+	private static WebService _webService;
 
     // We don't want people to use the constructor
     protected WebServiceFactory() {}
 
-    public static WebService CreateWebService(int port, String root_dir) throws Exception{
-    	WebService webService = new WebService();
-    	webService.start();
-    	webService.SetThreadPool(5);
-    	webService.port(port);
-    	webService.staticFileLocation(root_dir);
-    	return webService;
+//    public static WebService CreateWebService(int port, String root_dir) throws Exception{
+//    	_webService = new WebService();
+//    	_webService.port(port);
+//    	_webService.staticFileLocation(root_dir);
+//    	return _webService;
+//    }
+    
+    public static void createWebService() {
+    	_webService = new WebService();
     }
     
     /**
@@ -149,43 +156,42 @@ public class WebServiceFactory {
      * Set the IP address to listen on (default 0.0.0.0)
      */
     public static void ipAddress(String ipAddress) {
-        throw new UnsupportedOperationException();
+        _webService.ipAddress(ipAddress);
     }
 
     /**
      * Set the port to listen on (default 45555)
      */
     public static void port(int port) {
-    	
-        throw new UnsupportedOperationException();
+        _webService.port(port);
     }
 
     /**
      * Set the size of the thread pool
      */
     public static void threadPool(int threads) {
-        throw new UnsupportedOperationException();
+        _webService.threadPoolSize(threads);
     }
 
     /**
      * Set the root directory of the "static web" files
      */
     public static void staticFileLocation(String directory) {
-        throw new UnsupportedOperationException();
+        _webService.staticFileLocation(directory);
     }
 
     /**
      * Hold until the server is fully initialized
      */
     public static void awaitInitialization() {
-        throw new UnsupportedOperationException();
+        _webService.awaitInitialization();
     }
 
     /**
      * Gracefully shut down the server
      */
     public static void stop() {
-        throw new UnsupportedOperationException();
+        _webService.stop();
     }
 
     public static String createSession() {

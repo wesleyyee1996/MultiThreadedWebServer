@@ -28,7 +28,7 @@ public class CommandLineParserTest {
 		CommandLineParser cmdLineParse = new CommandLineParser();
 		CommandLineValues.getInstance().resetValues();
 		cmdLineParse.validateInput(args, CommandLineValues.getInstance());
-		assertFalse(CommandLineValues.getInstance().getValuesOk());
+		assertTrue(CommandLineValues.getInstance().getValuesOk());
 	}
 	
 	@Test
@@ -115,6 +115,15 @@ public class CommandLineParserTest {
 	@Test
 	public void test12() {
 		String[] args = {"//vagrant/cis555-key"};
+		CommandLineParser cmdLineParse = new CommandLineParser();
+		CommandLineValues.getInstance().resetValues();
+		cmdLineParse.validateInput(args, CommandLineValues.getInstance());
+		assertFalse(CommandLineValues.getInstance().getValuesOk());
+	}
+	
+	@Test
+	public void test13() {
+		String[] args = {"45555 /vagrant"};
 		CommandLineParser cmdLineParse = new CommandLineParser();
 		CommandLineValues.getInstance().resetValues();
 		cmdLineParse.validateInput(args, CommandLineValues.getInstance());

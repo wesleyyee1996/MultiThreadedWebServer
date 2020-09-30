@@ -28,6 +28,7 @@
  */
 package edu.upenn.cis.cis455.m1.server;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,6 +40,7 @@ import java.net.Socket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
 import edu.upenn.cis.cis455.m1.server.*;
@@ -46,26 +48,33 @@ import edu.upenn.cis.cis455.m1.server.*;
 public class WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
 
-    protected HttpListener listener;
-    protected ThreadPool threadPool;
-    protected int threadPoolSize;
+    protected static HttpListener listener;
+    protected static HttpTaskQueue taskQueue;
+    protected static ArrayList<HttpWorker> threadPool;
+    //protected ThreadPool threadPool;
+    //protected int threadPoolSize;
     protected int port;
     protected String root_dir;
-    protected String ip_address;
+    protected String ip_address = "0.0.0.0";
+    protected int threadPoolSize;
     
     /**
      * Launches the Web server thread pool and the listener
      * @throws IOException 
      */
-    public void start() throws IOException {
+    public void start() {
+    	// Launch the listener
+    	listener = new HttpListener(this.port, this.root_dir, taskQueue);
+    	Thread listenerThread = new Thread(listener);
+    	listenerThread.run();
     	
-    	//Socket socket = new Socket();
-    	//HttpTask task = new HttpTask(socket);
-    	//HttpWorker worker = new HttpWorker(task);
-    	
-    	//threadPool = new ThreadPool(threadPoolSize); 	
-    	listener = new HttpListener(this.port, this.root_dir);
-    	listener.run();
+    	// Create the thread pool
+        for (int thread = 0; thread < Constants.threadPoolSize; thread++) {
+        	HttpWorker worker = new HttpWorker(taskQueue);
+        	Thread workerThread = new Thread(worker);
+        	workerThread.run();
+        	threadPool.add(worker);
+        }
     }
 
     /**
@@ -79,8 +88,12 @@ public class WebService {
      * Hold until the server is fully initialized
      * @throws IOException 
      */
-    public void awaitInitialization() throws IOException {
+    public void awaitInitialization(){
         logger.info("Initializing server");
+        
+        // Create an HttpTaskQueue
+        taskQueue = new HttpTaskQueue(Constants.taskQueueSize);
+        
         start();
     }
 
@@ -145,12 +158,9 @@ public class WebService {
     public void port(int port) {
     	this.port = port;
     }
-
-    /**
-     * Set the size of the thread pool
-     */
-    public void SetThreadPool(int threads) {
-    	this.threadPoolSize = threads;
+    
+    public void threadPoolSize(int size) {
+    	this.threadPoolSize = size;
     }
 
 }

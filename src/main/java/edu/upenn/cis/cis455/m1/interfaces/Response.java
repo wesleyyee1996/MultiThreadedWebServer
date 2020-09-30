@@ -42,6 +42,7 @@ public abstract class Response {
     protected byte[] _messageBody;
     protected String _contentType = null; // e.g., "text/plain";
     protected Hashtable<String,String> _headers;
+    protected String _protocol;
 
     public int status() {
         return _statusCode;
@@ -53,6 +54,14 @@ public abstract class Response {
     
     public void setHeaders(Hashtable<String,String> headers) {
     	this._headers = headers;
+    }
+    
+    public String protocol() {
+    	return this._protocol;
+    }
+    
+    public void setProtocol (String protocol) {
+    	this._protocol = protocol;
     }
 
     /** 
@@ -121,6 +130,10 @@ public abstract class Response {
     }
     
     public abstract String getHeaders();
+    
+    public Hashtable<String,String> getHeadersRaw() {
+    	return this._headers;
+    }
 
     
 }

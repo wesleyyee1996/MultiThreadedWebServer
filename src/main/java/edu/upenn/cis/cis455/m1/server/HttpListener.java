@@ -19,17 +19,23 @@ public class HttpListener implements Runnable {
 	private int port;
 	private String root_dir;
 	private ServerSocket serverSocket;
+	private final HttpTaskQueue taskQueue;
 	
-	public HttpListener(int port, String root_dir) throws IOException {
+	public HttpListener(int port, String root_dir, HttpTaskQueue taskQueue){
 		this.port = port;
 		this.root_dir = root_dir;
-		this.serverSocket = new ServerSocket(this.port);
+		this.taskQueue = taskQueue;
+		try {
+			this.serverSocket = new ServerSocket(this.port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Listener started");
 	}
 	
     @Override
     public void run() {
-        // TODO Auto-generated method stub
     	
     	try {
     		System.out.println("running listener");
@@ -42,12 +48,14 @@ public class HttpListener implements Runnable {
     			
         		HttpTask task = new HttpTask(socket, port, root_dir);
         		
-        		HttpTaskQueue taskQueue = new HttpTaskQueue(Constants.taskQueueNumTasks);
+        		this.taskQueue.addTask(task);
+        		
+        		//HttpTaskQueue taskQueue = new HttpTaskQueue(Constants.taskQueueNumTasks);
         		//taskQueue.addTask(task);
         		
         		//TODO: use thread pool to assign worker to task from task queue
-        		ThreadPool threadPool = new ThreadPool(Constants.taskQueueNumTasks, Constants.threadPoolNumThreads);
-        		threadPool.addTask(task);
+        		//ThreadPool threadPool = new ThreadPool(Constants.taskQueueNumTasks, Constants.threadPoolNumThreads);
+        		//threadPool.addTask(task);
         		
         		serverSocket.close();
         	}

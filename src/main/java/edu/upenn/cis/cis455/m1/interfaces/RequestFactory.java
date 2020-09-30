@@ -47,6 +47,9 @@ public class RequestFactory {
 		if (headers.get(Constants.HttpVersion) != null) {
 			request.setProtocol(headers.get(Constants.HttpVersion));
 		}
+		if (headers.get(Constants.host) != null) {
+			request.setProtocol(headers.get(Constants.host));
+		}
 //		if (headers.get(Constants.Body) != null) {
 //			request.setBody(headers.get(Constants.Body));
 //		}

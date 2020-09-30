@@ -22,6 +22,7 @@ import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
 import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
+import edu.upenn.cis.cis455.m1.interfaces.SocketOutputBodyBuilder;
 import edu.upenn.cis.cis455.m1.interfaces.SuccessResponse;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 
@@ -43,21 +44,28 @@ public class HttpIoHandler {
     }
     
     public void handleRequest() throws IOException {
-    	Request request = createRequest();
     	
-    	try {
+    	
+    	//try {
         	parseInputStream();
-    		
+        	
+        	Request request = createRequest();
+        	SuccessResponse successResponse = new SuccessResponse();
+        	
     		// Call Request Handler
-    		RequestHandler requestHandler = new RequestHandler(request);
-    		SuccessResponse successResponse = new SuccessResponse();
+    		RequestHandler requestHandler = new RequestHandler();
+    		requestHandler.handleRequest(request, successResponse);
+    		
+    		SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
+			socketOutputBuilder.buildSocketOutput(successResponse);
+    		
     		//String responseBody = (String)requestHandler.handle(request, successResponse);
     		sendResponse(_socket, request, successResponse);
-    	} 
+    	//} 
     	// If anything goes wrong when trying to handle the request, then throw a HaltException
-    	catch (HaltException haltException) {
-    		sendException(_socket, request, haltException);
-    	}
+    	//catch (HaltException haltException) {
+    	//	sendException(_socket, request, haltException);
+    	//}
     }
     
     /**

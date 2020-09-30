@@ -146,6 +146,10 @@ public class CommandLineParser {
 			return false;
 		}
 		
+		if (rootDir.isDirectory()) {
+			return true;
+		}
+		
 		// If the inserted root directory contains a file, handle it
 		Path path = Paths.get(root_dir);
 		Path filename = path.getFileName();

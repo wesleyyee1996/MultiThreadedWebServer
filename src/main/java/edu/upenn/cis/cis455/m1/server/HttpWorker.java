@@ -24,12 +24,12 @@ public class HttpWorker implements Runnable {
 	static final Logger logger = LogManager.getLogger(HttpWorker.class);
 		
 	private HttpTask _httpTask;
-	private Socket _socket;
+	//private Socket _socket;
 	private Hashtable<String,String> _headers;
-	private HttpTaskQueue _httpTaskQueue;
+	private final HttpTaskQueue _httpTaskQueue;
 	
 	public HttpWorker (HttpTaskQueue httpTaskQueue) {
-		this._socket = _httpTask.getSocket();
+		//this._socket = _httpTask.getSocket();
 		this._httpTaskQueue = httpTaskQueue;
 		System.out.println("worker started");
 	}
@@ -47,7 +47,7 @@ public class HttpWorker implements Runnable {
         		HttpTask _httpTask = _httpTaskQueue.popTask();
         		
         		// HttpIoHandler parses data on socket, creates Request   		
-        		HttpIoHandler httpHandler = new HttpIoHandler(_socket, _httpTask);
+        		HttpIoHandler httpHandler = new HttpIoHandler(_httpTask.getSocket(), _httpTask);
         		
         		// Parse input stream
         		//httpHandler.parseInputStream();
@@ -55,7 +55,7 @@ public class HttpWorker implements Runnable {
         		// Handle request
         		httpHandler.handleRequest();    		
             	
-            	_socket.close();
+            	_httpTask.getSocket().close();
         	}
         	catch (InterruptedException e){
         		System.out.println(e);
