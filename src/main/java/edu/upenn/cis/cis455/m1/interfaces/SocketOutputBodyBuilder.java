@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
+import edu.upenn.cis.cis455.m1.handling.HttpParsing;
 
 public class SocketOutputBodyBuilder {
     final static Logger logger = LogManager.getLogger(SocketOutputBodyBuilder.class);
@@ -49,7 +50,7 @@ public class SocketOutputBodyBuilder {
 		logger.debug("Status code: "+statusCode);
 		logger.debug("Http Version: "+httpVersion);
 		StringBuffer statusLine = new StringBuffer();
-    	return statusLine.append(httpVersion + " "+ Integer.toString(statusCode) + " "+Constants.statusCodeReasons.get(statusCode)+ Constants.CRFL);
+    	return statusLine.append(httpVersion + " "+ Integer.toString(statusCode) + " "+HttpParsing.explainStatus(statusCode)+ Constants.CRFL);
 	}
 	
 	private StringBuffer buildHeaders(Hashtable<String,String> headers) {

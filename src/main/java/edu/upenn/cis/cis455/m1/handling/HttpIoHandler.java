@@ -26,6 +26,7 @@ import edu.upenn.cis.cis455.m1.interfaces.SocketOutputBodyBuilder;
 import edu.upenn.cis.cis455.m1.interfaces.SuccessResponse;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 import edu.upenn.cis.cis455.m1.server.HttpWorker;
+import edu.upenn.cis.cis455.m1.server.WebService;
 
 /**
  * Handles marshalling between HTTP Requests and Responses
@@ -33,6 +34,7 @@ import edu.upenn.cis.cis455.m1.server.HttpWorker;
 public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
+    private SuccessResponse successResponse = new SuccessResponse();
     public Hashtable<String,String> _parsedHeaders;
     public String _uri;
     private InetAddress _remoteIp;
@@ -44,49 +46,70 @@ public class HttpIoHandler {
     	this._httpTask = task;
     }
     
-    public void handleRequest() throws IOException {
+    public boolean handleRequest() throws IOException {
     	
 		// Parses the input stream and sets values to _parsedHeaders and _uri
-    	parseInputStream();
+    	if (!parseInputStream()) {
+    		return false;
+    	}
     	
     	// Creates a new request based on type w/ RequestFactory
     	Request request = createRequest();
-    	HttpWorker.threadStatus = request.url();
-    	SuccessResponse successResponse = new SuccessResponse();
+    	//HttpWorker.setWorkerStatus(request.url());
+    	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
     	
 		// Call Request Handler to handle the request
 		RequestHandler requestHandler = new RequestHandler();
 		requestHandler.handleRequest(request, successResponse, _socket);
 		
-		// Build the output to the socket
-		SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
-		byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(successResponse);
-		sendResponse(_socket, socketOutputBytes);
+		outputResponseToSocket(successResponse);
+		return true;
     		
     }
     
     /**
      * Parses the socket's InputStream and gets the headers as well as the uri
      */
-    private void parseInputStream() {
+    private boolean parseInputStream() {
 		try {
-//	    	InputStreamReader reader = new InputStreamReader(socket.getInputStream());
-//	    	BufferedReader in = new BufferedReader(reader);
+			
 	    	Hashtable<String, String> headers = new Hashtable<String,String>();
 	    	Hashtable<String, List<String>> parms = new Hashtable<String,List<String>>();
+	    	
+	    	// Get the client's IP address if available
 	    	String remoteIp = "";
 	    	if (_socket.getInetAddress() != null) {
 	    		remoteIp = _socket.getInetAddress().toString();
 	    	}
-	    	_uri = HttpParsing.parseRequest(remoteIp, _socket.getInputStream(), headers, parms);
+	    	
+	    	// If there was a bad request, then throw a 400 error
+	    	try {
+	    		_uri = HttpParsing.parseRequest(remoteIp, _socket.getInputStream(), headers, parms);
+	    	} catch(HaltException he) {
+	    		successResponse.status(400);
+	    		outputResponseToSocket(successResponse);
+	    		return false;
+	    	}
+	    	
 	    	this._parsedHeaders = headers;
 	    	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error reading socket input stream" + e.toString());
+		} catch (HaltException he) {
+			logger.error("Bad request");
+			
 		}
+		return true;
     }
     
+    private void outputResponseToSocket(Response response) throws IOException {
+    	// Build the output to the socket
+    			SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
+    			byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(successResponse);
+    			sendResponse(_socket, socketOutputBytes);
+    }
+    
+    // Use the RequestFactory to build a request
     private Request createRequest() throws IOException {
 		RequestFactory requestFactory = new RequestFactory();
     	return requestFactory.getRequest(_parsedHeaders, _httpTask, _uri);
@@ -116,7 +139,7 @@ public class HttpIoHandler {
     	//if (!request.persistentConnection()) {
     		// Write output to socket
         	OutputStream outputStream = socket.getOutputStream();
-        	outputStream.write(socketOutputBytes);  
+        	outputStream.write(socketOutputBytes); 
     	//}
     	return true;
         

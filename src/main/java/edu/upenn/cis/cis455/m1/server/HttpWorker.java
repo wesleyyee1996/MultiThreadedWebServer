@@ -1,16 +1,16 @@
 package edu.upenn.cis.cis455.m1.server;
 
-import edu.upenn.cis.cis455.Constants;
+//import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
-import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
-import edu.upenn.cis.cis455.m1.interfaces.Request;
-import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
-import edu.upenn.cis.cis455.m1.interfaces.Response;
-import edu.upenn.cis.cis455.m1.server.*;
+//import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
+//import edu.upenn.cis.cis455.m1.interfaces.Request;
+//import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
+//import edu.upenn.cis.cis455.m1.interfaces.Response;
+//import edu.upenn.cis.cis455.m1.server.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
+//import java.net.Socket;
 import java.util.Hashtable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Stub class for a thread worker that handles Web requests
  */
-public class HttpWorker implements Runnable {
+public class HttpWorker extends Thread {
 
 	static final Logger logger = LogManager.getLogger(HttpWorker.class);
 		
@@ -27,7 +27,7 @@ public class HttpWorker implements Runnable {
 	//private Socket _socket;
 	private Hashtable<String,String> _headers;
 	private final HttpTaskQueue _httpTaskQueue;
-	public static String threadStatus;
+	//private static String threadStatus;
 	
 	public HttpWorker (HttpTaskQueue httpTaskQueue) {
 		//this._socket = _httpTask.getSocket();
@@ -41,9 +41,12 @@ public class HttpWorker implements Runnable {
     	InputStream inputStream = null;
     	OutputStream outputStream = null;
     	
+    	//ThreadLocal<String> threadStatus = new ThreadLocal<String>();
+    	
     	while(true) {
     		// Use HttpIoHandler to parse socket data
         	try {
+        		WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(), "waiting");
         		// Dequeue task from Task Queue
         		HttpTask _httpTask = _httpTaskQueue.popTask();
         		
@@ -54,7 +57,8 @@ public class HttpWorker implements Runnable {
         		httpHandler.handleRequest();    		
             	
             	_httpTask.getSocket().close();
-            	threadStatus = "waiting";
+            	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(), "waiting");
+            	//threadStatus.set("waiting");
         	}
         	catch (InterruptedException e){
         		System.out.println(e);
@@ -66,32 +70,12 @@ public class HttpWorker implements Runnable {
     	
     }
     
-    public static String workerStatus() {
-    	return threadStatus;
-    }
-    
-//    private HttpTask readFromQueue() throws InterruptedException {
-//    	while (true) {
-//    		synchronized (_httpTaskQueue) {
-//    			if (_httpTaskQueue.isEmpty()) {
-//    				logger.debug("Queue is currently empty");
-//    				_httpTaskQueue.wait();
-//    			}
-//    			else {
-//    				HttpTask task = _httpTaskQueue.popTask();
-//    				logger.debug("Removed task from queue and notifying other Workers");
-//    				task.notifyAll();
-//    				logger.debug("Exiting queue with return");
-//    				return task;
-//    			}
-//    		}
-//    	}
+//    public String workerStatus() {
+//    	return threadStatus;
 //    }
-    
-	/** Uses RequestFactory to create and get a new Request based on requestType
-	 * @param requestType
-	 * @return
-	 * @throws IOException 
-	 */
+//    
+//    public static void setWorkerStatus(String url) {
+//    	threadStatus = url;
+//    }
 
 }

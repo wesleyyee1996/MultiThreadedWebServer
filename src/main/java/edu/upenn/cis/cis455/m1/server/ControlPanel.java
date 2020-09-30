@@ -17,10 +17,10 @@ public class ControlPanel {
 		buffer.append("<!DOCTYPE html>\n" + 
 				"<html>\n" + 
 				"<head>\n" + 
-				"    <title>Sample File</title>\n" + 
+				"    <title>Control Panel</title>\n" + 
 				"</head>\n" + 
 				"<body>\n" + 
-				"<h1>Welcome</h1>\n" + 
+				"<h1>Control Panel</h1>\n" + 
 				"<ul>");
 		buffer.append(constructThreadList());
 		buffer.append("<li><a href=\"/shutdown\">Shut down</a></li>\n" + 
@@ -34,7 +34,7 @@ public class ControlPanel {
 		StringBuffer buffer = new StringBuffer();
 		for(int thread = 0; thread<threadPool.size();thread++) {
 			Thread workerThread = threadPool.get(thread);
-			buffer.append("<li>"+workerThread.getName()+"</li>");
+			buffer.append("<li>"+workerThread.getName()+" "+WebService.getInstance().threadStatuses.get(workerThread.getName())+"</li>");
 		}
 		return buffer.toString();
 	}

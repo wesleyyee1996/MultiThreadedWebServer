@@ -29,6 +29,7 @@
 package edu.upenn.cis.cis455.m1.server;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -60,6 +61,7 @@ public class WebService {
     protected String root_dir;
     protected String ip_address = "0.0.0.0";
     protected int threadPoolSize;
+    public static Hashtable<String,String> threadStatuses = new Hashtable<String,String>();
     
     private static WebService _webService;
 	
@@ -85,7 +87,7 @@ public class WebService {
         for (int thread = 0; thread < Constants.threadPoolSize; thread++) {
         	HttpWorker worker = new HttpWorker(taskQueue);
         	Thread workerThread = new Thread(worker);
-        	System.out.println(workerThread.getName());
+        	//System.out.println(workerThread.getName());
         	workerThread.start();
         	threadPool.add(workerThread);
         	//threadPool[thread] = new HttpWorker(taskQueue);

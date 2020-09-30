@@ -40,10 +40,10 @@ public abstract class Response {
     protected int _statusCode = 200;
     protected byte[] _body;
     protected byte[] _messageBody;
-    protected String method;
+    protected String method = Constants.get;
     protected String _contentType = null; // e.g., "text/plain";
     protected Hashtable<String,String> _headers = new Hashtable<String,String>();
-    protected String _protocol;
+    protected String _protocol = "HTTP/1.1";
 
     public int status() {
         return _statusCode;

@@ -55,7 +55,7 @@ public class RequestHandler{
     }
     
     private boolean handleFunction() {
-    	if (request.uri().equals("/shutdown")) {
+    	if (request.uri().equals("/shutdown") && request.requestMethod().equals(Constants.get)) {
     		// call shutdown method
     		WebService.getInstance().setSocket(this.socket);
     		WebService.getInstance().stop();
@@ -90,7 +90,7 @@ public class RequestHandler{
 			logger.debug("Uri for the file: "+file.toString());
 			if (file.exists() == false) {
 				response.status(404);
-				response.body(Constants.error_FileNotFound);
+				response.body(HttpParsing.explainStatus(404));
 				return false;
 			}
 			
@@ -101,7 +101,7 @@ public class RequestHandler{
 				fileDirectory = Paths.get(fileDirectory.toString(), "/index.html");
 				if (file.exists() == false) {
 					response.status(404);
-					response.body(Constants.error_FileNotFound);
+					response.body(HttpParsing.explainStatus(404));
 					return false;
 				}
 			}
@@ -119,7 +119,7 @@ public class RequestHandler{
 		}
 		catch (HaltException | IOException e){
 			response.status(500);
-			response.body(Constants.error_ServerError);
+			response.body(HttpParsing.explainStatus(500));
 			return false;
 		}
 				
@@ -143,10 +143,6 @@ public class RequestHandler{
 		response.addToHeaders("Last-Modified",lastModified.toString());
 	}
 	
-	private void getHeaders() throws IOException {
-		
-	}
-	
 	private Path createRelativePath (String root_dir, String uri) throws HaltException {
 		try {
 			Path pathDirectory = Paths.get(root_dir, uri);
@@ -154,7 +150,7 @@ public class RequestHandler{
 		}
 		catch (Exception e){
 			e.printStackTrace();
-			HaltException haltException = new HaltException(404, Constants.error_FileNotFound);
+			HaltException haltException = new HaltException(404, HttpParsing.explainStatus(404));
 		}
 		return null;
 	}
