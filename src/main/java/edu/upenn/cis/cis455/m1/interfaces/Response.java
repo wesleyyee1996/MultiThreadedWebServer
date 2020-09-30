@@ -41,7 +41,7 @@ public abstract class Response {
     protected byte[] _body;
     protected byte[] _messageBody;
     protected String _contentType = null; // e.g., "text/plain";
-    protected Hashtable<String,String> _headers;
+    protected Hashtable<String,String> _headers = new Hashtable<String,String>();
     protected String _protocol;
 
     public int status() {
@@ -54,6 +54,10 @@ public abstract class Response {
     
     public void setHeaders(Hashtable<String,String> headers) {
     	this._headers = headers;
+    }
+    
+    public void addToHeaders(String key, String value) {
+    	this._headers.put(key, value);
     }
     
     public String protocol() {

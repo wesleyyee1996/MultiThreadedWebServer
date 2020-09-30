@@ -58,6 +58,15 @@ public class WebService {
     protected String ip_address = "0.0.0.0";
     protected int threadPoolSize;
     
+    private static WebService _webService;
+	
+	public static WebService getInstance() {
+		if (_webService == null) {
+			_webService = new WebService();
+		}
+		return _webService;
+	}
+    
     /**
      * Launches the Web server thread pool and the listener
      * @throws IOException 
@@ -99,6 +108,10 @@ public class WebService {
         taskQueue = new HttpTaskQueue(Constants.taskQueueSize);
         
         start();
+    }
+    
+    public void controlPanel() {
+    	
     }
 
     /**

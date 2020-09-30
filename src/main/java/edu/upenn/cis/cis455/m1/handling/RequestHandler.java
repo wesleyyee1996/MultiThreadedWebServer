@@ -16,6 +16,7 @@ import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
 import edu.upenn.cis.cis455.m1.interfaces.Route;
+import edu.upenn.cis.cis455.m1.server.WebService;
 
 public class RequestHandler{
 	final static Logger logger = LogManager.getLogger(RequestHandler.class);
@@ -35,8 +36,9 @@ public class RequestHandler{
     public Response handleRequest(Request request, Response response) throws HaltException, IOException {
     	this.request = request;
     	this.response = response;
-        //response.status(200);
-        //response.type("text/html");
+    	this.response.setProtocol(request.protocol());
+    	this.response.addToHeaders("Server","CIS555/1.00");
+
     	boolean handleFunctionSuccess = handleFunction();
     	if (!handleFunctionSuccess) {
     		return this.response;
@@ -57,6 +59,7 @@ public class RequestHandler{
     private boolean handleFunction() {
     	if (request.uri() == "/shutdown") {
     		// call shutdown method
+    		WebService.getInstance().stop();
     	}
     	if (request.uri() == "/control") {
     		// call control panel method
@@ -77,25 +80,39 @@ public class RequestHandler{
 			file = new File(fileDirectory.toString());
 			logger.debug("Uri for the file: "+file.toString());
 			if (file.exists() == false) {
-				
 				response.status(404);
 				response.body(Constants.error_FileNotFound);
 				return false;
+			}
+			
+			// check if path is a file or directory
+			if (file.isDirectory()) {
+				// if it is a directory, then see if /index.html is there
+				file = new File(file.toString() + "/index.html");
+				fileDirectory = Paths.get(fileDirectory.toString(), "/index.html");
+				if (file.exists() == false) {
+					response.status(404);
+					response.body(Constants.error_FileNotFound);
+					return false;
+				}
 			}
 			
 			// get content type
 			String mimeType = Files.probeContentType(fileDirectory);
 			if (mimeType != null) {
 				response.type(mimeType);
+				response.addToHeaders("Content-Type", mimeType);
+				System.out.println(mimeType);
 			}
+//			else {
+//				response.addToHeaders("Content-Type", "text/html");
+//			}
 						
 			response.setProtocol(request.protocol());
 			
-			
-			
 			// read file into byte array
 			response.bodyRaw(Files.readAllBytes(file.toPath()));
-			response.setHeaders(setResponseHeaders(fileDirectory));
+			setLastModifiedHeader(fileDirectory);
 			return true;
 		}
 		catch (HaltException | IOException e){
@@ -106,12 +123,10 @@ public class RequestHandler{
 				
 	}
 	
-	private Hashtable<String,String> setResponseHeaders(Path fileDirectory) throws IOException{
+	private void setLastModifiedHeader(Path fileDirectory) throws IOException{
 		Hashtable<String,String> responseHeaders = new Hashtable<String,String>();
 		FileTime lastModified = Files.getLastModifiedTime(fileDirectory);
-		responseHeaders.put("Last-Modified",lastModified.toString());
-		responseHeaders.put("Server","CIS555/1.00");
-		return responseHeaders;		
+		response.addToHeaders("Last-Modified",lastModified.toString());
 	}
 	
 	private void getHeaders() throws IOException {
@@ -132,11 +147,4 @@ public class RequestHandler{
 		return null;
 	}
 	
-	
-//	public Response createResponse() throws IOException {
-//    	ResponseFactory responseFactory = new ResponseFactory();
-//    	return responseFactory.createResponse();
-//		
-//    	
-//    }
 }

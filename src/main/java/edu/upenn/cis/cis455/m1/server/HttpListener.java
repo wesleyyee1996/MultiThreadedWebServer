@@ -40,7 +40,7 @@ public class HttpListener implements Runnable {
     		try {
         		System.out.println("running listener");
         	    // Make sure socket is bound to an address and has not already been closed
-        		//while(serverSocket.isBound() && !serverSocket.isClosed()) {
+        		while(serverSocket.isBound() && !serverSocket.isClosed()) {
             		System.out.println("in serverSocket loop");
             		
         			Socket socket = serverSocket.accept();
@@ -52,7 +52,7 @@ public class HttpListener implements Runnable {
             		System.out.println("task added to Queue");
             		
             		//serverSocket.close();
-            	//}
+            	}
         		System.out.println("out of listener loop");
         	}
         	catch (IOException ex){

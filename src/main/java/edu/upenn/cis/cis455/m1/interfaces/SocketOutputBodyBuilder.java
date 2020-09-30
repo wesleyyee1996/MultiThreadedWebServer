@@ -21,8 +21,13 @@ public class SocketOutputBodyBuilder {
 		socketOutput = new StringBuffer();
 		StringBuffer statusLine = buildStatusLine(response.status(), response.protocol());
 		socketOutput.append(statusLine);
-		StringBuffer headers = buildHeaders(response.getHeadersRaw());
-		socketOutput.append(headers);
+		if (!response.getHeadersRaw().isEmpty()) {
+			StringBuffer headers = buildHeaders(response.getHeadersRaw());
+			socketOutput.append(headers);
+		}
+		else {
+			socketOutput.append(CRFL);
+		}
 		socketOutputBytes = stringToByteArray(socketOutput.toString());
 		if (response.bodyRaw() != null) {
 			socketOutputBytesOutput = combineByteArrays(socketOutputBytes, response.bodyRaw());
@@ -43,7 +48,7 @@ public class SocketOutputBodyBuilder {
 	private StringBuffer buildHeaders(Hashtable<String,String> headers) {
 		StringBuffer bodyHeaders = new StringBuffer();
     	for (String key : headers.keySet()) {
-    		bodyHeaders.append(key + " : " + headers.get(key) + Constants.CRFL);
+    		bodyHeaders.append(key + ": " + headers.get(key) + Constants.CRFL);
     	}
     	bodyHeaders.append(Constants.CRFL);
     	return bodyHeaders;

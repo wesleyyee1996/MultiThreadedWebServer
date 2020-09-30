@@ -38,10 +38,10 @@ public class Constants {
 	static {
 		statusCodeReasons = new Hashtable<Integer, String>();
 		statusCodeReasons.put(200,"OK");
-		statusCodeReasons.put(400,"OK");
-		statusCodeReasons.put(403,"OK");
-		statusCodeReasons.put(404,"OK");
-		statusCodeReasons.put(500,"OK");
+		statusCodeReasons.put(400,"Bad request");
+		statusCodeReasons.put(403,"Forbidden");
+		statusCodeReasons.put(404,"File note found");
+		statusCodeReasons.put(500,"Server error");
 	}
 //	public static final String _200 = "OK";
 //	public static final String _400 = "Bad Request";
