@@ -21,15 +21,15 @@ public class HttpTaskQueue {
 		this._maxNumTasks = maxNumTasks;
 	}
 	
-	public synchronized void addTask (HttpTask task) throws InterruptedException {
+	public void addTask (HttpTask task) throws InterruptedException {
 		while(true) {
-			synchronized(_taskQueue) {
+			synchronized (_taskQueue) {
 				if (_taskQueue.size() == _maxNumTasks) {
 					logger.debug("Queue full");
 					_taskQueue.wait();
 				}
 				else{
-					_taskQueue.offer(task);
+					_taskQueue.add(task);
 					logger.debug("Added task to queue");
 					_taskQueue.notifyAll();
 					break;
@@ -39,12 +39,12 @@ public class HttpTaskQueue {
 		
 	}
 	
-	public synchronized HttpTask popTask() throws InterruptedException {
+	public HttpTask popTask() throws InterruptedException {
 		while(true) {
-			synchronized (_taskQueue) {
+			synchronized(_taskQueue) {
 				if(_taskQueue.isEmpty()) {
 					logger.debug("Queue currently empty");
-					wait();
+					_taskQueue.wait();
 				}
 				else {
 					logger.debug("Grabbing task from queue");

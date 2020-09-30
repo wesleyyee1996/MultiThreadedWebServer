@@ -57,10 +57,10 @@ public class HttpIoHandler {
     		requestHandler.handleRequest(request, successResponse);
     		
     		SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
-			socketOutputBuilder.buildSocketOutput(successResponse);
+			byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(successResponse);
     		
     		//String responseBody = (String)requestHandler.handle(request, successResponse);
-    		sendResponse(_socket, request, successResponse);
+    		sendResponse(_socket, request, socketOutputBytes);
     	//} 
     	// If anything goes wrong when trying to handle the request, then throw a HaltException
     	//catch (HaltException haltException) {
@@ -114,11 +114,11 @@ public class HttpIoHandler {
      * (for persistent connections).
      * @throws IOException 
      */
-    public static boolean sendResponse(Socket socket, Request request, Response response) throws IOException {
+    public static boolean sendResponse(Socket socket, Request request, byte[] socketOutputBytes) throws IOException {
     	if (!request.persistentConnection()) {
     		// Write output to socket
         	OutputStream outputStream = socket.getOutputStream();
-        	outputStream.write(response.body().getBytes());  
+        	outputStream.write(socketOutputBytes);  
     	}
     	return true;
         

@@ -36,39 +36,33 @@ public class HttpListener implements Runnable {
 	
     @Override
     public void run() {
-    	
-    	try {
-    		System.out.println("running listener");
-    	    // Make sure socket is bound to an address and has not already been closed
-    		while(serverSocket.isBound() && !serverSocket.isClosed()) {
-        		System.out.println("in serverSocket loop");
-        		
-    			Socket socket = serverSocket.accept();
-        		System.out.println("accepted socket");
-    			
-        		HttpTask task = new HttpTask(socket, port, root_dir);
-        		
-        		this.taskQueue.addTask(task);
-        		
-        		//HttpTaskQueue taskQueue = new HttpTaskQueue(Constants.taskQueueNumTasks);
-        		//taskQueue.addTask(task);
-        		
-        		//TODO: use thread pool to assign worker to task from task queue
-        		//ThreadPool threadPool = new ThreadPool(Constants.taskQueueNumTasks, Constants.threadPoolNumThreads);
-        		//threadPool.addTask(task);
-        		
-        		serverSocket.close();
+    	while(true) {
+    		try {
+        		System.out.println("running listener");
+        	    // Make sure socket is bound to an address and has not already been closed
+        		//while(serverSocket.isBound() && !serverSocket.isClosed()) {
+            		System.out.println("in serverSocket loop");
+            		
+        			Socket socket = serverSocket.accept();
+            		System.out.println("accepted socket");
+        			
+            		HttpTask task = new HttpTask(socket, port, root_dir);
+            		
+            		this.taskQueue.addTask(task);
+            		System.out.println("task added to Queue");
+            		
+            		//serverSocket.close();
+            	//}
+        		System.out.println("out of listener loop");
         	}
-    		System.out.println("out of listener loop");
+        	catch (IOException ex){
+        		// TODO Add logging functionality
+        		System.out.println("Error creating connection" + ex);
+        	}
+        	catch (InterruptedException ex){
+        		System.out.println("Thread error: " + ex);
+        	}
     	}
-    	catch (IOException ex){
-    		// TODO Add logging functionality
-    		System.out.println("Error creating connection" + ex);
-    	}
-    	catch (InterruptedException ex){
-    		System.out.println("Thread error: " + ex);
-    	}
-    	
     	
     }
 }

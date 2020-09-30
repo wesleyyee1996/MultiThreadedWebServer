@@ -15,6 +15,7 @@ public class SocketOutputBodyBuilder {
 	String CRFL = "\r\n";
 	StringBuffer socketOutput;
 	byte[] socketOutputBytes;
+	byte[] socketOutputBytesOutput;
 	
 	public byte[] buildSocketOutput(Response response) {
 		socketOutput = new StringBuffer();
@@ -23,15 +24,20 @@ public class SocketOutputBodyBuilder {
 		StringBuffer headers = buildHeaders(response.getHeadersRaw());
 		socketOutput.append(headers);
 		socketOutputBytes = stringToByteArray(socketOutput.toString());
-		socketOutputBytes = combineByteArrays(socketOutputBytes, response.bodyRaw());
-		return socketOutputBytes;
+		if (response.bodyRaw() != null) {
+			socketOutputBytesOutput = combineByteArrays(socketOutputBytes, response.bodyRaw());
+		}
+		if (response.bodyRaw() == null) {
+			socketOutputBytesOutput = combineByteArrays(socketOutputBytes, CRFL.getBytes());
+		}
+		return socketOutputBytesOutput;
 	}
 	
 	private StringBuffer buildStatusLine(int statusCode, String httpVersion) {
 		logger.debug("Status code: "+statusCode);
 		logger.debug("Http Version: "+httpVersion);
 		StringBuffer statusLine = new StringBuffer();
-    	return statusLine.append(httpVersion + " "+ Integer.toString(statusCode) + Constants.CRFL);
+    	return statusLine.append(httpVersion + " "+ Integer.toString(statusCode) + " "+Constants.statusCodeReasons.get(statusCode)+ Constants.CRFL);
 	}
 	
 	private StringBuffer buildHeaders(Hashtable<String,String> headers) {
@@ -39,6 +45,7 @@ public class SocketOutputBodyBuilder {
     	for (String key : headers.keySet()) {
     		bodyHeaders.append(key + " : " + headers.get(key) + Constants.CRFL);
     	}
+    	bodyHeaders.append(Constants.CRFL);
     	return bodyHeaders;
 	}
 	

@@ -1,5 +1,6 @@
 package edu.upenn.cis.cis455;
 
+import java.util.Hashtable;
 
 public class Constants {
 
@@ -30,6 +31,23 @@ public class Constants {
 	
 	public static final int threadPoolSize = 10;
 	public static final int taskQueueSize = 10;
+	
+	
+	public static final Hashtable<Integer, String> statusCodeReasons;
+	
+	static {
+		statusCodeReasons = new Hashtable<Integer, String>();
+		statusCodeReasons.put(200,"OK");
+		statusCodeReasons.put(400,"OK");
+		statusCodeReasons.put(403,"OK");
+		statusCodeReasons.put(404,"OK");
+		statusCodeReasons.put(500,"OK");
+	}
+//	public static final String _200 = "OK";
+//	public static final String _400 = "Bad Request";
+//	public static final String _403 = "Forbidden";
+//	public static final String _404 = "File not found";
+//	public static final String _500 = "Server error";
 	
 	//public static final Hashtable<Integer, String> statusCodeMessages = new Hashtable<Integer, String>() {{ put(200, "OK"); put()
 }

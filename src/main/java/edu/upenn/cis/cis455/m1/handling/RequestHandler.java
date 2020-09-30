@@ -110,7 +110,7 @@ public class RequestHandler{
 		Hashtable<String,String> responseHeaders = new Hashtable<String,String>();
 		FileTime lastModified = Files.getLastModifiedTime(fileDirectory);
 		responseHeaders.put("Last-Modified",lastModified.toString());
-		responseHeaders.put("Server:","CIS555/1.00");
+		responseHeaders.put("Server","CIS555/1.00");
 		return responseHeaders;		
 	}
 	

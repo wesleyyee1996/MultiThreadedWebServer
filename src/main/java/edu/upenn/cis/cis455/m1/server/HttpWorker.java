@@ -55,7 +55,7 @@ public class HttpWorker implements Runnable {
         		// Handle request
         		httpHandler.handleRequest();    		
             	
-            	_httpTask.getSocket().close();
+            	//_httpTask.getSocket().close();
         	}
         	catch (InterruptedException e){
         		System.out.println(e);

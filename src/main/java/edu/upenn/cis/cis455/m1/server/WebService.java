@@ -50,7 +50,7 @@ public class WebService {
 
     protected static HttpListener listener;
     protected static HttpTaskQueue taskQueue;
-    protected static ArrayList<HttpWorker> threadPool;
+    protected static ArrayList<Thread> threadPool;
     //protected ThreadPool threadPool;
     //protected int threadPoolSize;
     protected int port;
@@ -66,14 +66,18 @@ public class WebService {
     	// Launch the listener
     	listener = new HttpListener(this.port, this.root_dir, taskQueue);
     	Thread listenerThread = new Thread(listener);
-    	listenerThread.run();
+    	listenerThread.start();
     	
     	// Create the thread pool
+    	threadPool = new ArrayList<Thread>();
         for (int thread = 0; thread < Constants.threadPoolSize; thread++) {
         	HttpWorker worker = new HttpWorker(taskQueue);
         	Thread workerThread = new Thread(worker);
-        	workerThread.run();
-        	threadPool.add(worker);
+        	System.out.println(workerThread.getName());
+        	workerThread.start();
+        	threadPool.add(workerThread);
+        	//threadPool[thread] = new HttpWorker(taskQueue);
+        	//threadPool[thread].run();
         }
     }
 
