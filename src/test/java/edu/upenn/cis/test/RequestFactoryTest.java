@@ -18,8 +18,8 @@ import java.util.Hashtable;
 import org.junit.Test;
 
 import edu.upenn.cis.cis455.Constants;
-import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
+import edu.upenn.cis.cis455.m1.server.RequestFactory;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
 

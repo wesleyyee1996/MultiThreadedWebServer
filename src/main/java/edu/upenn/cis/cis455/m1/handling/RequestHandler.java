@@ -48,7 +48,6 @@ public class RequestHandler{
     	boolean handleFunctionSuccess = handleFunction();
     	if (!handleFunctionSuccess) {
     		return false;
-    		//return Constants.normalRouteFailed;
     	}
         
         return true;
@@ -71,11 +70,8 @@ public class RequestHandler{
     	}
     	else {
     		// if request type is head, then don't need to get the body
-    		//if (!request.headers().get(Constants.Method).equals(Constants.head)) {
-	    		// get file from directory
 	    		route = Constants.normalRoute;
 	    		return getFileFromPath();
-    		//}
     	}
     	return true;
     }
@@ -91,6 +87,7 @@ public class RequestHandler{
 			if (file.exists() == false) {
 				response.status(404);
 				response.body(HttpParsing.explainStatus(404));
+				WebService.getInstance().halt(404, HttpParsing.explainStatus(404));
 				return false;
 			}
 			
@@ -138,7 +135,6 @@ public class RequestHandler{
 	}
 	
 	private void setLastModifiedHeader(Path fileDirectory) throws IOException{
-		Hashtable<String,String> responseHeaders = new Hashtable<String,String>();
 		FileTime lastModified = Files.getLastModifiedTime(fileDirectory);
 		response.addToHeaders("Last-Modified",lastModified.toString());
 	}

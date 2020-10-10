@@ -18,15 +18,15 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
-import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
 import edu.upenn.cis.cis455.m1.interfaces.Request;
-import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
 import edu.upenn.cis.cis455.m1.interfaces.Response;
-import edu.upenn.cis.cis455.m1.interfaces.SocketOutputBodyBuilder;
-import edu.upenn.cis.cis455.m1.interfaces.SuccessResponse;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 import edu.upenn.cis.cis455.m1.server.HttpWorker;
+import edu.upenn.cis.cis455.m1.server.RequestFactory;
+import edu.upenn.cis.cis455.m1.server.RequestObj;
+import edu.upenn.cis.cis455.m1.server.ResponseObj;
 import edu.upenn.cis.cis455.m1.server.WebService;
+import edu.upenn.cis.cis455.utils.SocketOutputBodyBuilder;
 
 /**
  * Handles marshalling between HTTP Requests and Responses
@@ -34,7 +34,7 @@ import edu.upenn.cis.cis455.m1.server.WebService;
 public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
-    private SuccessResponse successResponse = new SuccessResponse();
+    private ResponseObj successResponse = new ResponseObj();
     public Hashtable<String,String> _parsedHeaders;
     public String _uri;
     private InetAddress _remoteIp;
@@ -55,7 +55,6 @@ public class HttpIoHandler {
     	
     	// Creates a new request based on type w/ RequestFactory
     	Request request = createRequest();
-    	//HttpWorker.setWorkerStatus(request.url());
     	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
     	
 		// Call Request Handler to handle the request
@@ -134,7 +133,6 @@ public class HttpIoHandler {
      * (for persistent connections).
      * @throws IOException 
      */
-    //public static boolean sendResponse(Socket socket, Request request, byte[] socketOutputBytes) throws IOException {
 	public static boolean sendResponse(Socket socket, byte[] socketOutputBytes) throws IOException {
     	//if (!request.persistentConnection()) {
     		// Write output to socket

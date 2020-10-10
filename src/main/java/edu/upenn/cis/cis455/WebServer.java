@@ -1,16 +1,12 @@
 package edu.upenn.cis.cis455;
 
-import static edu.upenn.cis.cis455.WebServiceFactory.*;
-
-import java.io.IOException;
-import java.util.Optional;
-
 import org.apache.logging.log4j.*;
 
-import edu.upenn.cis.cis455.exceptions.ConfigurationException;
-import edu.upenn.cis.cis455.m1.server.CommandLineParser;
-import edu.upenn.cis.cis455.m1.server.CommandLineValues;
-import edu.upenn.cis.cis455.m1.server.WebService;
+import edu.upenn.cis.cis455.m2.interfaces.Request;
+import edu.upenn.cis.cis455.m2.interfaces.Response;
+import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.utils.CommandLineParser;
+import edu.upenn.cis.cis455.utils.CommandLineValues;
 
 public class WebServer {
 	
@@ -34,6 +30,10 @@ public class WebServer {
 		WebServiceFactory.port(CommandLineValues.getInstance().getPort());
 		WebServiceFactory.staticFileLocation(CommandLineValues.getInstance().getRootDir());
 		WebServiceFactory.ipAddress(null);
+		
+//		Route test = (Request request, Response response)-> {
+//			return "abc";};
+//		WebServiceFactory.get("/test", test);
 		
 		// Run web service
 		WebServiceFactory.awaitInitialization();

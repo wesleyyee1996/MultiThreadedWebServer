@@ -5,15 +5,15 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.upenn.cis.cis455.m1.interfaces.SocketOutputBodyBuilder;
-import edu.upenn.cis.cis455.m1.interfaces.SuccessResponse;
+import edu.upenn.cis.cis455.m1.server.ResponseObj;
+import edu.upenn.cis.cis455.utils.SocketOutputBodyBuilder;
 
 public class SocketOutputBodyBuilderTest {
 
-	SuccessResponse response;
+	ResponseObj response;
 	@Before
 	public void setUp() {
-		response = new SuccessResponse();
+		response = new ResponseObj();
 		response.status(404);
 	}
 	

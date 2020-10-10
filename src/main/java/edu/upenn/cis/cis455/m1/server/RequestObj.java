@@ -1,10 +1,11 @@
-package edu.upenn.cis.cis455.m1.interfaces;
+package edu.upenn.cis.cis455.m1.server;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.Set;
 
-public class GetRequest extends Request{
+import edu.upenn.cis.cis455.m1.interfaces.Request;
+
+public class RequestObj extends Request{
 
 	@Override
 	public String requestMethod() {

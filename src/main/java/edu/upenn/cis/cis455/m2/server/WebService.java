@@ -32,10 +32,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.utils.FilterMap;
+import edu.upenn.cis.cis455.utils.RouteMap;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
 
 public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
+    public static RouteMap postRouteMap = new RouteMap();
+    public static RouteMap putRouteMap = new RouteMap();
+    public static RouteMap deleteRouteMap = new RouteMap();
+    public static RouteMap headRouteMap = new RouteMap();
+    public static RouteMap optionsRouteMap = new RouteMap();
+    public static FilterMap beforeFilterMap = new FilterMap();
+    public static FilterMap afterFilterMap = new FilterMap();
 
     public WebService() {
         super();
@@ -48,27 +57,37 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     /**
      * Handle an HTTP POST request to the path
      */
-    public void post(String path, Route route) {}
+    public void post(String path, Route route) {
+    	postRouteMap.add(path, route);
+    }
 
     /**
      * Handle an HTTP PUT request to the path
      */
-    public void put(String path, Route route) {}
+    public void put(String path, Route route) {
+    	putRouteMap.add(path, route);
+    }
 
     /**
      * Handle an HTTP DELETE request to the path
      */
-    public void delete(String path, Route route) {}
+    public void delete(String path, Route route) {
+    	deleteRouteMap.add(path, route);
+    }
 
     /**
      * Handle an HTTP HEAD request to the path
      */
-    public void head(String path, Route route) {}
+    public void head(String path, Route route) {
+    	headRouteMap.add(path, route);
+    }
 
     /**
      * Handle an HTTP OPTIONS request to the path
      */
-    public void options(String path, Route route) {}
+    public void options(String path, Route route) {
+    	optionsRouteMap.add(path, route);
+    }
 
     ///////////////////////////////////////////////////
     // HTTP request filtering
@@ -77,20 +96,28 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     /**
      * Add filters that get called before a request
      */
-    public void before(Filter filter) {}
+    public void before(Filter filter) {
+    	beforeFilterMap.add(filter);
+    }
 
     /**
      * Add filters that get called after a request
      */
-    public void after(Filter filter) {}
+    public void after(Filter filter) {
+    	afterFilterMap.add(filter);
+    }
     /**
      * Add filters that get called before a request
      */
-    public void before(String path, String acceptType, Filter filter) {}
+    public void before(String path, String acceptType, Filter filter) {
+    	beforeFilterMap.add(path, acceptType, filter);
+    }
     /**
      * Add filters that get called after a request
      */
-    public void after(String path, String acceptType, Filter filter) {}
+    public void after(String path, String acceptType, Filter filter) {
+    	afterFilterMap.add(path, acceptType, filter);
+    }
 
 
 }

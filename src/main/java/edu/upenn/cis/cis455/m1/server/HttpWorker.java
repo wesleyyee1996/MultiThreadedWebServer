@@ -1,16 +1,9 @@
 package edu.upenn.cis.cis455.m1.server;
 
-//import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
-//import edu.upenn.cis.cis455.m1.interfaces.GetRequest;
-//import edu.upenn.cis.cis455.m1.interfaces.Request;
-//import edu.upenn.cis.cis455.m1.interfaces.RequestFactory;
-//import edu.upenn.cis.cis455.m1.interfaces.Response;
-//import edu.upenn.cis.cis455.m1.server.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-//import java.net.Socket;
 import java.util.Hashtable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

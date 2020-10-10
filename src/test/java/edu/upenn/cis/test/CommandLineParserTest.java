@@ -6,8 +6,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import edu.upenn.cis.cis455.m1.server.CommandLineParser;
-import edu.upenn.cis.cis455.m1.server.CommandLineValues;
+import edu.upenn.cis.cis455.utils.CommandLineParser;
+import edu.upenn.cis.cis455.utils.CommandLineValues;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CommandLineParserTest {

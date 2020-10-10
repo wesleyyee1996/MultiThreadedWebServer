@@ -30,12 +30,8 @@ package edu.upenn.cis.cis455.m1.server;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,8 +40,8 @@ import org.apache.logging.log4j.Logger;
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
-import edu.upenn.cis.cis455.m1.interfaces.Route;
-import edu.upenn.cis.cis455.m1.server.*;
+import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.utils.RouteMap;
 
 public class WebService {
     final static Logger logger = LogManager.getLogger(WebService.class);
@@ -55,13 +51,12 @@ public class WebService {
     protected static HttpTaskQueue taskQueue;
     protected static ArrayList<Thread> threadPool;
     protected Socket socket = new Socket();
-    //protected ThreadPool threadPool;
-    //protected int threadPoolSize;
     protected int port;
     protected String root_dir;
     protected String ip_address = "0.0.0.0";
     protected int threadPoolSize;
     public static Hashtable<String,String> threadStatuses = new Hashtable<String,String>();
+    public static RouteMap getRouteMap = new RouteMap();
     
     private static WebService _webService;
 	
@@ -177,7 +172,9 @@ public class WebService {
     /**
      * Handle an HTTP GET request to the path
      */
-    public void get(String path, Route route) {}
+    public void get(String path, Route route) {
+    	getRouteMap.add(path, route);
+    }
 
     ////////////////////////////////////////////
     // Server configuration

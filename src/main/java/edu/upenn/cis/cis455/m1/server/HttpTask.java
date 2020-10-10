@@ -2,7 +2,7 @@ package edu.upenn.cis.cis455.m1.server;
 
 import java.net.Socket;
 
-import edu.upenn.cis.cis455.m1.interfaces.Request;
+import edu.upenn.cis.cis455.m2.interfaces.Request;
 
 public class HttpTask {
     private Socket requestSocket;

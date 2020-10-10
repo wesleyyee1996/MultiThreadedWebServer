@@ -38,8 +38,8 @@ import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
 
 // change all to edu.upenn.cis.cis455.m2 for m2
-import edu.upenn.cis.cis455.m1.server.WebService;
-import edu.upenn.cis.cis455.m1.interfaces.Route;
+import edu.upenn.cis.cis455.m2.server.WebService;
+import edu.upenn.cis.cis455.m2.interfaces.Route;
 
 public class WebServiceFactory {
 	
@@ -48,13 +48,6 @@ public class WebServiceFactory {
 
     // We don't want people to use the constructor
     protected WebServiceFactory() {}
-
-//    public static WebService CreateWebService(int port, String root_dir) throws Exception{
-//    	_webService = new WebService();
-//    	_webService.port(port);
-//    	_webService.staticFileLocation(root_dir);
-//    	return _webService;
-//    }
     
     public static void createWebService() {
     	_webService = new WebService();
@@ -64,42 +57,42 @@ public class WebServiceFactory {
      * Handle an HTTP GET request to the path
      */
     public static void get(String path, Route route) {
-        throw new UnsupportedOperationException();
+        _webService.get(path, route);
     }
 
     /**
      * Handle an HTTP POST request to the path
      */
     public static void post(String path, Route route) {
-        throw new UnsupportedOperationException();
+        _webService.post(path, route);
     }
 
     /**
      * Handle an HTTP PUT request to the path
      */
     public static void put(String path, Route route) {
-        throw new UnsupportedOperationException();
+    	_webService.put(path, route);
     }
 
     /**
      * Handle an HTTP DELETE request to the path
      */
     public static void delete(String path, Route route) {
-        throw new UnsupportedOperationException();
+    	_webService.delete(path, route);
     }
 
     /**
      * Handle an HTTP HEAD request to the path
      */
     public static void head(String path, Route route) {
-        throw new UnsupportedOperationException();
+    	_webService.head(path, route);
     }
 
     /**
      * Handle an HTTP OPTIONS request to the path
      */
     public static void options(String path, Route route) {
-        throw new UnsupportedOperationException();
+    	_webService.options(path, route);
     }
 
     ///////////////////////////////////////////////////
@@ -110,28 +103,36 @@ public class WebServiceFactory {
      * Add filters that get called before a request
      */
     public static void before(Filter... filters) {
-        throw new UnsupportedOperationException();
+    	for (Filter filter : filters){
+    		_webService.before(filter);
+    	}
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(Filter... filters) {
-        throw new UnsupportedOperationException();
+    	for (Filter filter : filters) {
+            _webService.after(filter);
+    	}
     }
 
     /**
      * Add filters that get called before a request
      */
     public static void before(String path, String acceptType, Filter... filters) {
-        throw new UnsupportedOperationException();
+    	for (Filter filter : filters) {
+            _webService.before(path, acceptType, filter);
+    	}
     }
 
     /**
      * Add filters that get called after a request
      */
     public static void after(String path, String acceptType, Filter... filters) {
-        throw new UnsupportedOperationException();
+    	for (Filter filter : filters) {
+            _webService.after(path, acceptType, filter);
+    	}
     }
 
     /**

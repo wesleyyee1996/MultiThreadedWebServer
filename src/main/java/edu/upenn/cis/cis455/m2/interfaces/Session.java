@@ -55,4 +55,14 @@ public abstract class Session {
      * Delete an object from the session
      */
     public abstract void removeAttribute(String name);
+    
+    public String createSessionId() {
+		String nums = "0123456789";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 15; i++) {
+			int idx = (int)(nums.length()*Math.random());
+			sb.append(nums.charAt(idx));
+		}
+		return sb.toString();
+	}
 }

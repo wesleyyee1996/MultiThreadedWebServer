@@ -1,26 +1,18 @@
-package edu.upenn.cis.cis455.m1.interfaces;
+package edu.upenn.cis.cis455.m1.server;
 
 import java.io.IOException;
 import java.util.Hashtable;
 
 import edu.upenn.cis.cis455.Constants;
-import edu.upenn.cis.cis455.m1.server.HttpTask;
+import edu.upenn.cis.cis455.m1.interfaces.Request;
 
 public class RequestFactory {
 
-	public  Request getRequest(Hashtable<String,String> parsedHeaders, HttpTask task, String uri) throws IOException {
+	public  RequestObj getRequest(Hashtable<String,String> parsedHeaders, HttpTask task, String uri) throws IOException {
 		String requestType = parsedHeaders.get(Constants.Method);
-		if (requestType.equals(Constants.get)) {
-			GetRequest getRequest = new GetRequest();
-			setRequestParams(getRequest, task, requestType, parsedHeaders, uri);
-			return getRequest;
-		}
-		if (requestType.equals(Constants.head)) {
-			HeadRequest headRequest = new HeadRequest();
-			setRequestParams(headRequest, task, requestType, parsedHeaders, uri);
-			return headRequest;
-		}
-		throw new IOException("Error creating request for request type " + requestType);
+		RequestObj request = new RequestObj();
+		setRequestParams(request, task, requestType, parsedHeaders, uri);
+		return request;
 	}
 	
 	public void setRequestParams(Request request, HttpTask task, String requestType, Hashtable<String,String> headers, String uri) {

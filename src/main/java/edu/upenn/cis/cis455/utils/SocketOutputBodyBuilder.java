@@ -1,14 +1,13 @@
-package edu.upenn.cis.cis455.m1.interfaces;
+package edu.upenn.cis.cis455.utils;
 
-import java.io.File;
 import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
-import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m1.handling.HttpParsing;
+import edu.upenn.cis.cis455.m1.interfaces.Response;
 
 public class SocketOutputBodyBuilder {
     final static Logger logger = LogManager.getLogger(SocketOutputBodyBuilder.class);
