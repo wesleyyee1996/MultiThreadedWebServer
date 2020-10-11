@@ -196,7 +196,7 @@ public class WebServiceFactory {
     }
 
     public static String createSession() {
-        throw new UnsupportedOperationException();
+        return _webService.createSession();
     }
 
     public static Session getSession(String id) {

@@ -28,10 +28,13 @@
  */
 package edu.upenn.cis.cis455.m2.server;
 
+import java.util.Hashtable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.m2.interfaces.Session;
 import edu.upenn.cis.cis455.utils.FilterMap;
 import edu.upenn.cis.cis455.utils.RouteMap;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
@@ -45,11 +48,21 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     public static RouteMap optionsRouteMap = new RouteMap();
     public static FilterMap beforeFilterMap = new FilterMap();
     public static FilterMap afterFilterMap = new FilterMap();
+    public static Hashtable<String,Session> sessionMap = new Hashtable<String,Session>();
 
     public WebService() {
         super();
     }
-
+    
+    public static WebService _webService = new WebService();
+    
+    public static WebService getInstance() {
+		if (_webService == null) {
+			_webService = new WebService();
+		}
+		return _webService;
+	}
+    
     ///////////////////////////////////////////////////
     // For more advanced capabilities
     ///////////////////////////////////////////////////
@@ -118,6 +131,36 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     public void after(String path, String acceptType, Filter filter) {
     	afterFilterMap.add(path, acceptType, filter);
     }
+    
+	///////////////////////////////////////////////////
+	// Sessions
+	///////////////////////////////////////////////////
 
+    /**
+     * Creates a new session and adds it to the sessionMap
+     * @return
+     */
+    public String createSession() {
+    	Session session = new SessionObj();
+    	sessionMap.put(session.id(), session);
+    	return session.id();
+    }
+    
+    /**
+     * Gets a session based on id
+     * @param id
+     * @return
+     */
+    public Session getSession(String id) {
+    	return sessionMap.get(id);
+    }
+    
+    /**
+     * Gets the entire sessionMap
+     * @return
+     */
+    public Hashtable<String,Session> getSessionMap(){
+    	return sessionMap;
+    }
 
 }

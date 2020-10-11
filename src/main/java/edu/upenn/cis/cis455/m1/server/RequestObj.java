@@ -2,10 +2,25 @@ package edu.upenn.cis.cis455.m1.server;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import edu.upenn.cis.cis455.m1.interfaces.Request;
+import edu.upenn.cis.cis455.Constants;
+import edu.upenn.cis.cis455.m2.interfaces.Request;
+import edu.upenn.cis.cis455.m2.interfaces.Session;
+import edu.upenn.cis.cis455.m2.server.Cookie;
+import edu.upenn.cis.cis455.m2.server.SessionObj;
+import edu.upenn.cis.cis455.m2.server.WebService;
 
 public class RequestObj extends Request{
+	
+	Hashtable<String, Cookie> _cookies = new Hashtable<String,Cookie>();
+	Hashtable<String, Object> _attributes = new Hashtable<String, Object>();
+	String _queryString;
+	Hashtable<String,List<String>> _queryParams = new Hashtable<String,List<String>>();
+	Hashtable<String,String> _uriPathParams = new Hashtable<String,String>();
+	
 
 	@Override
 	public String requestMethod() {
@@ -186,6 +201,101 @@ public class RequestObj extends Request{
 	public void setRootDir(String root_dir) {
 		this.root_dir = root_dir;
 		
+	}
+
+	/**
+	 * Gets the session for the request provided. Assumes that request already
+	 * has a session.
+	 */
+	@Override
+	public Session session() {
+		Cookie sessionCookie = this._cookies.get(Constants.sessionId);
+		Session session = new SessionObj();
+		session = WebService.getInstance().getSession(sessionCookie.sessionId());
+		return session;
+	}
+
+	/**
+     * @return Gets or creates a session for this request
+     */
+	@Override
+	public Session session(boolean create) {
+		if (create) {
+			return new SessionObj();
+		}
+		return session();
+	}
+
+	/**
+	 * Returns the map containing all route params
+	 */
+	@Override
+	public Map<String, String> params() {
+		return this._uriPathParams;
+	}
+
+	/**
+	 * Returns the value of the provided queryParam 
+	 * Example: query parameter 'id' from the following request URI: /hello?id=foo
+	 */
+	@Override
+	public String queryParams(String param) {
+		return _queryParams.get(param).get(0);
+	}
+
+	/**
+	 * Gets all the values of the query param 
+	 * Example: query parameter 'id' from the following request URI: /hello?id=foo&id=bar
+	 */
+	@Override
+	public List<String> queryParamsValues(String param) {
+		return _queryParams.get(param);
+	}
+
+	/**
+	 * Returns all the query parameters
+	 */
+	@Override
+	public Set<String> queryParams() {
+		return _queryParams.keySet();
+	}
+
+	/**
+	 * Returns the query string
+	 */
+	@Override
+	public String queryString() {
+		return this._queryString;
+	}
+
+	/**
+	 * Sets an attribute on the request (can be fetched in filter/routes later in the chain)
+	 */
+	@Override
+	public void attribute(String attrib, Object val) {
+		this._attributes.put(attrib, val);
+	}
+
+	@Override
+	public Object attribute(String attrib) {
+		return this._attributes.get(attrib);
+	}
+
+	@Override
+	public Set<String> attributes() {
+		return this._attributes.keySet();
+	}
+
+	/**
+	 * Returns the request cookies as Map<cookieId,cookieName>
+	 */
+	@Override
+	public Map<String, String> cookies() {
+		Hashtable<String,String> stringCookies = new Hashtable<String,String>();
+		for (String cookieId : this._cookies.keySet()) {
+			stringCookies.put(cookieId,cookie(cookieId));
+		}
+		return stringCookies;
 	}
 	
 

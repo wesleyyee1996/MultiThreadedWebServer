@@ -31,6 +31,8 @@ package edu.upenn.cis.cis455.m1.server;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import static edu.upenn.cis.cis455.m1.server.WebService._webService;
+
 import java.io.IOException;
 import java.net.Socket;
 
@@ -58,9 +60,9 @@ public class WebService {
     public static Hashtable<String,String> threadStatuses = new Hashtable<String,String>();
     public static RouteMap getRouteMap = new RouteMap();
     
-    private static WebService _webService;
-	
-	public static WebService getInstance() {
+    public static WebService _webService;
+	    
+    public static WebService getInstance() {
 		if (_webService == null) {
 			_webService = new WebService();
 		}

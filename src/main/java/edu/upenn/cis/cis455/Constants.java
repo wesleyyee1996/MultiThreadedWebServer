@@ -29,6 +29,8 @@ public class Constants {
 	public static final int threadPoolSize = 10;
 	public static final int taskQueueSize = 100;
 	
+	public static final String sessionId = "JSESSIONID";
+	
 	
 	public static final Hashtable<Integer, String> statusCodeReasons;
 	

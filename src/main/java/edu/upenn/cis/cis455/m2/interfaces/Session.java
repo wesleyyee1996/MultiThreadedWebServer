@@ -56,6 +56,10 @@ public abstract class Session {
      */
     public abstract void removeAttribute(String name);
     
+    /**
+     * Creates a random 15 character long number for sessionId
+     * @return
+     */
     public String createSessionId() {
 		String nums = "0123456789";
 		StringBuilder sb = new StringBuilder();
