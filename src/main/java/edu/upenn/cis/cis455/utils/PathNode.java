@@ -8,10 +8,6 @@ public class PathNode<T> {
 	
 	public PathNode() {};
 	
-	public PathNode<T> head(){
-		
-	}
-	
 //	public PathNode(PathNode<T> head, PathNode<T> prev) {
 //		this.head = head;
 //		this.prev = prev;
