@@ -32,6 +32,10 @@ public abstract class Response extends edu.upenn.cis.cis455.m1.interfaces.Respon
 
     public abstract void cookie(String path, String name, String value, int maxAge, boolean secured, boolean httpOnly);
 
+    /**
+     * Set the cookie Expires date to a date in the past
+     * @param name
+     */
     public abstract void removeCookie(String name);
 
     public abstract void removeCookie(String path, String name);

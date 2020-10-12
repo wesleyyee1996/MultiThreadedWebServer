@@ -31,6 +31,13 @@ public class Constants {
 	
 	public static final String sessionId = "JSESSIONID";
 	
+	public static final String expires = "Expires";
+	public static final String maxAge = "Max-Age";
+	public static final String domain = "Domain";
+	public static final String path = "Path";
+	public static final String secure = "Secure";
+	public static final String httpOnly = "HttpOnly";
+	
 	
 	public static final Hashtable<Integer, String> statusCodeReasons;
 	
