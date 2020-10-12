@@ -35,20 +35,31 @@ public class PathTree {
 	private void add(TreeNode<String> treeNode, Path path, int idx) {
 		if (idx < path.getNameCount()) {
 			
-			// If the path up to current pathNode exists, then keep traversing
-			// through matching path components
-			if (treeNode.value.equals(path.getName(idx).toString())) {
-				for (TreeNode<String> child : treeNode.children) {
-					if (child.value.equals(path.getName(idx +1).toString())) {
+			boolean childExists = false;
+			
+			if (treeNode.value.equals("/")) {
+				for (TreeNode<String> child : treeNode.children){
+					if (child.value.equals(path.getName(0).toString())){
+						childExists = true;
 						idx++;
 						add(child, path, idx);
 					}
 				}
 			}
 			
-			// If the path up to current pathNode doesn't exist, then keep adding until
-			// you reach the end of the path
+			// If the path up to current pathNode exists, then keep traversing
+			// through matching path components
 			else {
+				for (TreeNode<String> child : treeNode.children) {
+					if (child.value.equals(path.getName(idx).toString())) {
+						childExists = true;
+						idx++;
+						add(child,path,idx);
+					}
+				}
+			}
+			
+			if (childExists == false) {
 				TreeNode<String> newLeaf = new TreeNode<String>();
 				newLeaf.value = path.getName(idx).toString();
 				newLeaf.sharedPathCount += 1;
@@ -80,14 +91,23 @@ public class PathTree {
 	private boolean exists(TreeNode<String> treeNode, Path path, int idx) {
 		
 		// This means we are at the end of the path and also at a leaf node
-		if (treeNode == null && idx < path.getNameCount()) {
+		if (treeNode.children.isEmpty() && idx < path.getNameCount()) {
 			return true;
 		}
-					
-		for (TreeNode<String> child : treeNode.children) {
-			if (child.value.equals(path.getName(idx+1).toString())) {
-				idx++;
-				return exists(child, path, idx);
+		
+		if (treeNode.value.equals("/")) {
+			for (TreeNode<String> child : treeNode.children) {
+				if (child.value.equals(path.getName(idx).toString())) {		
+					return exists(child, path, idx);				
+				}
+			}
+		}
+		else {
+			for (TreeNode<String> child : treeNode.children) {
+				if (child.value.equals(path.getName(idx+1).toString())) {		
+					idx++;
+					return exists(child, path, idx);				
+				}
 			}
 		}
 		
@@ -107,7 +127,6 @@ public class PathTree {
 	 * @return
 	 */
 	public Path splitPath(String path){
-		PathNode<String> pathLinkedList = new PathNode<String>();
 		return Paths.get(path);
 	}
 		
