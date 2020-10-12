@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import java.util.Set;
 
 import edu.upenn.cis.cis455.m2.interfaces.Session;
-import edu.upenn.cis.cis455.utils.SessionHandler;
 
 public class SessionObj extends Session {
 
@@ -14,7 +13,6 @@ public class SessionObj extends Session {
 	long _lastAccessedTime;
 	int _maxInactiveInterval;
 	Hashtable<String,Object> _attributes;
-	SessionHandler sessionHandler;
 	
 	public SessionObj() {
 		_id = createSessionId();

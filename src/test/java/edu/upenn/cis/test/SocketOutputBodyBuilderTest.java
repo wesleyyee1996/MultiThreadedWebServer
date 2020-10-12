@@ -16,14 +16,14 @@ public class SocketOutputBodyBuilderTest {
 		response = new ResponseObj();
 		response.status(404);
 	}
-	
-	@Test
-	public void test() {
-		
-		response.
-		SocketOutputBodyBuilder bodyBuilder = new SocketOutputBodyBuilder();
-		
-		fail("Not yet implemented");
-	}
+//	
+//	@Test
+//	public void test() {
+//		
+//		response.
+//		SocketOutputBodyBuilder bodyBuilder = new SocketOutputBodyBuilder();
+//		
+//		fail("Not yet implemented");
+//	}
 
 }
