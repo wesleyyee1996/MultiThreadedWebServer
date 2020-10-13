@@ -9,10 +9,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
-import edu.upenn.cis.cis455.m2.server.Cookie;
 import edu.upenn.cis.cis455.m2.server.SessionObj;
 import edu.upenn.cis.cis455.m2.server.WebService;
 
@@ -194,7 +192,7 @@ public class RequestObj extends Request{
 		// TODO Auto-generated method stub
 		this.headers = headers;
 	}
-
+	
 	@Override
 	public String root_dir() {
 		// TODO Auto-generated method stub
@@ -264,12 +262,22 @@ public class RequestObj extends Request{
 		return null;
 	}
 
+	
+	
 	/**
 	 * Returns the map containing all route params
 	 */
 	@Override
 	public Map<String, String> params() {
 		return this._uriPathParams;
+	}
+	
+	/**
+	 * Sets the query parameters (NOT the URI Path parameters)
+	 * @param queryParams
+	 */
+	public void setQueryParams(Hashtable<String, List<String>> queryParams) {
+		this._queryParams = queryParams;
 	}
 
 	/**

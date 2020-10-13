@@ -1,5 +1,6 @@
 package edu.upenn.cis.cis455.m1.server;
 
+import edu.upenn.cis.cis455.exceptions.HaltException;
 import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +59,13 @@ public class HttpWorker extends Thread {
         	}  	    	
         	catch (IOException ex ) {
         		System.out.println(ex);
-        	}
+        	} catch (HaltException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	}
     	
     }

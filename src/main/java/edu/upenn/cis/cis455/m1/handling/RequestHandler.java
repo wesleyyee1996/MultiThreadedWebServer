@@ -14,11 +14,12 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
-import edu.upenn.cis.cis455.m1.interfaces.Request;
-import edu.upenn.cis.cis455.m1.interfaces.Response;
-import edu.upenn.cis.cis455.m1.interfaces.Route;
+import edu.upenn.cis.cis455.m2.interfaces.Request;
+import edu.upenn.cis.cis455.m2.interfaces.Response;
+import edu.upenn.cis.cis455.m2.interfaces.Route;
 import edu.upenn.cis.cis455.m1.server.ControlPanel;
-import edu.upenn.cis.cis455.m1.server.WebService;
+import edu.upenn.cis.cis455.m2.server.WebService;
+import edu.upenn.cis.cis455.utils.RouteMatcher;
 
 public class RequestHandler{
 	final static Logger logger = LogManager.getLogger(RequestHandler.class);
@@ -30,17 +31,22 @@ public class RequestHandler{
 	private File file;
 	private int route;
 		
+    public RequestHandler(Request request, Response response, Socket socket) {
+    	this.request = request;
+    	this.response = response;
+    	this.socket = socket;
+    }
+	
     /**
-     * Decides which method to call (either shutdown, show control panel, or get file)
+     * Reads from the socket and adds data to the response
      * @param request
+     * @param response
+     * @param socket
      * @return
      * @throws HaltException
      * @throws IOException
      */
-    public boolean handleRequest(Request request, Response response, Socket socket) throws HaltException, IOException {
-    	this.request = request;
-    	this.response = response;
-    	this.socket = socket;
+    public boolean handleRequest() throws HaltException, IOException, Exception {    	
     	this.response.setProtocol(request.protocol());
     	this.response.setMethod(request.requestMethod());
     	this.response.addToHeaders("Server","CIS555/1.00");
@@ -53,12 +59,22 @@ public class RequestHandler{
         return true;
     }
     
-    private boolean handleFunction() {
+    /** 
+     * Decides which method to call (either shutdown, show control panel, calls the Route Matcher)
+     * If it can't match to a route, then it tries to get the file from static directory
+     * @param request
+     * @return
+     * @throws Exception 
+     */
+    private boolean handleFunction() throws Exception {
+    	
+    	// first check to see if uri is calling shutdown method
     	if (request.uri().equals("/shutdown") && request.requestMethod().equals(Constants.get)) {
-    		// call shutdown method
     		WebService.getInstance().setSocket(this.socket);
     		WebService.getInstance().stop();
     	}
+    	
+    	// then check to see if uri is calling control
     	else if (request.uri().equals("/control")) {
     		ControlPanel controlPanel = new ControlPanel();
         	byte[] controlPanelBytes = controlPanel.getControlPanel(WebService.getInstance().getThreadPool());
@@ -66,12 +82,20 @@ public class RequestHandler{
         	response.addToHeaders("Content-Length", Integer.toString(calcContentLength(controlPanelBytes)));
         	response.type("text/html");
     		return true;
-    		// call control panel method
     	}
-    	else {
-    		// if request type is head, then don't need to get the body
-	    		route = Constants.normalRoute;
-	    		return getFileFromPath();
+    	
+    	// otherwise try to match with filters and route
+    	else {    		
+    		RouteMatcher routeMatcher = new RouteMatcher();
+    		Route route = routeMatcher.matchRoute(request, response);
+    		if (route != null) {
+    			String body = route.handle(request, response).toString();
+    		}
+    		
+    		// if can't match with a route, then 
+    		else {
+        		return getFileFromPath();
+    		}	    		
     	}
     	return true;
     }

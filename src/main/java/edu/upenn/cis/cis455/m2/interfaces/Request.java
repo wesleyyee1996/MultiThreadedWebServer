@@ -1,5 +1,6 @@
 package edu.upenn.cis.cis455.m2.interfaces;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,8 @@ public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request
         else
             return params().get(':' + param.toLowerCase());
     }
+    
+    public abstract void setQueryParams(Hashtable<String, List<String>> queryParams);
 
     /**
      * @return Query parameter from the URL

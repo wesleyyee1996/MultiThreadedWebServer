@@ -18,14 +18,14 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
-import edu.upenn.cis.cis455.m1.interfaces.Request;
-import edu.upenn.cis.cis455.m1.interfaces.Response;
+import edu.upenn.cis.cis455.m2.interfaces.Request;
+import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m1.server.HttpTask;
 import edu.upenn.cis.cis455.m1.server.HttpWorker;
 import edu.upenn.cis.cis455.m1.server.RequestFactory;
 import edu.upenn.cis.cis455.m1.server.RequestObj;
 import edu.upenn.cis.cis455.m1.server.ResponseObj;
-import edu.upenn.cis.cis455.m1.server.WebService;
+import edu.upenn.cis.cis455.m2.server.WebService;
 import edu.upenn.cis.cis455.utils.SocketOutputBodyBuilder;
 
 /**
@@ -36,6 +36,7 @@ public class HttpIoHandler {
 
     private ResponseObj successResponse = new ResponseObj();
     public Hashtable<String,String> _parsedHeaders;
+    public Hashtable<String,List<String>> _parsedQueryParams;
     public String _uri;
     private InetAddress _remoteIp;
     private Socket _socket;
@@ -46,7 +47,7 @@ public class HttpIoHandler {
     	this._httpTask = task;
     }
     
-    public boolean handleRequest() throws IOException {
+    public boolean handleRequest() throws HaltException, Exception {
     	
 		// Parses the input stream and sets values to _parsedHeaders and _uri
     	if (!parseInputStream()) {
@@ -58,8 +59,8 @@ public class HttpIoHandler {
     	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
     	
 		// Call Request Handler to handle the request
-		RequestHandler requestHandler = new RequestHandler();
-		requestHandler.handleRequest(request, successResponse, _socket);
+		RequestHandler requestHandler = new RequestHandler(request, successResponse, _socket);
+		requestHandler.handleRequest();
 		
 		outputResponseToSocket(successResponse);
 		return true;
@@ -91,6 +92,7 @@ public class HttpIoHandler {
 	    	}
 	    	
 	    	this._parsedHeaders = headers;
+	    	this._parsedQueryParams = parms;
 	    	
 		} catch (IOException e) {
 			System.out.println("Error reading socket input stream" + e.toString());
@@ -111,7 +113,7 @@ public class HttpIoHandler {
     // Use the RequestFactory to build a request
     private Request createRequest() throws IOException {
 		RequestFactory requestFactory = new RequestFactory();
-    	return requestFactory.getRequest(_parsedHeaders, _httpTask, _uri);
+    	return requestFactory.getRequest(_parsedHeaders, _httpTask, _uri, _parsedQueryParams);
 	}
 
     /**
