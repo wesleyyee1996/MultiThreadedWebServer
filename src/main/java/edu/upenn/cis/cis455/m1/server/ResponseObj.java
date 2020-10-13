@@ -58,9 +58,7 @@ public class ResponseObj extends Response {
 		Cookie cookie = new Cookie();
 		cookie.addNameValuePair(name, value);
 		cookie.setMaxAge(maxAge);
-		this._cookies.put(name, cookie);
-		//this._headers.put("Cookie", name+"="+value+"; Max-Age="+maxAge);
-		
+		this._cookies.put(name, cookie);		
 	}
 
 	@Override
@@ -72,81 +70,73 @@ public class ResponseObj extends Response {
 		cookie.setSecured(secured);
 		this._cookies.put(name, cookie);
 		
-//		if (secured) {
-//			this._headers.put("Cookie", name+"="+value+"; Max-Age="+maxAge+"; Secure");
-//		}
-//		else {
-//			cookie(name, value, maxAge);
-//		}
-		
 	}
 
 	@Override
 	public void cookie(String name, String value, int maxAge, boolean secured, boolean httpOnly) {
-		if (secured && httpOnly) {
-			this._headers.put("Cookie", name+"="+value+"; Max-Age="+maxAge+"; Secure; HttpOnly");
-		}
-		else if(secured && !httpOnly) {
-			cookie(name, value, maxAge, secured);
-		}
-		else if (!secured && httpOnly){
-			this._headers.put("Cookie", name+"="+value+"; Max-Age="+maxAge+"; HttpOnly");
-		}
-		else if (!secured && !httpOnly) {
-			this._headers.put("Cookie", name+"="+value+"; Max-Age="+maxAge+";");
-		}
+		
+		Cookie cookie = new Cookie();
+		cookie.addNameValuePair(name, value);
+		cookie.setMaxAge(maxAge);
+		cookie.setSecured(secured);
+		cookie.setHttpOnly(httpOnly);
+		this._cookies.put(name, cookie);
 		
 	}
 
 	@Override
 	public void cookie(String path, String name, String value) {
-		this._headers.put("Cookie", name+"="+value+"; Path: "+path);	
+		Cookie cookie = new Cookie();
+		cookie.addNameValuePair(name, value);
+		cookie.setPath(path);
+		this._cookies.put(name, cookie);
 		
 	}
 
 	@Override
 	public void cookie(String path, String name, String value, int maxAge) {
-		this._headers.put("Cookie", name+"="+value+"; Path: "+path+"; Max-Age="+maxAge);
+		Cookie cookie = new Cookie();
+		cookie.addNameValuePair(name, value);
+		cookie.setMaxAge(maxAge);
+		cookie.setPath(path);
+		this._cookies.put(name, cookie);
 		
 	}
 
 	@Override
 	public void cookie(String path, String name, String value, int maxAge, boolean secured) {
 		
-		if (secured) {
-			this._headers.put("Cookie", name+"="+value+"; Path: "+path+"; Max-Age="+maxAge+"; Secure");
-		}
-		else {
-			cookie(path, name, value, maxAge);
-		}
+		Cookie cookie = new Cookie();
+		cookie.addNameValuePair(name, value);
+		cookie.setMaxAge(maxAge);
+		cookie.setSecured(secured);
+		cookie.setPath(path);
+		this._cookies.put(name, cookie);
 	}
 
 	@Override
 	public void cookie(String path, String name, String value, int maxAge, boolean secured, boolean httpOnly) {
-		if (secured && httpOnly) {
-			this._headers.put("Cookie", name+"="+value+"; Path: "+path+"; Max-Age="+maxAge+"; Secure; HttpOnly");
-		}
-		else if(secured && !httpOnly) {
-			cookie(path, name, value, maxAge, secured);
-		}
-		else if (!secured && httpOnly){
-			this._headers.put("Cookie", name+"="+value+"; Path: "+path+"; Max-Age="+maxAge+"; HttpOnly");
-		}
-		else if (!secured && !httpOnly) {
-			this._headers.put("Cookie", name+"="+value+"; Path: "+path+"; Max-Age="+maxAge+";");
-		}
+		Cookie cookie = new Cookie();
+		cookie.addNameValuePair(name, value);
+		cookie.setMaxAge(maxAge);
+		cookie.setSecured(secured);
+		cookie.setHttpOnly(httpOnly);
+		cookie.setPath(path);
+		this._cookies.put(name, cookie);
 		
 	}
 
 	@Override
 	public void removeCookie(String name) {
-		// TODO Auto-generated method stub
-		
+		this._cookies.get(name).setMaxAge(0);		
 	}
 
 	@Override
 	public void removeCookie(String path, String name) {
-		// TODO Auto-generated method stub
+		Cookie cookie = this._cookies.get(name);
+		if (cookie.path().equals(path)) {
+			cookie.setMaxAge(0);
+		}
 		
 	}
 }

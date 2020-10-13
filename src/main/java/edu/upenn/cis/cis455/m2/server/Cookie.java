@@ -7,6 +7,7 @@ public class Cookie {
 	private String _name;
 	private String _value;
 	private Hashtable<String, String> nameValuePair = new Hashtable<String,String>();
+	private Hashtable<String, String> _params = new Hashtable<String, String>();
 	private String _path;
 	private int _maxAge;
 	private boolean _secured;
@@ -18,6 +19,14 @@ public class Cookie {
 	
 	public String getValueForName(String name) {
 		return this.nameValuePair.get(name);
+	}
+	
+	public void addParam(String key, String val) {
+		this._params.put(key, val);
+	}
+	
+	public String getParamForKey(String key) {
+		return this._params.get(key);
 	}
 		
 	public String path() {
@@ -44,7 +53,7 @@ public class Cookie {
 		this._secured = secured;
 	}
 	
-	public void httpOnly(boolean httpOnly) {
+	public void setHttpOnly(boolean httpOnly) {
 		this._httpOnly = httpOnly;
 	}
 	

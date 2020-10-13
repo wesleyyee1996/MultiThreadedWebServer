@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
@@ -14,8 +17,9 @@ import edu.upenn.cis.cis455.m2.server.SessionObj;
 import edu.upenn.cis.cis455.m2.server.WebService;
 
 public class RequestObj extends Request{
+	static final Logger logger = LogManager.getLogger(RequestObj.class);
 	
-	Hashtable<String, Cookie> _cookies = new Hashtable<String,Cookie>();
+	Hashtable<String, String> _cookies = new Hashtable<String,String>();
 	Hashtable<String, Object> _attributes = new Hashtable<String, Object>();
 	String _queryString;
 	Hashtable<String,List<String>> _queryParams = new Hashtable<String,List<String>>();
@@ -204,15 +208,49 @@ public class RequestObj extends Request{
 	}
 
 	/**
-	 * Gets the session for the request provided. Assumes that request already
-	 * has a session.
+	 * Gets the session for the request provided, if it has one. If there's no
+	 * request for given session, then returns a new one
 	 */
 	@Override
 	public Session session() {
-		Cookie sessionCookie = this._cookies.get(Constants.sessionId);
-		Session session = new SessionObj();
-		session = WebService.getInstance().getSession(sessionCookie.sessionId());
-		return session;
+		
+		// Get the Cookie header from the request and then
+		// find the cookie w/ JSESSIONID
+		if (this.headers().get("Cookie") != null) {
+			String cookieString = this.headers().get("Cookie");
+			_cookies = parseCookieString(cookieString);
+			String sessionId = _cookies.get("JSESSIONID");
+			return WebService.getInstance().getSession(sessionId);
+		}
+			
+		return new SessionObj();
+	}
+	
+	/**
+	 * Parses the cookie string from the Cookie: header
+	 * and returns the parse cookies
+	 * @param cookieString
+	 * @return
+	 */
+	private Hashtable<String, String> parseCookieString(String cookieString){
+		Hashtable<String,String> cookies = new Hashtable<String,String>();
+		
+		// split cookie components by ;
+		String[] cookieComponents = cookieString.split(";");
+				
+		// then handle the attributes
+		for (int i = 0; i < cookieComponents.length; i++) {
+			String[] cookieComponent = cookieComponents[i].split("=");	
+			
+			// check to make sure the component is valid
+			if (cookieComponent.length != 2) {
+				logger.error("Bad cookie header");
+				WebService.getInstance().halt(400);
+			}
+						
+			cookies.put(cookieComponent[0].trim(), cookieComponent[1].trim());
+		}
+		return cookies;
 	}
 
 	/**
@@ -223,7 +261,7 @@ public class RequestObj extends Request{
 		if (create) {
 			return new SessionObj();
 		}
-		return session();
+		return null;
 	}
 
 	/**
