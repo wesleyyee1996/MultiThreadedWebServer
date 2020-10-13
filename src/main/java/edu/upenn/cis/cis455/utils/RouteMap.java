@@ -26,25 +26,7 @@ public class RouteMap {
 	public ArrayList<Tuple<Path, Route>> getRouteMap(){
 		return this.routeMap;
 	}
-	
-	/**
-	 * Gets the registered Route from the inputted path
-	 * @param path
-	 * @return
-	 */
-//	public Route get(Path path) {
-//		if (!containsPath(path)) {
-//			for (int i = 0; i < routeMap.size() ; i++) {
-//				Tuple<Path,Route> pathRoute = routeMap.get(i);
-//				if (pathRoute.x.equals(path) && pathRoute.y != null) {
-//					return pathRoute.y;
-//				}
-//			}
-//		}
-//		logger.debug("The path "+path+" does not have a registered route handler");
-//		return null;
-//	}
-	
+		
 	/**
 	 * Adds a path, route pair to the RouteMap provided that the path doesn't already exist
 	 * @param path

@@ -155,7 +155,12 @@ public class RequestHandler{
 			setLastModifiedHeader(fileDirectory);
 			return true;
 		}
-		catch (HaltException | IOException e){
+		catch (HaltException he){
+			logger.error(he);
+			return false;
+		}
+		catch(IOException e) {
+			logger.error("Internal Server Error: "+e);
 			response.status(500);
 			response.body(HttpParsing.explainStatus(500));
 			return false;

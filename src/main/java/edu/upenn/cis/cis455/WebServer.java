@@ -31,9 +31,10 @@ public class WebServer {
 		WebServiceFactory.staticFileLocation(CommandLineValues.getInstance().getRootDir());
 		WebServiceFactory.ipAddress(null);
 		
-//		Route test = (Request request, Response response)-> {
-//			return "abc";};
-//		WebServiceFactory.get("/test", test);
+		Route test = (Request request, Response response)-> {
+			System.out.println("test");
+			return "test";};
+		WebServiceFactory.get("/test", test);
 		
 		// Run web service
 		WebServiceFactory.awaitInitialization();

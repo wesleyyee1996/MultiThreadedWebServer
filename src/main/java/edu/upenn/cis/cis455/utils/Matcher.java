@@ -62,8 +62,16 @@ public class Matcher {
 			Tuple<Path, Route> pathRoute = routeMap.getRouteMap().get(i);
 			Path registeredPath = pathRoute.x;
 			
+			// if the registered path is just *
+			if (registeredPath.toString().equals("*")){
+				matchedRoutes.add(pathRoute.y);
+				break;
+			}
+			
 			// only compare the 2 paths if the lengths of the 2 paths match
-			if (registeredPath.getNameCount() == requestPath.getNameCount()) {
+			// or if the registered path ends with *
+			if (registeredPath.getNameCount() == requestPath.getNameCount()
+					|| registeredPath.endsWith("*")) {
 				
 				// loop through the requestPath and compare each of the registered path 
 				// components to the requestPath components
@@ -71,17 +79,19 @@ public class Matcher {
 					
 					// if the register path component and request path component match 
 					// or the registered path component is a path parameter
-					// or the registered path component is a *
 					// then continue comparing
 					if (requestPath.getName(pathIdx).equals(registeredPath.getName(pathIdx))
 							|| registeredPath.getName(pathIdx).toString().startsWith(":")
 							|| registeredPath.getName(pathIdx).toString().equals("*")) {
 						
-						// check to see if at the end of the path
-						if (pathIdx == requestPath.getNameCount()-1) {
+						// check to see if at the end of the request path
+						// or if at end of registered path (which is a *)
+						if (pathIdx == requestPath.getNameCount()-1
+								|| registeredPath.getName(pathIdx).toString().equals("*")) {
 							
 							// if so, then add the route to list of matched routes
 							matchedRoutes.add(pathRoute.y);
+							i++;
 							break;
 						}
 						pathIdx++;
@@ -94,9 +104,7 @@ public class Matcher {
 				}
 			}		
 		}		
-		
-		// if we made it here, then we didn't find any paths that matched
-		return null;
+		return matchedRoutes;
 		
 	}
 	
@@ -132,9 +140,16 @@ public class Matcher {
 			Triplet<Path, String, Filter> pathFilter = filterMap.getFilterMap().get(i);
 			Path registeredPath = pathFilter.x;
 			
+			// if the registered path is just *
+			if (registeredPath.toString().equals("*")){
+				matchedFilters.add(pathFilter.z);
+				break;
+			}
+			
 			// only compare the 2 paths if the lengths of the 2 paths match
-			if (registeredPath.getNameCount() == requestPath.getNameCount()) {
-				
+			// or if the registered path ends with a *
+			if (registeredPath.getNameCount() == requestPath.getNameCount() 
+					|| registeredPath.endsWith("*")) {				
 				
 				// loop through the requestPath and compare each of the registered path 
 				// components to the requestPath components
@@ -145,18 +160,20 @@ public class Matcher {
 							|| registeredPath.getName(pathIdx).toString().equals(contentType)){
 						
 						// if the register path component and request path component match 
-						// or the registered path component is a path parameter
-						// or the registered path component is a *
+						// or the registered path component is a path parameter						
 						// then continue comparing
 						if (requestPath.getName(pathIdx).equals(registeredPath.getName(pathIdx)) 
 								|| registeredPath.getName(pathIdx).toString().startsWith(":")
 								|| registeredPath.getName(pathIdx).toString().equals("*")) {
 							
-							// check to see if at end of path
-							if (pathIdx == requestPath.getNameCount()-1) {
+							// check to see if at end of request path
+							// or end of registered path (if ends w/ *)
+							if (pathIdx == (requestPath.getNameCount()-1)
+									|| registeredPath.getName(pathIdx).toString().equals("*")) {
 								
 								// if we are, then add to list of matched filters
 								matchedFilters.add(pathFilter.z);
+								i++;
 								break;
 							}
 							pathIdx++;
@@ -175,8 +192,7 @@ public class Matcher {
 			}		
 		}		
 		
-		// if we made it here, then we didn't find any paths that matched
-		return null;
+		return matchedFilters;
 	}
 	
 	

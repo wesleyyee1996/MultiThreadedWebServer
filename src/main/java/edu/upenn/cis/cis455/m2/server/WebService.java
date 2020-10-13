@@ -28,7 +28,10 @@
  */
 package edu.upenn.cis.cis455.m2.server;
 
+import java.time.Instant;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -152,7 +155,32 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
      * @return
      */
     public Session getSession(String id) {
-    	return sessionMap.get(id);
+    	
+    	// Need to loop through sessionMap to make sure that the session
+    	// is not invalidated or isn't expired
+    	Iterator<Map.Entry<String, Session>> iterator = sessionMap.entrySet().iterator();
+    	
+    	while (iterator.hasNext()) {    		
+    		Map.Entry<String, Session> entry = iterator.next();
+    		Session session = entry.getValue();
+    		if (session._invalidated || session._expiresTime.isAfter(Instant.now())) {
+    			iterator.remove();
+    		}
+    	}    	
+    	
+    	// Try to find the corresponding session from the sessionMap
+    	Session sesh = sessionMap.get(id);
+    	
+    	// If unable to find a corresponding session, then return a new Session
+    	if (sesh == null) {
+    		sesh = new SessionObj();
+    		sessionMap.put(sesh.id(), sesh);
+    	}
+    	return sesh;
+    }
+    
+    public void removeSession(String id) {
+    	sessionMap.remove(id);
     }
     
     /**

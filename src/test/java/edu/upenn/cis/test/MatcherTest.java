@@ -26,11 +26,11 @@ public class MatcherTest {
 	Route testRoute1;
 	Route testRoute2;
 	Route testRoute3;
-	String testPath1 = "/index/:color/abc";
-	String testPath2 = "/index/blue/abc";
-	String testPath3 = "/index/red/xyz";
-	String reqPath = "/index/red/abc";
-	WebService webService = new WebService();
+	String testPath1;
+	String testPath2;
+	String testPath3;
+	String reqPath;
+	
 	
 	@Before
 	public void before() {
@@ -41,16 +41,70 @@ public class MatcherTest {
 		testRoute3 = (Request request, Response response)-> {
 			return "ghi";};	
 		request.setRequestMethod(Constants.get);
-		request.setUri(reqPath);
-		webService.get(testPath1, testRoute1);
-		webService.get(testPath2, testRoute2);
-		webService.get(testPath3, testRoute3);
+		
 	}
 	
 	@Test
-	public void test() {
+	public void test1() {
+		testPath1 = "/index/:color/abc";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "/index/red/xyz";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
 		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
 		assertTrue(matchedTestRoutes.get(0) == testRoute1);
+	}
+	
+	@Test
+	public void test2() {
+		testPath1 = "/index/:color/abc";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "/index/red/*";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
+		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoutes.get(0) == testRoute1);
+		assertTrue(matchedTestRoutes.get(1) == testRoute3);
+	}
+	
+	@Test
+	public void test3() {
+		testPath1 = "/index/:color/abc";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "*";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
+		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoutes.get(0) == testRoute1);
+		assertTrue(matchedTestRoutes.get(1) == testRoute3);
+	}
+	
+	@Test
+	public void test4() {
+		testPath1 = "/index/:color/abc";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "*";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
+		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoutes.get(0) == testRoute1);
+		assertTrue(matchedTestRoutes.get(1) == testRoute3);
 	}
 
 }

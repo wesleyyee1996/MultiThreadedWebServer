@@ -21,7 +21,7 @@ public class RouteMapTest {
 	@Before
 	public void before() {
 		testRoute = (Request request, Response response)-> {
-			return "abc";};			
+			return "abc";};		
 	}
 	
 	@Test

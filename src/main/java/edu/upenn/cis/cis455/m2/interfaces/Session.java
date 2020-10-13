@@ -1,8 +1,11 @@
 package edu.upenn.cis.cis455.m2.interfaces;
 
+import java.time.Instant;
 import java.util.Set;
 
 public abstract class Session {
+	public boolean _invalidated = false;
+	public Instant _expiresTime;	
     public abstract String id();
 
     /**
