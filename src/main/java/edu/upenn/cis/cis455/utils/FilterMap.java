@@ -1,5 +1,7 @@
 package edu.upenn.cis.cis455.utils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,30 +13,12 @@ public class FilterMap {
 	
 		final static Logger logger = LogManager.getLogger(FilterMap.class);
 		
-		private ArrayList<Triplet<String, String, Filter>> filterMap;
+		private ArrayList<Triplet<Path, String, Filter>> filterMap;
 		
 		public FilterMap() {
-			filterMap = new ArrayList<Triplet<String, String, Filter>>();
+			filterMap = new ArrayList<Triplet<Path, String, Filter>>();
 		}
-		
-		/**
-		 * Gets the registered Filter from the inputted path
-		 * @param path
-		 * @return
-		 */		
-		public Filter get(String path, String acceptType) {
-			if (!containsPathAndType(path, acceptType)) {
-				for (int i = 0; i < filterMap.size() ; i++) {
-					Triplet<String,String,Filter> trip = filterMap.get(i);
-					if (trip.x.equals(path) && trip.y.equals(acceptType) && trip.z != null) {
-						return trip.z;
-					}
-				}
-			}
-			logger.debug("The path "+path+" does not have a registered filter");
-			return null;
-		}
-		
+			
 		/**
 		 * Adds a filter to the FilterMap provided and sets the path and acceptType to "*"
 		 * Adds a path
@@ -51,17 +35,18 @@ public class FilterMap {
 		 * @param path
 		 * @param route
 		 */
-		public void add(String path, String acceptType, Filter filter) {
+		public void add(String pathString, String acceptType, Filter filter) {
+			Path path = Paths.get(pathString);
 			if (!containsPathAndType(path, acceptType)) {
 				if (filter != null) {
-					filterMap.add(new Triplet<String,String, Filter>(path,  acceptType,filter));
+					filterMap.add(new Triplet<Path,String, Filter>(path,  acceptType,filter));
 				}
 				else {
-					logger.debug("The provided filter is null");
+					logger.info("The provided filter is null");
 				}
 			}
 			else {
-				logger.debug("The FilterMap already contains the given path "+path +" and acceptType "+acceptType);
+				logger.info("The FilterMap already contains the given path "+path +" and acceptType "+acceptType);
 			}
 		}
 		
@@ -70,16 +55,20 @@ public class FilterMap {
 		 * @param path
 		 * @return
 		 */
-		public boolean containsPathAndType(String path,String acceptType) {
+		private boolean containsPathAndType(Path path,String acceptType) {
 			for (int i = 0; i < filterMap.size() ; i++) {
-				Triplet<String,String,Filter> trip = filterMap.get(i);
+				Triplet<Path,String,Filter> trip = filterMap.get(i);
 				if (trip.x != null && trip.y != null) {
-					if(trip.x.equals(path) && trip.y.equals(acceptType)) {
+					if(trip.x.toString().equals(path) && trip.y.equals(acceptType)) {
 						return true;
 					}
 				}
 			}
 			return false;
+		}
+		
+		public ArrayList<Triplet<Path, String, Filter>> getFilterMap(){
+			return this.filterMap;
 		}
 		
 }

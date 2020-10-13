@@ -2,6 +2,8 @@ package edu.upenn.cis.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,12 +15,12 @@ import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Route;
 import edu.upenn.cis.cis455.m2.server.WebService;
 import edu.upenn.cis.cis455.utils.RouteMap;
-import edu.upenn.cis.cis455.utils.RouteMatcher;
+import edu.upenn.cis.cis455.utils.Matcher;
 
-public class RouteMatcherTest {
+public class MatcherTest {
 
 	RouteMap getRouteMap = new RouteMap();
-	RouteMatcher routeMatcher = new RouteMatcher();
+	Matcher routeMatcher = new Matcher();
 	Request request = new RequestObj();
 	Response response = new ResponseObj();
 	Route testRoute1;
@@ -47,8 +49,8 @@ public class RouteMatcherTest {
 	
 	@Test
 	public void test() {
-		Route testRoute = routeMatcher.matchRoute(request, response);
-		assertTrue(testRoute == testRoute1);
+		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoutes.get(0) == testRoute1);
 	}
 
 }

@@ -9,7 +9,14 @@ import edu.upenn.cis.cis455.m2.server.Cookie;
 import edu.upenn.cis.cis455.m2.server.SessionObj;
 
 public class ResponseObj extends Response {
-
+	protected int _statusCode = 200;
+    protected byte[] _body;
+    protected byte[] _messageBody;
+    protected String method = Constants.get;
+    protected String _contentType = null; // e.g., "text/plain";
+    protected Hashtable<String,String> _headers = new Hashtable<String,String>();
+    protected String _protocol = "HTTP/1.1";
+	
 	private Hashtable<String, Cookie> _cookies = new Hashtable<String, Cookie>();
 	
 	@Override
@@ -25,20 +32,25 @@ public class ResponseObj extends Response {
 
 	@Override
 	public void header(String header, String value) {
-		// TODO Auto-generated method stub
-		
+		this._headers.put(header, value);
 	}
 
 	@Override
 	public void redirect(String location) {
-		// TODO Auto-generated method stub
-		
+		Hashtable<String, String> header = new Hashtable<String, String>();
+		header.put("Location", location);
+		this._headers = header;
+		this._body = null;
+		this._statusCode = 301;		
 	}
 
 	@Override
 	public void redirect(String location, int httpStatusCode) {
-		// TODO Auto-generated method stub
-		
+		Hashtable<String, String> header = new Hashtable<String, String>();
+		header.put("Location", location);
+		this._headers = header;
+		this._body = null;
+		this._statusCode = httpStatusCode;			
 	}
 
 	/**

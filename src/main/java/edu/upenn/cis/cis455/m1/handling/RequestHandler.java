@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +15,13 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Route;
 import edu.upenn.cis.cis455.m1.server.ControlPanel;
 import edu.upenn.cis.cis455.m2.server.WebService;
-import edu.upenn.cis.cis455.utils.RouteMatcher;
+import edu.upenn.cis.cis455.utils.Matcher;
 
 public class RequestHandler{
 	final static Logger logger = LogManager.getLogger(RequestHandler.class);
@@ -60,7 +62,7 @@ public class RequestHandler{
     }
     
     /** 
-     * Decides which method to call (either shutdown, show control panel, calls the Route Matcher)
+     * Decides which method to call (either shutdown, show control panel, or applies any matching routes/filters)
      * If it can't match to a route, then it tries to get the file from static directory
      * @param request
      * @return
@@ -86,16 +88,31 @@ public class RequestHandler{
     	
     	// otherwise try to match with filters and route
     	else {    		
-    		RouteMatcher routeMatcher = new RouteMatcher();
-    		Route route = routeMatcher.matchRoute(request, response);
-    		if (route != null) {
-    			String body = route.handle(request, response).toString();
+    		Matcher matcher = new Matcher();
+    		
+    		// apply before filters, if any
+    		ArrayList<Filter> matchedBeforeFilters = matcher.matchFilter(request, response, true);
+    		for(Filter filter : matchedBeforeFilters) {
+    			filter.handle(request, response);
     		}
     		
-    		// if can't match with a route, then 
+    		// apply routes, if any
+    		ArrayList<Route> matchedRoutes = matcher.matchRoute(request, response);
+    		if (!matchedRoutes.isEmpty()) {
+    			for(Route route : matchedRoutes) {
+        			response.body(route.handle(request, response).toString());
+        		}
+    		}   	    		
+    		// if can't match with a route, then get attempt to retrieve from static path
     		else {
         		return getFileFromPath();
-    		}	    		
+    		}	
+    		
+    		// apply after filters, if any
+    		ArrayList<Filter> matchedAfterFilters = matcher.matchFilter(request, response, false);
+    		for(Filter filter : matchedAfterFilters) {
+    			filter.handle(request, response);
+    		}
     	}
     	return true;
     }
