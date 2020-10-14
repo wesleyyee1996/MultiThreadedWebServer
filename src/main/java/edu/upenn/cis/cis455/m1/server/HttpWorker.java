@@ -55,10 +55,10 @@ public class HttpWorker extends Thread {
             	//threadStatus.set("waiting");
         	}
         	catch (InterruptedException e){
-        		System.out.println(e);
+        		logger.error("Interrupted Exception: "+e);
         	}  	    	
         	catch (IOException ex ) {
-        		System.out.println(ex);
+        		logger.error("IO Exception: "+ex);
         	} catch (HaltException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -4,6 +4,8 @@ import java.util.Hashtable;
 
 import org.apache.logging.log4j.*;
 
+import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m1.handling.HttpParsing;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
@@ -38,6 +40,9 @@ public class WebServer {
 		WebServiceFactory.before("*","*",(Request request, Response response) -> {
 			Session session = request.session();
 			System.out.println(session.id());
+		});
+		WebServiceFactory.before("/testBeforeHalt","*",(Request request, Response response) -> {
+			WebServiceFactory.halt(403, HttpParsing.explainStatus(403));
 		});
 		WebServiceFactory.get("/test", (Request request, Response response)-> {
 			System.out.println("test");

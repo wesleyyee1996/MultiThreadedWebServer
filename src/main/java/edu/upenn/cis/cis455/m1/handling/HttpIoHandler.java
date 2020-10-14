@@ -56,18 +56,20 @@ public class HttpIoHandler {
 			logger.error("Error reading from socket input stream");
 			Request request = new RequestObj();
 			sendException(_socket, request, e1);
+			return;
 		}
     	
     	// Creates a new request based on type w/ RequestFactory
     	Request request = createRequest();
-    	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
-    	logger.info(request.requestMethod() +" "+ request.uri());
+    	
     	
 		// Call Request Handler to handle the request
 		RequestHandler requestHandler = new RequestHandler(request, successResponse, _socket);
 		try {
 			requestHandler.handleRequest();
 			outputSuccessToSocket(successResponse);
+			WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
+	    	logger.info(request.requestMethod() +" "+ request.uri());
 		} catch (HaltException he) {
 			logger.error("Halt Exception called with status code "+he.statusCode());
 			sendException(_socket, request, he);
@@ -118,7 +120,6 @@ public class HttpIoHandler {
 			logger.error("Bad request");
 			throw he;
 		}
-		return true;
     }
     
     private void outputSuccessToSocket(Response response) throws IOException {

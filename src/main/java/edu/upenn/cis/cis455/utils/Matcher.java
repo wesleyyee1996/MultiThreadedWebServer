@@ -142,7 +142,7 @@ public class Matcher {
 			if (registeredPath.toString().equals("*")){
 				matchedFilters.add(pathFilter.z);
 				i++;
-				break;
+				continue;
 			}
 			
 			// only compare the 2 paths if the lengths of the 2 paths match
@@ -155,8 +155,8 @@ public class Matcher {
 				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); i++) {
 					
 					// check the registered path's content type
-					if (registeredPath.getName(pathIdx).toString().equals("*")
-							|| registeredPath.getName(pathIdx).toString().equals(contentType)){
+					if (pathFilter.y.equals("*")
+							|| pathFilter.y.equals(contentType)){
 						
 						// if the register path component and request path component match 
 						// or the registered path component is a path parameter						

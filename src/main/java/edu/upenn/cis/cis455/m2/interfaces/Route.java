@@ -29,6 +29,8 @@
 
 package edu.upenn.cis.cis455.m2.interfaces;
 
+import edu.upenn.cis.cis455.exceptions.HaltException;
+
 /**
  * A Route Handler is called when an HTTP request maps to the assigned route. It
  * is given Request info.
@@ -40,5 +42,5 @@ public interface Route {
      * A route handler for a given HTTP request.
      * 
      */
-    Object handle(Request request, Response response) throws Exception;
+    Object handle(Request request, Response response) throws HaltException, Exception;
 }

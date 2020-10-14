@@ -140,14 +140,14 @@ public class WebServiceFactory {
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt() {
-        throw new UnsupportedOperationException();
+        return _webService.halt();
     }
 
     /**
      * Triggers a HaltException that terminates the request
      */
     public static HaltException halt(int statusCode, String body) {
-        throw new UnsupportedOperationException();
+        return _webService.halt(statusCode, body);
     }
 
     ////////////////////////////////////////////

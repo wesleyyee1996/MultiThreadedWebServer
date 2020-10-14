@@ -259,6 +259,10 @@ public class HttpParsing {
             uri = pre.get("uri") + (pre.get("queryString").isEmpty() ? "" : "?" + pre.get("queryString"));
 
             //headers.put("cookie", pre.get("cookie"));
+            if ((!pre.get("protocolVersion").equals("HTTP/1.0") && !pre.get("protocolVersion").equals("HTTP/1.1"))) {
+            	logger.error("Invalid HTTP version: "+pre.get("protocolVersion"));
+            	throw new HaltException(400, HttpParsing.explainStatus(400));            	
+            }
             headers.put("protocolVersion", pre.get("protocolVersion"));
             headers.put("Method", pre.get("method"));
         } catch (SocketException e) {

@@ -21,8 +21,12 @@ public class SocketOutputBodyBuilder {
 	
 	public byte[] buildSocketOutput(Response response) {
 		socketOutput = new StringBuffer();
+		
+		// status line
 		StringBuffer statusLine = buildStatusLine(response.status(), response.protocol());
 		socketOutput.append(statusLine);
+		
+		// headers
 		if (!response.getHeadersRaw().isEmpty()) {
 			StringBuffer headers = buildHeaders(response.getHeadersRaw());
 			socketOutput.append(headers);
@@ -31,6 +35,8 @@ public class SocketOutputBodyBuilder {
 			socketOutput.append(CRFL);
 		}
 		
+		// set cookie headers need to be handled differently b/c Hashtable
+		// doesn't work with them
 		if (!response.getCookieHeaders().isEmpty()) {
 			StringBuffer cookieHeaders = buildCookieHeaders(response.getCookieHeaders());
 			socketOutput.append(cookieHeaders);
@@ -56,11 +62,15 @@ public class SocketOutputBodyBuilder {
 		return socketOutputBytesOutput;
 	}
 	
+	/**
+	 * Builds socket output for a halt exception
+	 * @param haltException
+	 * @return
+	 */
 	public byte[] buildSocketOutput(HaltException haltException) {
 		socketOutput = new StringBuffer();
 		StringBuffer statusLine = buildStatusLine(haltException.statusCode(), haltException.protocol());
 		socketOutput.append(statusLine+CRFL);
-		socketOutput.append(haltException.body());
 		socketOutputBytes = stringToByteArray(socketOutput.toString());
 		return socketOutputBytes;
 	}
