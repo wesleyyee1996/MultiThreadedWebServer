@@ -42,6 +42,9 @@ public class WebServer {
 		WebServiceFactory.get("/test", (Request request, Response response)-> {
 			System.out.println("test");
 			return "test";});
+		WebServiceFactory.get("/testRedirect", (Request request, Response response)-> {
+			response.redirect("/test");
+			return "test";});
 		WebServiceFactory.after("*","*",(Request request, Response response) -> {
 			response.header("test1","test2");
 			Session session = request.session();

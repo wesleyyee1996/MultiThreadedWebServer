@@ -181,7 +181,7 @@ public class ResponseObj extends Response {
 				if (cookie.maxAge() != 0) {
 					cookieString.append(Constants.maxAge+"="+cookie.maxAge()+"; ");
 				}
-				cookieString.append(Constants.domain+"="+"localhost:"+WebService.getInstance().port+"; ");
+				cookieString.append(Constants.domain+"="+"localhost:"+WebService.getInstance().getPort()+"; ");
 				if (cookie.path() != null) {
 					cookieString.append(Constants.path+"="+cookie.path()+"; ");
 				}

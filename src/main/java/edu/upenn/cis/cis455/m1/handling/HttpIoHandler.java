@@ -57,6 +57,7 @@ public class HttpIoHandler {
     	// Creates a new request based on type w/ RequestFactory
     	Request request = createRequest();
     	WebService.getInstance().threadStatuses.put(Thread.currentThread().getName(),request.uri());
+    	logger.info(request.requestMethod() +" "+ request.uri());
     	
 		// Call Request Handler to handle the request
 		RequestHandler requestHandler = new RequestHandler(request, successResponse, _socket);

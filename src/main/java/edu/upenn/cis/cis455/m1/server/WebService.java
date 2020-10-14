@@ -53,8 +53,8 @@ public class WebService {
     protected static HttpTaskQueue taskQueue;
     protected static ArrayList<Thread> threadPool;
     protected Socket socket = new Socket();
-    protected int port;
-    protected String root_dir;
+    protected int port = 45555;
+    protected String root_dir = "www";
     protected String ip_address = "0.0.0.0";
     protected int threadPoolSize;
     public static Hashtable<String,String> threadStatuses = new Hashtable<String,String>();
@@ -194,6 +194,14 @@ public class WebService {
      */
     public void port(int port) {
     	this.port = port;
+    }
+    
+    public int getPort() {
+    	return this.port;
+    }
+    
+    public String getRootDir() {
+    	return this.root_dir;
     }
     
     public void threadPoolSize(int size) {

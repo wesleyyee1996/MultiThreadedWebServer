@@ -9,10 +9,21 @@ Configuration:
       PatternLayout:
         pattern: '%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n'
       name: File
-      fileName: app.log
+      fileName: www/app.log
   Loggers:
     Root:
       AppenderRef:
       - ref: Console
       - ref: File
       level: trace
+  RollingFile:
+    - name: LogToRollingFile
+      fileName: logs/app.log
+      filePattern: "logs/$${date:yyyy-MM}/app-%d{MM-dd-yy}-%i.log.gz"
+      PatternLayout:
+        pattern: '%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n'
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 10MB
+        DefaultRollOverStrategy:
+          max:10
