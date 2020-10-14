@@ -38,6 +38,7 @@ public class HaltException extends RuntimeException {
 
     int statusCode = HttpServletResponse.SC_OK;
     private String body = null;
+    String protocol = "HTTP/1.1";
 
     public HaltException() {
         super();
@@ -62,5 +63,21 @@ public class HaltException extends RuntimeException {
 
     public String body() {
         return body;
+    }
+    
+    public void setBody(String body) {
+    	this.body = body;
+    }
+    
+    public void setStatusCode(int status) {
+    	this.statusCode = status;
+    }
+    
+    public void setProtocol(String protocol) {
+    	this.protocol = protocol;
+    }
+    
+    public String protocol() {
+    	return this.protocol;
     }
 }

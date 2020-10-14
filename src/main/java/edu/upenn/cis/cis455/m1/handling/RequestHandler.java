@@ -48,17 +48,12 @@ public class RequestHandler{
      * @throws HaltException
      * @throws IOException
      */
-    public boolean handleRequest() throws HaltException, IOException, Exception {    	
+    public void handleRequest() throws HaltException, IOException, Exception {    	
     	this.response.setProtocol(request.protocol());
     	this.response.setMethod(request.requestMethod());
     	this.response.addToHeaders("Server","CIS555/1.00");
 
-    	boolean handleFunctionSuccess = handleFunction();
-    	if (!handleFunctionSuccess) {
-    		return false;
-    	}
-        
-        return true;
+    	handleFunction();
     }
     
     /** 
@@ -68,7 +63,7 @@ public class RequestHandler{
      * @return
      * @throws Exception 
      */
-    private boolean handleFunction() throws Exception {
+    private void handleFunction() throws Exception, HaltException {
     	
     	// first check to see if uri is calling shutdown method
     	if (request.uri().equals("/shutdown") && request.requestMethod().equals(Constants.get)) {
@@ -83,56 +78,53 @@ public class RequestHandler{
         	response.bodyRaw(controlPanelBytes);
         	response.addToHeaders("Content-Length", Integer.toString(calcContentLength(controlPanelBytes)));
         	response.type("text/html");
-    		return true;
     	}
     	
     	// otherwise try to match with filters and route
     	else {    		
     		Matcher matcher = new Matcher();
     		
-    		// apply before filters, if any
-    		ArrayList<Filter> matchedBeforeFilters = matcher.matchFilter(request, response, true);
-    		for(Filter filter : matchedBeforeFilters) {
-    			filter.handle(request, response);
-    		}
-    		
-    		// apply routes, if any
-    		Route matchedRoute = matcher.matchRoute(request, response);
-    		if (matchedRoute != null) {
-    			response.body(matchedRoute.handle(request, response).toString());
-    		}   	    		
-    		// if can't match with a route, then attempt to retrieve from static path
-    		else {
-        		boolean success = getFileFromPath();
-        		if (!success) {
-        			return false;
+    		try {
+    			// apply before filters, if any
+        		ArrayList<Filter> matchedBeforeFilters = matcher.matchFilter(request, response, true);
+        		for(Filter filter : matchedBeforeFilters) {
+        			filter.handle(request, response);
         		}
-    		}	
     		
-    		// apply after filters, if any
-    		ArrayList<Filter> matchedAfterFilters = matcher.matchFilter(request, response, false);
-    		for(Filter filter : matchedAfterFilters) {
-    			filter.handle(request, response);
-    		}
     		
+    			// apply routes, if any
+        		Route matchedRoute = matcher.matchRoute(request, response);
+        		if (matchedRoute != null) {
+        			response.body(matchedRoute.handle(request, response).toString());
+        		}   	    		
+        		// if can't match with a route, then attempt to retrieve from static path
+        		else {
+            		getFileFromPath();
+        		}	
+    		
+    			// apply after filters, if any
+        		ArrayList<Filter> matchedAfterFilters = matcher.matchFilter(request, response, false);
+        		for(Filter filter : matchedAfterFilters) {
+        			filter.handle(request, response);
+        		}
+			}
+			catch(HaltException he) {
+				throw he;
+			}
     		response.convertSetCookiesToHeaders();
     	}
-    	return true;
     }
     
 	/** Gets file from directory
 	 * @throws HaltException
 	 */
-	private boolean getFileFromPath () throws HaltException {
+	private void getFileFromPath () throws HaltException {
 		try {
 			Path fileDirectory = createRelativePath(request.root_dir(), request.uri());
 			file = new File(fileDirectory.toString());
 			logger.debug("Uri for the file: "+file.toString());
 			if (file.exists() == false) {
-				response.status(404);
-				response.body(HttpParsing.explainStatus(404));
-				WebService.getInstance().halt(404, HttpParsing.explainStatus(404));
-				return false;
+				throw new HaltException(404, HttpParsing.explainStatus(404));
 			}
 			
 			// check if path is a file or directory
@@ -141,9 +133,7 @@ public class RequestHandler{
 				file = new File(file.toString() + "/index.html");
 				fileDirectory = Paths.get(fileDirectory.toString(), "/index.html");
 				if (file.exists() == false) {
-					response.status(404);
-					response.body(HttpParsing.explainStatus(404));
-					return false;
+					throw new HaltException(404, HttpParsing.explainStatus(404));
 				}
 			}
 			
@@ -156,17 +146,13 @@ public class RequestHandler{
 			response.bodyRaw(bodyRaw);
 			response.addToHeaders("Content-Length", Integer.toString(calcContentLength(bodyRaw)));
 			setLastModifiedHeader(fileDirectory);
-			return true;
 		}
 		catch (HaltException he){
-			logger.error(he);
-			return false;
+			throw he;
 		}
-		catch(IOException e) {
-			logger.error("Internal Server Error: "+e);
-			response.status(500);
-			response.body(HttpParsing.explainStatus(500));
-			return false;
+		catch (IOException e) {
+			logger.error("Error reading file content for file: "+file.toString()+" due to exception: "+e);
+			throw new HaltException(500, HttpParsing.explainStatus(500));
 		}
 				
 	}
@@ -175,17 +161,27 @@ public class RequestHandler{
 		return bytes.length;
 	}
 	
-	private void setContentType(Path fileDirectory) throws IOException {
-		String mimeType = Files.probeContentType(fileDirectory);
-		if (mimeType != null) {
-			response.type(mimeType);
-			response.addToHeaders("Content-Type", mimeType);
+	private void setContentType(Path fileDirectory) throws HaltException {
+		try {
+			String mimeType = Files.probeContentType(fileDirectory);
+			if (mimeType != null) {
+				response.type(mimeType);
+				response.addToHeaders("Content-Type", mimeType);
+			}
+		} catch (IOException e) {
+			logger.error("Error retrieving file type for file: "+fileDirectory.toString()+" due to error: "+e);
+			throw new HaltException(500, HttpParsing.explainStatus(500));
 		}
 	}
 	
-	private void setLastModifiedHeader(Path fileDirectory) throws IOException{
-		FileTime lastModified = Files.getLastModifiedTime(fileDirectory);
-		response.addToHeaders("Last-Modified",lastModified.toString());
+	private void setLastModifiedHeader(Path fileDirectory) throws HaltException{
+		try {
+			FileTime lastModified = Files.getLastModifiedTime(fileDirectory);
+			response.addToHeaders("Last-Modified",lastModified.toString());
+		} catch (IOException e) {
+			logger.error("Error retrieving last modified time from file: "+fileDirectory.toString()+" due to error: "+e);
+			throw new HaltException(500, HttpParsing.explainStatus(500));
+		}
 	}
 	
 	private Path createRelativePath (String root_dir, String uri) throws HaltException {
@@ -196,8 +192,8 @@ public class RequestHandler{
 		catch (Exception e){
 			e.printStackTrace();
 			HaltException haltException = new HaltException(404, HttpParsing.explainStatus(404));
+			throw haltException;
 		}
-		return null;
 	}
 	
 }

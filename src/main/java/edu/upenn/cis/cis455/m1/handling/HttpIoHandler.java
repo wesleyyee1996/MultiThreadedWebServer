@@ -47,12 +47,16 @@ public class HttpIoHandler {
     	this._httpTask = task;
     }
     
-    public boolean handleRequest() throws HaltException, Exception {
+    public void handleRequest() throws HaltException, Exception {
     	
 		// Parses the input stream and sets values to _parsedHeaders and _uri
-    	if (!parseInputStream()) {
-    		return false;
-    	}
+    	try {
+			parseInputStream();
+		} catch (HaltException e1) {
+			logger.error("Error reading from socket input stream");
+			Request request = new RequestObj();
+			sendException(_socket, request, e1);
+		}
     	
     	// Creates a new request based on type w/ RequestFactory
     	Request request = createRequest();
@@ -61,17 +65,27 @@ public class HttpIoHandler {
     	
 		// Call Request Handler to handle the request
 		RequestHandler requestHandler = new RequestHandler(request, successResponse, _socket);
-		requestHandler.handleRequest();
-		
-		outputResponseToSocket(successResponse);
-		return true;
-    		
+		try {
+			requestHandler.handleRequest();
+			outputSuccessToSocket(successResponse);
+		} catch (HaltException he) {
+			logger.error("Halt Exception called with status code "+he.statusCode());
+			sendException(_socket, request, he);
+		} catch (IOException e) {
+			logger.error("Error reading request or outputting to socket stream: "+e);
+			HaltException he = new HaltException(500);
+			sendException(_socket, request, he);
+		} catch (Exception e) {
+			logger.error("An unknown server error occurred: "+e);
+			HaltException he = new HaltException(500);
+			sendException(_socket, request, he);
+		}		
     }
     
     /**
      * Parses the socket's InputStream and gets the headers as well as the uri
      */
-    private boolean parseInputStream() {
+    private void parseInputStream() throws HaltException {
 		try {
 			
 	    	Hashtable<String, String> headers = new Hashtable<String,String>();
@@ -87,24 +101,27 @@ public class HttpIoHandler {
 	    	try {
 	    		_uri = HttpParsing.parseRequest(remoteIp, _socket.getInputStream(), headers, parms);
 	    	} catch(HaltException he) {
-	    		successResponse.status(400);
-	    		outputResponseToSocket(successResponse);
-	    		return false;
+	    		logger.error("Error parsing request");
+	    		he.setBody(HttpParsing.explainStatus(400));
+	    		he.setStatusCode(400);
+	    		throw he;
 	    	}
 	    	
 	    	this._parsedHeaders.putAll(headers);
 	    	this._parsedQueryParams.putAll(parms);
 	    	
 		} catch (IOException e) {
-			System.out.println("Error reading socket input stream" + e.toString());
+			logger.error("Error reading socket input stream" + e.toString());
+			throw new HaltException(500);
 		} catch (HaltException he) {
+			he.setStatusCode(400);
 			logger.error("Bad request");
-			
+			throw he;
 		}
 		return true;
     }
     
-    private void outputResponseToSocket(Response response) throws IOException {
+    private void outputSuccessToSocket(Response response) throws IOException {
     	// Build the output to the socket
     			SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
     			byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(response);
@@ -125,8 +142,11 @@ public class HttpIoHandler {
      */
     public static boolean sendException(Socket socket, Request request, HaltException except) throws IOException {
     	if (!request.persistentConnection()) {
+    		SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
+    		byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(except);
+    		logger.debug("Sending exception");
     		OutputStream outputStream = socket.getOutputStream();
-    		outputStream.write(except.body().getBytes());
+    		outputStream.write(socketOutputBytes);
     	}
     	return true;
     }
@@ -137,11 +157,9 @@ public class HttpIoHandler {
      * @throws IOException 
      */
 	public static boolean sendResponse(Socket socket, byte[] socketOutputBytes) throws IOException {
-    	//if (!request.persistentConnection()) {
-    		// Write output to socket
-        	OutputStream outputStream = socket.getOutputStream();
-        	outputStream.write(socketOutputBytes); 
-    	//}
+		logger.debug("Sending response");
+    	OutputStream outputStream = socket.getOutputStream();
+    	outputStream.write(socketOutputBytes); 
     	return true;
         
     }
