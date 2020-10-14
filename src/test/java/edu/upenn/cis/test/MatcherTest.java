@@ -55,24 +55,23 @@ public class MatcherTest {
 		webService.get(testPath1, testRoute1);
 		webService.get(testPath2, testRoute2);
 		webService.get(testPath3, testRoute3);
-		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
-		assertTrue(matchedTestRoutes.get(0) == testRoute1);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoute == testRoute1);
 	}
 	
 	@Test
 	public void test2() {
-		testPath1 = "/index/:color/abc";
+		testPath1 = "/index/red/*";
 		testPath2 = "/index/blue/abc";
-		testPath3 = "/index/red/*";
+		testPath3 = "/index/:color/abc";
 		reqPath = "/index/red/abc";
 		request.setUri(reqPath);
 		WebService webService = new WebService();
 		webService.get(testPath1, testRoute1);
 		webService.get(testPath2, testRoute2);
 		webService.get(testPath3, testRoute3);
-		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
-		assertTrue(matchedTestRoutes.get(0) == testRoute1);
-		assertTrue(matchedTestRoutes.get(1) == testRoute3);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoute == testRoute1);
 	}
 	
 	@Test
@@ -86,25 +85,23 @@ public class MatcherTest {
 		webService.get(testPath1, testRoute1);
 		webService.get(testPath2, testRoute2);
 		webService.get(testPath3, testRoute3);
-		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
-		assertTrue(matchedTestRoutes.get(0) == testRoute1);
-		assertTrue(matchedTestRoutes.get(1) == testRoute3);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoute == testRoute1);
 	}
 	
 	@Test
 	public void test4() {
-		testPath1 = "/index/:color/abc";
+		testPath1 = "*/*";
 		testPath2 = "/index/blue/abc";
-		testPath3 = "*";
+		testPath3 = "/index/:color/abc";
 		reqPath = "/index/red/abc";
 		request.setUri(reqPath);
 		WebService webService = new WebService();
 		webService.get(testPath1, testRoute1);
 		webService.get(testPath2, testRoute2);
 		webService.get(testPath3, testRoute3);
-		ArrayList<Route> matchedTestRoutes = routeMatcher.matchRoute(request, response);
-		assertTrue(matchedTestRoutes.get(0) == testRoute1);
-		assertTrue(matchedTestRoutes.get(1) == testRoute3);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		assertTrue(matchedTestRoute == testRoute1);
 	}
 
 }

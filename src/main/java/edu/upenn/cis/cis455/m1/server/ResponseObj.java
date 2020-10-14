@@ -1,11 +1,13 @@
 package edu.upenn.cis.cis455.m1.server;
 
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
-import edu.upenn.cis.cis455.m2.server.Cookie;
+import edu.upenn.cis.cis455.m2.server.SetCookie;
 import edu.upenn.cis.cis455.m2.server.SessionObj;
 
 public class ResponseObj extends Response {
@@ -17,7 +19,7 @@ public class ResponseObj extends Response {
     protected Hashtable<String,String> _headers = new Hashtable<String,String>();
     protected String _protocol = "HTTP/1.1";
 	
-	private Hashtable<String, Cookie> _cookies = new Hashtable<String, Cookie>();
+	private Hashtable<String, SetCookie> _cookies = new Hashtable<String, SetCookie>();
 	
 	@Override
 	public String getHeaders() {
@@ -58,8 +60,9 @@ public class ResponseObj extends Response {
 	 */
 	@Override
 	public void cookie(String name, String value) {
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);	
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);	
 	}
 
 	/**
@@ -67,8 +70,9 @@ public class ResponseObj extends Response {
 	 */
 	@Override
 	public void cookie(String name, String value, int maxAge) {
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		this._cookies.put(name, cookie);		
 	}
@@ -76,8 +80,9 @@ public class ResponseObj extends Response {
 	@Override
 	public void cookie(String name, String value, int maxAge, boolean secured) {
 		
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		cookie.setSecured(secured);
 		this._cookies.put(name, cookie);
@@ -87,8 +92,9 @@ public class ResponseObj extends Response {
 	@Override
 	public void cookie(String name, String value, int maxAge, boolean secured, boolean httpOnly) {
 		
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		cookie.setSecured(secured);
 		cookie.setHttpOnly(httpOnly);
@@ -98,8 +104,9 @@ public class ResponseObj extends Response {
 
 	@Override
 	public void cookie(String path, String name, String value) {
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setPath(path);
 		this._cookies.put(name, cookie);
 		
@@ -107,8 +114,9 @@ public class ResponseObj extends Response {
 
 	@Override
 	public void cookie(String path, String name, String value, int maxAge) {
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		cookie.setPath(path);
 		this._cookies.put(name, cookie);
@@ -118,8 +126,9 @@ public class ResponseObj extends Response {
 	@Override
 	public void cookie(String path, String name, String value, int maxAge, boolean secured) {
 		
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		cookie.setSecured(secured);
 		cookie.setPath(path);
@@ -128,14 +137,14 @@ public class ResponseObj extends Response {
 
 	@Override
 	public void cookie(String path, String name, String value, int maxAge, boolean secured, boolean httpOnly) {
-		Cookie cookie = new Cookie();
-		cookie.addNameValuePair(name, value);
+		SetCookie cookie = new SetCookie();
+		cookie.setName(name);
+		cookie.setValue(value);
 		cookie.setMaxAge(maxAge);
 		cookie.setSecured(secured);
 		cookie.setHttpOnly(httpOnly);
 		cookie.setPath(path);
 		this._cookies.put(name, cookie);
-		
 	}
 
 	@Override
@@ -145,10 +154,19 @@ public class ResponseObj extends Response {
 
 	@Override
 	public void removeCookie(String path, String name) {
-		Cookie cookie = this._cookies.get(name);
+		SetCookie cookie = this._cookies.get(name);
 		if (cookie.path().equals(path)) {
 			cookie.setMaxAge(0);
 		}
-		
+	}
+	
+	public void convertSetCookiesToHeaders() {
+		Iterator cookiesIterator = _cookies.entrySet().iterator();
+		while(cookiesIterator.hasNext()) {
+			Map.Entry<String,SetCookie> cookieHash = (Map.Entry<String,SetCookie>)cookiesIterator.next();
+			SetCookie cookie = cookieHash.getValue();
+			StringBuilder cookieString = new StringBuilder();
+			cookieString.append("JSESSIONID="+cookie.name());
+		}
 	}
 }

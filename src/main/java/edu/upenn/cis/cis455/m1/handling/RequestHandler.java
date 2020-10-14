@@ -97,15 +97,16 @@ public class RequestHandler{
     		}
     		
     		// apply routes, if any
-    		ArrayList<Route> matchedRoutes = matcher.matchRoute(request, response);
-    		if (!matchedRoutes.isEmpty()) {
-    			for(Route route : matchedRoutes) {
-        			response.body(route.handle(request, response).toString());
-        		}
+    		Route matchedRoute = matcher.matchRoute(request, response);
+    		if (matchedRoute != null) {
+    			response.body(matchedRoute.handle(request, response).toString());
     		}   	    		
-    		// if can't match with a route, then get attempt to retrieve from static path
+    		// if can't match with a route, then attempt to retrieve from static path
     		else {
-        		return getFileFromPath();
+        		boolean success = getFileFromPath();
+        		if (!success) {
+        			return false;
+        		}
     		}	
     		
     		// apply after filters, if any

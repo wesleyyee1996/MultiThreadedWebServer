@@ -11,9 +11,8 @@ public class SessionObj extends Session {
 
 	String _id;
 	Instant _creationTime;
-	Instant _lastAccessedTime;
-	
-	Duration _maxInactiveInterval;
+	Instant _lastAccessedTime;	
+	Duration _maxInactiveInterval = Duration.ofMinutes(15);
 	Hashtable<String,Object> _attributes;
 	
 	public SessionObj() {

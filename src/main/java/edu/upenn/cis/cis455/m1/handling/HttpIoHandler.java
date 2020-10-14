@@ -35,8 +35,8 @@ public class HttpIoHandler {
     final static Logger logger = LogManager.getLogger(HttpIoHandler.class);
 
     private ResponseObj successResponse = new ResponseObj();
-    public Hashtable<String,String> _parsedHeaders;
-    public Hashtable<String,List<String>> _parsedQueryParams;
+    public Hashtable<String,String> _parsedHeaders = new Hashtable<String,String>();
+    public Hashtable<String,List<String>> _parsedQueryParams = new Hashtable<String,List<String>>();
     public String _uri;
     private InetAddress _remoteIp;
     private Socket _socket;
@@ -91,8 +91,8 @@ public class HttpIoHandler {
 	    		return false;
 	    	}
 	    	
-	    	this._parsedHeaders = headers;
-	    	this._parsedQueryParams = parms;
+	    	this._parsedHeaders.putAll(headers);
+	    	this._parsedQueryParams.putAll(parms);
 	    	
 		} catch (IOException e) {
 			System.out.println("Error reading socket input stream" + e.toString());

@@ -1,10 +1,14 @@
 package edu.upenn.cis.cis455;
 
+import java.util.Hashtable;
+
 import org.apache.logging.log4j.*;
 
+import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Route;
+import edu.upenn.cis.cis455.m2.interfaces.Session;
 import edu.upenn.cis.cis455.utils.CommandLineParser;
 import edu.upenn.cis.cis455.utils.CommandLineValues;
 
@@ -31,15 +35,23 @@ public class WebServer {
 		WebServiceFactory.staticFileLocation(CommandLineValues.getInstance().getRootDir());
 		WebServiceFactory.ipAddress(null);
 		
-		Route test = (Request request, Response response)-> {
+		WebServiceFactory.before("*","*",(Request request, Response response) -> {
+			Session session = request.session();
+			System.out.println(session.id());
+		});
+		WebServiceFactory.get("/test", (Request request, Response response)-> {
 			System.out.println("test");
-			return "test";};
-		WebServiceFactory.get("/test", test);
+			return "test";});
+		WebServiceFactory.after("*","*",(Request request, Response response) -> {
+			Hashtable<String,String> testinghash = new Hashtable<String,String>();
+			testinghash.put("test1","test2");
+			response.setHeaders(testinghash);});
 		
 		// Run web service
 		WebServiceFactory.awaitInitialization();
 		logger.info("Waiting to handle requests!");
         
+		// ... and above here. Leave this comment for the Spark comparator tool
     }
 
 }

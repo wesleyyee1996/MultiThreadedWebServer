@@ -22,15 +22,13 @@ public class Matcher {
 	 * @return
 	 * @throws HaltException
 	 */
-	public ArrayList<Route> matchRoute(Request request, Response response) throws HaltException {
+	public Route matchRoute(Request request, Response response) throws HaltException {
 		
 		// get the path and requestType from the request
 		Path requestPath = Paths.get(request.uri());
 		String requestType = request.requestMethod();
 		
 		RouteMap routeMap = new RouteMap();
-		
-		ArrayList<Route> matchedRoutes = new ArrayList<Route>();
 		
 		// based on requestType, look in the corresponding RouteMap in WebService
 		switch(requestType) {
@@ -64,8 +62,7 @@ public class Matcher {
 			
 			// if the registered path is just *
 			if (registeredPath.toString().equals("*")){
-				matchedRoutes.add(pathRoute.y);
-				break;
+				return pathRoute.y;
 			}
 			
 			// only compare the 2 paths if the lengths of the 2 paths match
@@ -90,22 +87,23 @@ public class Matcher {
 								|| registeredPath.getName(pathIdx).toString().equals("*")) {
 							
 							// if so, then add the route to list of matched routes
-							matchedRoutes.add(pathRoute.y);
-							i++;
-							break;
+							return pathRoute.y;
 						}
 						pathIdx++;
 						continue;
 					}
 					// if registered path doesn't meet any of the criteria, then go to next one
 					else {
+						i++;
 						break;
 					}	
 				}
-			}		
+			}
+			else {
+				i++;
+			}
 		}		
-		return matchedRoutes;
-		
+		return null;		
 	}
 	
 	/**
@@ -143,6 +141,7 @@ public class Matcher {
 			// if the registered path is just *
 			if (registeredPath.toString().equals("*")){
 				matchedFilters.add(pathFilter.z);
+				i++;
 				break;
 			}
 			
@@ -181,15 +180,20 @@ public class Matcher {
 						}
 						// if registered path doesn't meet any of the criteria, then go to next one
 						else {
+							i++;
 							break;
 						}	
 					}
 					else {
+						i++;
 						break;
 					}
 					
 				}
-			}		
+			}
+			else {
+				i++;
+			}
 		}		
 		
 		return matchedFilters;
