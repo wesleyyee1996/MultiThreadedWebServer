@@ -43,9 +43,9 @@ public class WebServer {
 			System.out.println("test");
 			return "test";});
 		WebServiceFactory.after("*","*",(Request request, Response response) -> {
-			Hashtable<String,String> testinghash = new Hashtable<String,String>();
-			testinghash.put("test1","test2");
-			response.setHeaders(testinghash);});
+			response.header("test1","test2");
+			Session session = request.session();
+			response.cookie("JESSIONID", session.id(), 570, false);});
 		
 		// Run web service
 		WebServiceFactory.awaitInitialization();

@@ -1,5 +1,6 @@
 package edu.upenn.cis.cis455.utils;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
@@ -7,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m1.handling.HttpParsing;
-import edu.upenn.cis.cis455.m1.interfaces.Response;
+import edu.upenn.cis.cis455.m2.interfaces.Response;
 
 public class SocketOutputBodyBuilder {
     final static Logger logger = LogManager.getLogger(SocketOutputBodyBuilder.class);
@@ -28,6 +29,15 @@ public class SocketOutputBodyBuilder {
 		else {
 			socketOutput.append(CRFL);
 		}
+		
+		if (!response.getCookieHeaders().isEmpty()) {
+			StringBuffer cookieHeaders = buildCookieHeaders(response.getCookieHeaders());
+			socketOutput.append(cookieHeaders);
+		}
+		else {
+			socketOutput.append(CRFL);
+		}
+		
 		socketOutputBytes = stringToByteArray(socketOutput.toString());
 		
 		// if it's a head request, then don't add the body
@@ -57,8 +67,16 @@ public class SocketOutputBodyBuilder {
     	for (String key : headers.keySet()) {
     		bodyHeaders.append(key + ": " + headers.get(key) + Constants.CRFL);
     	}
-    	bodyHeaders.append(Constants.CRFL);
     	return bodyHeaders;
+	}
+	
+	private StringBuffer buildCookieHeaders(ArrayList<Tuple<String,String>> cookieHeaders) {
+		StringBuffer cookieHeaderString = new StringBuffer();
+		for (Tuple<String,String> cookie : cookieHeaders) {
+			cookieHeaderString.append(cookie.x +": "+cookie.y+Constants.CRFL);
+		}
+		cookieHeaderString.append(CRFL);
+		return cookieHeaderString;
 	}
 	
 	private byte[] stringToByteArray(String str) {

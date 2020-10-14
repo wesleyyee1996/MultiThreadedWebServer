@@ -106,7 +106,7 @@ public class HttpIoHandler {
     private void outputResponseToSocket(Response response) throws IOException {
     	// Build the output to the socket
     			SocketOutputBodyBuilder socketOutputBuilder = new SocketOutputBodyBuilder();
-    			byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(successResponse);
+    			byte[] socketOutputBytes = socketOutputBuilder.buildSocketOutput(response);
     			sendResponse(_socket, socketOutputBytes);
     }
     

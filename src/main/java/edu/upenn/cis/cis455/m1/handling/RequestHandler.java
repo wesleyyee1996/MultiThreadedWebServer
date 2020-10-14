@@ -114,6 +114,8 @@ public class RequestHandler{
     		for(Filter filter : matchedAfterFilters) {
     			filter.handle(request, response);
     		}
+    		
+    		response.convertSetCookiesToHeaders();
     	}
     	return true;
     }

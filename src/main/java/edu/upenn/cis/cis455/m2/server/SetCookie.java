@@ -59,6 +59,9 @@ public class SetCookie {
 	}
 	
 	public int maxAge() {
+		if (this._maxAge == null) {
+			return 0;
+		}
 		return (int) this._maxAge.toMinutes()*60;
 	}
 	

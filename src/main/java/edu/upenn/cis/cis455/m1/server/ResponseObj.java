@@ -1,5 +1,6 @@
 package edu.upenn.cis.cis455.m1.server;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,6 +9,7 @@ import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
 import edu.upenn.cis.cis455.m2.server.SetCookie;
+import edu.upenn.cis.cis455.utils.Tuple;
 import edu.upenn.cis.cis455.m2.server.SessionObj;
 
 public class ResponseObj extends Response {
@@ -18,6 +20,7 @@ public class ResponseObj extends Response {
     protected String _contentType = null; // e.g., "text/plain";
     protected Hashtable<String,String> _headers = new Hashtable<String,String>();
     protected String _protocol = "HTTP/1.1";
+    protected ArrayList<Tuple<String,String>> cookieHeaders = new ArrayList<Tuple<String,String>>();
 	
 	private Hashtable<String, SetCookie> _cookies = new Hashtable<String, SetCookie>();
 	
@@ -160,13 +163,39 @@ public class ResponseObj extends Response {
 		}
 	}
 	
+	/**
+	 * Creates the Set-Cookie headers from added cookies and 
+	 * adds them to response headers
+	 */
 	public void convertSetCookiesToHeaders() {
 		Iterator cookiesIterator = _cookies.entrySet().iterator();
 		while(cookiesIterator.hasNext()) {
 			Map.Entry<String,SetCookie> cookieHash = (Map.Entry<String,SetCookie>)cookiesIterator.next();
 			SetCookie cookie = cookieHash.getValue();
 			StringBuilder cookieString = new StringBuilder();
-			cookieString.append("JSESSIONID="+cookie.name());
+			cookieString.append("JSESSIONID="+cookie.value()+"; ");
+			if (!cookie.secured()) {
+				if (cookie.expires() != null) {
+					cookieString.append(Constants.expires+"="+cookie.expires()+"; ");
+				}
+				if (cookie.maxAge() != 0) {
+					cookieString.append(Constants.maxAge+"="+cookie.maxAge()+"; ");
+				}
+				cookieString.append(Constants.domain+"="+"localhost:"+WebService.getInstance().port+"; ");
+				if (cookie.path() != null) {
+					cookieString.append(Constants.path+"="+cookie.path()+"; ");
+				}
+				if (cookie.httpOnly()) {
+					cookieString.append(Constants.httpOnly+"="+cookie.httpOnly()+"; ");
+				}
+			}	
+			Tuple<String,String> cookieHeader = new Tuple<String,String>("Set-Cookie", cookieString.toString());
+			this.cookieHeaders.add(cookieHeader);
 		}
+	}
+
+	@Override
+	public ArrayList<Tuple<String, String>> getCookieHeaders() {
+		return this.cookieHeaders;
 	}
 }

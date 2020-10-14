@@ -1,5 +1,9 @@
 package edu.upenn.cis.cis455.m2.interfaces;
 
+import java.util.ArrayList;
+
+import edu.upenn.cis.cis455.utils.Tuple;
+
 public abstract class Response extends edu.upenn.cis.cis455.m1.interfaces.Response {
     /**
      * Add a header key/value
@@ -39,4 +43,8 @@ public abstract class Response extends edu.upenn.cis.cis455.m1.interfaces.Respon
     public abstract void removeCookie(String name);
 
     public abstract void removeCookie(String path, String name);
+    
+    public abstract void convertSetCookiesToHeaders();
+    
+    public abstract ArrayList<Tuple<String,String>> getCookieHeaders();
 }
