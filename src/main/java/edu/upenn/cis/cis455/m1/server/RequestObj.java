@@ -22,6 +22,7 @@ public class RequestObj extends Request{
 	String _queryString;
 	Hashtable<String,List<String>> _queryParams = new Hashtable<String,List<String>>();
 	Hashtable<String,String> _uriPathParams = new Hashtable<String,String>();
+	String _sessionId;
 	
 
 	@Override
@@ -212,16 +213,20 @@ public class RequestObj extends Request{
 	@Override
 	public Session session() {
 		
+		if (this._sessionId != null) {
+			return WebService.getInstance().getSession(_sessionId);
+		}
 		// Get the Cookie header from the request and then
 		// find the cookie w/ JSESSIONID
-		if (this.headers().get("Cookie") != null) {
-			String cookieString = this.headers().get("Cookie");
+		else if (this.headers().get("cookie") != null) {
+			String cookieString = this.headers().get("cookie");
 			_cookies = parseCookieString(cookieString);
-			String sessionId = _cookies.get("JSESSIONID");
-			return WebService.getInstance().getSession(sessionId);
+			_sessionId = _cookies.get("JSESSIONID");
+			return WebService.getInstance().getSession(_sessionId);
 		}
-			
-		return new SessionObj();
+		
+		
+		return session(true);
 	}
 	
 	/**
@@ -257,7 +262,8 @@ public class RequestObj extends Request{
 	@Override
 	public Session session(boolean create) {
 		if (create) {
-			return new SessionObj();
+			this._sessionId = WebService.getInstance().createSession();
+			return WebService.getInstance().getSession(_sessionId);
 		}
 		return null;
 	}

@@ -9,15 +9,18 @@ import edu.upenn.cis.cis455.m2.interfaces.Session;
 
 public class SessionObj extends Session {
 
-	String _id;
-	Instant _creationTime;
-	Instant _lastAccessedTime;	
-	Duration _maxInactiveInterval = Duration.ofMinutes(15);
-	Hashtable<String,Object> _attributes;
+	private boolean _invalidated = false;
+	private Instant _expiresTime;	
+	private String _id;
+	private Instant _creationTime;
+	private Instant _lastAccessedTime;	
+	private Duration _maxInactiveInterval = Duration.ofMinutes(15);
+	private Hashtable<String,Object> _attributes;
 	
 	public SessionObj() {
 		_id = createSessionId();
 		_creationTime = Instant.now();
+		this._expiresTime = Instant.now().plus(_maxInactiveInterval);
 	}	
 	
 	/**
@@ -26,6 +29,7 @@ public class SessionObj extends Session {
 	 */
 	@Override
 	public String id() {
+		access();
 		return this._id;
 	}
 
@@ -46,6 +50,7 @@ public class SessionObj extends Session {
 	 */
 	@Override
 	public long lastAccessedTime() {
+		access();
 		return _lastAccessedTime.toEpochMilli();
 	}
 
@@ -54,6 +59,7 @@ public class SessionObj extends Session {
 	 */
 	@Override
 	public void invalidate() {
+		access();
 		this._invalidated = true;
 	}
 
@@ -63,6 +69,7 @@ public class SessionObj extends Session {
 	 */
 	@Override
 	public int maxInactiveInterval() {
+		access();
 		return (int)this._maxInactiveInterval.getSeconds();
 	}
 
@@ -126,5 +133,15 @@ public class SessionObj extends Session {
 		access();
 		this._attributes.remove(name);
 		
+	}
+
+	@Override
+	public boolean invalidated() {
+		return this._invalidated;
+	}
+
+	@Override
+	public Instant expiresTime() {
+		return this._expiresTime;
 	}
 }

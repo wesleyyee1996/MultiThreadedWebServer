@@ -9,5 +9,5 @@ import edu.upenn.cis.cis455.exceptions.HaltException;
  */
 @FunctionalInterface
 public interface Filter {
-    void handle(Request request, Response response) throws HaltException, Exception;
+    void handle(Request request, Response response) throws Exception;
 }

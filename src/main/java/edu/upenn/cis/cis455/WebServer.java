@@ -53,7 +53,7 @@ public class WebServer {
 		WebServiceFactory.after("*","*",(Request request, Response response) -> {
 			response.header("test1","test2");
 			Session session = request.session();
-			response.cookie("JESSIONID", session.id(), 570, false);});
+			response.cookie("JESSIONID", session.id());});
 		
 		// Run web service
 		WebServiceFactory.awaitInitialization();

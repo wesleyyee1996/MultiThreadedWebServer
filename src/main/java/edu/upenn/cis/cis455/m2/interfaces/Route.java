@@ -42,5 +42,5 @@ public interface Route {
      * A route handler for a given HTTP request.
      * 
      */
-    Object handle(Request request, Response response) throws HaltException, Exception;
+    Object handle(Request request, Response response) throws Exception;
 }

@@ -4,8 +4,7 @@ import java.time.Instant;
 import java.util.Set;
 
 public abstract class Session {
-	public boolean _invalidated = false;
-	public Instant _expiresTime;	
+	
     public abstract String id();
 
     /**
@@ -43,6 +42,14 @@ public abstract class Session {
      * Store an object under the name
      */
     public abstract void attribute(String name, Object value);
+    
+    /**
+     * Returns whether session has been invalidated or not
+     * @return
+     */
+    public abstract boolean invalidated();
+    
+    public abstract Instant expiresTime();
 
     /**
      * Get an object associated with the name

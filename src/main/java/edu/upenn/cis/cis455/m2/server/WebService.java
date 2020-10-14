@@ -163,7 +163,7 @@ public class WebService extends edu.upenn.cis.cis455.m1.server.WebService {
     	while (iterator.hasNext()) {    		
     		Map.Entry<String, Session> entry = iterator.next();
     		Session session = entry.getValue();
-    		if (session._invalidated || session._expiresTime.isAfter(Instant.now())) {
+    		if (session.invalidated() || session.expiresTime().isBefore(Instant.now())) {
     			iterator.remove();
     		}
     	}    	

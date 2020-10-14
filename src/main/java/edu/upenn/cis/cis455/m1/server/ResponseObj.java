@@ -18,7 +18,6 @@ public class ResponseObj extends Response {
     protected byte[] _messageBody;
     protected String method = Constants.get;
     protected String _contentType = null; // e.g., "text/plain";
-    protected Hashtable<String,String> _headers = new Hashtable<String,String>();
     protected String _protocol = "HTTP/1.1";
     protected ArrayList<Tuple<String,String>> cookieHeaders = new ArrayList<Tuple<String,String>>();
 	
@@ -66,6 +65,7 @@ public class ResponseObj extends Response {
 		SetCookie cookie = new SetCookie();
 		cookie.setName(name);
 		cookie.setValue(value);	
+		this._cookies.put(name, cookie);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class ResponseObj extends Response {
 			Map.Entry<String,SetCookie> cookieHash = (Map.Entry<String,SetCookie>)cookiesIterator.next();
 			SetCookie cookie = cookieHash.getValue();
 			StringBuilder cookieString = new StringBuilder();
-			cookieString.append("JSESSIONID="+cookie.value()+"; ");
+			cookieString.append(cookie.name()+"="+cookie.value()+"; ");
 			if (!cookie.secured()) {
 				if (cookie.expires() != null) {
 					cookieString.append(Constants.expires+"="+cookie.expires()+"; ");

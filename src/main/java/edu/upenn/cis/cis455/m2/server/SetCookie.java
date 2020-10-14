@@ -72,8 +72,11 @@ public class SetCookie {
 	}
 	
 	public String expires() {
-		SimpleDateFormat formatter = new SimpleDateFormat("EE, dd MMM yyyy kk:mm:ss z");
-		return formatter.format(this._expires);
+		if (this._expires != null) {
+			SimpleDateFormat formatter = new SimpleDateFormat("EE, dd MMM yyyy kk:mm:ss z");
+			return formatter.format(this._expires);
+		}
+		return null;
 	}
 	
 	public boolean secured() {
