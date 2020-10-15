@@ -13,12 +13,6 @@ import edu.upenn.cis.cis455.utils.Tuple;
 import edu.upenn.cis.cis455.m2.server.SessionObj;
 
 public class ResponseObj extends Response {
-	protected int _statusCode = 200;
-    protected byte[] _body;
-    protected byte[] _messageBody;
-    protected String method = Constants.get;
-    protected String _contentType = null; // e.g., "text/plain";
-    protected String _protocol = "HTTP/1.1";
     protected ArrayList<Tuple<String,String>> cookieHeaders = new ArrayList<Tuple<String,String>>();
 	
 	private Hashtable<String, SetCookie> _cookies = new Hashtable<String, SetCookie>();

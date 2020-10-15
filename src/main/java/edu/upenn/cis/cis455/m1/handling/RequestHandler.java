@@ -95,7 +95,10 @@ public class RequestHandler{
     			// apply routes, if any
         		Route matchedRoute = matcher.matchRoute(request, response);
         		if (matchedRoute != null) {
-        			response.body(matchedRoute.handle(request, response).toString());
+        			Object obj = matchedRoute.handle(request, response);
+        			if (obj != null) {
+        				response.body(obj.toString());
+        			}        			
         		}   	    		
         		// if can't match with a route, then attempt to retrieve from static path
         		else {

@@ -89,8 +89,12 @@ public class MatcherTest {
 		assertTrue(matchedTestRoute == testRoute1);
 	}
 	
+	/**
+	 * Fails when it's run w/ others but succeeds when run by itself, not sure why...
+	 * @throws Exception 
+	 */
 	@Test
-	public void test4() {
+	public void test4() throws Exception {
 		testPath1 = "*/*";
 		testPath2 = "/index/blue/abc";
 		testPath3 = "/index/:color/abc";
@@ -101,7 +105,48 @@ public class MatcherTest {
 		webService.get(testPath2, testRoute2);
 		webService.get(testPath3, testRoute3);
 		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
-		assertTrue(matchedTestRoute == testRoute1);
+		System.out.println(matchedTestRoute.handle(request, response));
+		assertTrue(matchedTestRoute == testRoute3);
+	}
+	
+	/**
+	 * Fails when it's run w/ others but succeeds when run by itself
+	 * @throws Exception 
+	 */
+	@Test
+	public void test5() throws Exception {
+		testPath1 = "*/+/*";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "/index/:color/abc";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		System.out.println(matchedTestRoute.handle(request, response));
+		assertTrue(matchedTestRoute == testRoute3);
+	}
+	
+	/**
+	 * Fails when it's run w/ others but succeeds when run by itself
+	 * @throws Exception 
+	 */
+	@Test
+	public void test6() throws Exception {
+		testPath1 = "/";
+		testPath2 = "/index/blue/abc";
+		testPath3 = "/index/:color/abc";
+		reqPath = "/index/red/abc";
+		request.setUri(reqPath);
+		WebService webService = new WebService();
+		webService.get(testPath1, testRoute1);
+		webService.get(testPath2, testRoute2);
+		webService.get(testPath3, testRoute3);
+		Route matchedTestRoute = routeMatcher.matchRoute(request, response);
+		System.out.println(matchedTestRoute.handle(request, response));
+		assertTrue(matchedTestRoute == testRoute3);
 	}
 
 }

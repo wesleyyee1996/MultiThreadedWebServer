@@ -56,7 +56,7 @@ public class Matcher {
 		}		
 		
 		// loop through RouteMap's entries
-		for (int i=0;i<routeMap.getRouteMap().size();routeMap.getRouteMap()) {
+		for (int i=0;i<routeMap.getRouteMap().size();i++) {
 			Tuple<Path, Route> pathRoute = routeMap.getRouteMap().get(i);
 			Path registeredPath = pathRoute.x;
 			
@@ -72,14 +72,14 @@ public class Matcher {
 				
 				// loop through the requestPath and compare each of the registered path 
 				// components to the requestPath components
-				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); i++) {
+				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); pathIdx++) {
 					
 					// if the register path component and request path component match 
 					// or the registered path component is a path parameter
 					// then continue comparing
 					if (requestPath.getName(pathIdx).equals(registeredPath.getName(pathIdx))
 							|| registeredPath.getName(pathIdx).toString().startsWith(":")
-							|| registeredPath.getName(pathIdx).toString().equals("*")) {
+							|| (registeredPath.getName(pathIdx).toString().equals("*") && pathIdx == registeredPath.getNameCount()-1)){
 						
 						// check to see if at the end of the request path
 						// or if at end of registered path (which is a *)
@@ -89,12 +89,12 @@ public class Matcher {
 							// if so, then add the route to list of matched routes
 							return pathRoute.y;
 						}
-						pathIdx++;
+						//pathIdx++;
 						continue;
 					}
 					// if registered path doesn't meet any of the criteria, then go to next one
 					else {
-						i++;
+						//i++;
 						break;
 					}	
 				}
@@ -134,7 +134,7 @@ public class Matcher {
 		}
 		
 		// loop through FilterMap's entries
-		for (int i=0;i<filterMap.getFilterMap().size();filterMap.getFilterMap()) {
+		for (int i=0;i<filterMap.getFilterMap().size();i++) {
 			Triplet<Path, String, Filter> pathFilter = filterMap.getFilterMap().get(i);
 			Path registeredPath = pathFilter.x;
 			
@@ -152,7 +152,7 @@ public class Matcher {
 				
 				// loop through the requestPath and compare each of the registered path 
 				// components to the requestPath components
-				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); i++) {
+				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); pathIdx++) {
 					
 					// check the registered path's content type
 					if (pathFilter.y.equals("*")

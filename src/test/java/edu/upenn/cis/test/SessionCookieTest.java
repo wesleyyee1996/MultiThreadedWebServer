@@ -25,7 +25,15 @@ import edu.upenn.cis.cis455.m2.interfaces.Route;
 import edu.upenn.cis.cis455.m2.interfaces.Session;
 import edu.upenn.cis.cis455.utils.CommandLineValues;
 
-public class SessionObjTest {
+/**
+ * Tests to see that:
+ * 1. If server receives a cookie w/ JSESSIONID not registered, invalidated or expired it creates a new one
+ * 2. If server receives a cookie w/ JESSIONID that is registered and is valid, that it returns it if specified 
+ * 	  in the registered filters
+ * @author vagrant
+ *
+ */
+public class SessionCookieTest {
 
 	@Before
     public void setUp() {
@@ -36,6 +44,8 @@ public class SessionObjTest {
      		WebServiceFactory.port(CommandLineValues.getInstance().getPort());
      		WebServiceFactory.staticFileLocation(CommandLineValues.getInstance().getRootDir());
      		WebServiceFactory.ipAddress(null);
+     		
+     		// Sets the before and after filters
      		WebServiceFactory.before("*","*",(Request request, Response response) -> {
     			Session session = request.session();
     			System.out.println(session.id());
