@@ -4,8 +4,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import edu.upenn.cis.cis455.Constants;
 import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m1.handling.HttpIoHandler;
 import edu.upenn.cis.cis455.m2.interfaces.Response;
 import edu.upenn.cis.cis455.m2.interfaces.Filter;
 import edu.upenn.cis.cis455.m2.interfaces.Request;
@@ -13,6 +17,7 @@ import edu.upenn.cis.cis455.m2.interfaces.Route;
 import edu.upenn.cis.cis455.m2.server.WebService;
 
 public class Matcher {
+	final static Logger logger = LogManager.getLogger(Matcher.class);
 
 	/**
 	 * Finds a route that matches with given request's path and method, if it exists.
@@ -99,9 +104,6 @@ public class Matcher {
 					}	
 				}
 			}
-			else {
-				i++;
-			}
 		}		
 		return null;		
 	}
@@ -141,7 +143,6 @@ public class Matcher {
 			// if the registered path is just *
 			if (registeredPath.toString().equals("*")){
 				matchedFilters.add(pathFilter.z);
-				i++;
 				continue;
 			}
 			
@@ -161,9 +162,9 @@ public class Matcher {
 						// if the register path component and request path component match 
 						// or the registered path component is a path parameter						
 						// then continue comparing
-						if (requestPath.getName(pathIdx).equals(registeredPath.getName(pathIdx)) 
+						if (requestPath.getName(pathIdx).toString().equals(registeredPath.getName(pathIdx).toString()) 
 								|| registeredPath.getName(pathIdx).toString().startsWith(":")
-								|| registeredPath.getName(pathIdx).toString().equals("*")) {
+								|| (registeredPath.getName(pathIdx).toString().equals("*") && pathIdx == registeredPath.getNameCount()-1)) {
 							
 							// check to see if at end of request path
 							// or end of registered path (if ends w/ *)
@@ -172,27 +173,20 @@ public class Matcher {
 								
 								// if we are, then add to list of matched filters
 								matchedFilters.add(pathFilter.z);
-								i++;
 								break;
 							}
-							pathIdx++;
 							continue;
 						}
 						// if registered path doesn't meet any of the criteria, then go to next one
 						else {
-							i++;
 							break;
 						}	
 					}
 					else {
-						i++;
 						break;
 					}
 					
 				}
-			}
-			else {
-				i++;
 			}
 		}		
 		

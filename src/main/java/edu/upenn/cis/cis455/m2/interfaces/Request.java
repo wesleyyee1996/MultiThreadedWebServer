@@ -5,10 +5,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.upenn.cis.cis455.exceptions.HaltException;
+import edu.upenn.cis.cis455.m1.server.RequestObj;
+import edu.upenn.cis.cis455.m2.server.WebService;
+
 /**
  * Expanded version of the request API for Milestone 2
  */
 public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request {
+	static final Logger logger = LogManager.getLogger(Request.class);
     /**
      * @return Gets the session associated with this request
      */
@@ -86,5 +94,33 @@ public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request
         else
             return cookies().get(name);
     }
+    
+    /**
+	 * Parses the cookie string from the Cookie: header
+	 * and returns the parse cookies
+	 * @param cookieString
+	 * @return
+	 */
+	public Hashtable<String, String> parseCookieString(String cookieString){
+		Hashtable<String,String> cookies = new Hashtable<String,String>();
+		
+		// split cookie components by ;
+		String[] cookieComponents = cookieString.split(";");
+				
+		// then handle the attributes
+		for (int i = 0; i < cookieComponents.length; i++) {
+			String[] cookieComponent = cookieComponents[i].split("=");	
+			
+			// check to make sure the component is valid
+			if (cookieComponent.length != 2) {
+				logger.error("Bad cookie header");
+				HaltException he = WebService.getInstance().halt(400);
+				throw he;
+			}
+						
+			cookies.put(cookieComponent[0].trim(), cookieComponent[1].trim());
+		}
+		return cookies;
+	}
 
 }

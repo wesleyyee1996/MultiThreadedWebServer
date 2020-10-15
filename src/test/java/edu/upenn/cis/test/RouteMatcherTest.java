@@ -17,7 +17,7 @@ import edu.upenn.cis.cis455.m2.server.WebService;
 import edu.upenn.cis.cis455.utils.RouteMap;
 import edu.upenn.cis.cis455.utils.Matcher;
 
-public class MatcherTest {
+public class RouteMatcherTest {
 
 	RouteMap getRouteMap = new RouteMap();
 	Matcher routeMatcher = new Matcher();
@@ -110,7 +110,7 @@ public class MatcherTest {
 	}
 	
 	/**
-	 * Fails when it's run w/ others but succeeds when run by itself
+	 * Fails when it's run w/ others but succeeds when run by itself, not sure why...
 	 * @throws Exception 
 	 */
 	@Test
@@ -130,7 +130,7 @@ public class MatcherTest {
 	}
 	
 	/**
-	 * Fails when it's run w/ others but succeeds when run by itself
+	 * Fails when it's run w/ others but succeeds when run by itself, not sure why...
 	 * @throws Exception 
 	 */
 	@Test

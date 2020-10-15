@@ -36,25 +36,7 @@ public class WebServer {
 		WebServiceFactory.port(CommandLineValues.getInstance().getPort());
 		WebServiceFactory.staticFileLocation(CommandLineValues.getInstance().getRootDir());
 		WebServiceFactory.ipAddress(null);
-		
-		WebServiceFactory.before("*","*",(Request request, Response response) -> {
-			Session session = request.session();
-			System.out.println(session.id());
-		});
-		WebServiceFactory.before("/testBeforeHalt","*",(Request request, Response response) -> {
-			WebServiceFactory.halt(403, HttpParsing.explainStatus(403));
-		});
-		WebServiceFactory.get("/test", (Request request, Response response)-> {
-			System.out.println("test");
-			return "test";});
-		WebServiceFactory.get("/testRedirect", (Request request, Response response)-> {
-			response.redirect("/test");
-			return "test";});
-		WebServiceFactory.after("*","*",(Request request, Response response) -> {
-			response.header("test1","test2");
-			Session session = request.session();
-			response.cookie("JESSIONID", session.id());});
-		
+			
 		// Run web service
 		WebServiceFactory.awaitInitialization();
 		logger.info("Waiting to handle requests!");
