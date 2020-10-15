@@ -22,7 +22,7 @@ public class RequestObj extends Request{
 	Hashtable<String, Object> _attributes = new Hashtable<String, Object>();
 	String _queryString;
 	Hashtable<String,List<String>> _queryParams = new Hashtable<String,List<String>>();
-	Hashtable<String,String> _uriPathParams = new Hashtable<String,String>();
+	
 	String _sessionId;
 	
 
@@ -253,6 +253,8 @@ public class RequestObj extends Request{
 	public Map<String, String> params() {
 		return this._uriPathParams;
 	}
+	
+	
 	
 	/**
 	 * Sets the query parameters (NOT the URI Path parameters)

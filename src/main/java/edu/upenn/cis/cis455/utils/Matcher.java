@@ -3,6 +3,7 @@ package edu.upenn.cis.cis455.utils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,6 +76,8 @@ public class Matcher {
 			if (registeredPath.getNameCount() == requestPath.getNameCount()
 					|| registeredPath.endsWith("*")) {
 				
+				Hashtable<String, String> uriParams = new Hashtable<String,String>();
+				
 				// loop through the requestPath and compare each of the registered path 
 				// components to the requestPath components
 				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); pathIdx++) {
@@ -91,10 +94,14 @@ public class Matcher {
 						if (pathIdx == requestPath.getNameCount()-1
 								|| registeredPath.getName(pathIdx).toString().equals("*")) {
 							
+							request.addToPathParams(uriParams);
+							
 							// if so, then add the route to list of matched routes
 							return pathRoute.y;
 						}
-						//pathIdx++;
+						if (registeredPath.getName(pathIdx).toString().startsWith(":")) {
+							uriParams.put(registeredPath.getName(pathIdx).toString(), requestPath.getName(pathIdx).toString());
+						}
 						continue;
 					}
 					// if registered path doesn't meet any of the criteria, then go to next one
@@ -106,6 +113,12 @@ public class Matcher {
 			}
 		}		
 		return null;		
+	}
+	
+	private void setParams(Request request, Response response, Path registeredPath, Path requestPath) {
+		for (int pathIdx=0; pathIdx<requestPath.getNameCount(); pathIdx++) {
+			
+		}
 	}
 	
 	/**
@@ -155,6 +168,8 @@ public class Matcher {
 				// components to the requestPath components
 				for (int pathIdx = 0; pathIdx < registeredPath.getNameCount(); pathIdx++) {
 					
+					Hashtable<String, String> uriParams = new Hashtable<String,String>();
+
 					// check the registered path's content type
 					if (pathFilter.y.equals("*")
 							|| pathFilter.y.equals(contentType)){
@@ -173,7 +188,11 @@ public class Matcher {
 								
 								// if we are, then add to list of matched filters
 								matchedFilters.add(pathFilter.z);
+								request.addToPathParams(uriParams);
 								break;
+							}
+							if (registeredPath.getName(pathIdx).toString().startsWith(":")) {
+								uriParams.put(registeredPath.getName(pathIdx).toString(), requestPath.getName(pathIdx).toString());
 							}
 							continue;
 						}

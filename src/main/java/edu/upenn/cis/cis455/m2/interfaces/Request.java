@@ -17,6 +17,7 @@ import edu.upenn.cis.cis455.m2.server.WebService;
  */
 public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request {
 	static final Logger logger = LogManager.getLogger(Request.class);
+	public Hashtable<String,String> _uriPathParams = new Hashtable<String,String>();
     /**
      * @return Gets the session associated with this request
      */
@@ -121,6 +122,12 @@ public abstract class Request extends edu.upenn.cis.cis455.m1.interfaces.Request
 			cookies.put(cookieComponent[0].trim(), cookieComponent[1].trim());
 		}
 		return cookies;
+	}
+	
+	public void addToPathParams(Hashtable<String,String> uriParams) {
+		if (!uriParams.isEmpty()) {
+			this._uriPathParams.putAll(uriParams);
+		}
 	}
 
 }
